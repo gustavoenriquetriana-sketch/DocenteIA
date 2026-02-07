@@ -356,20 +356,15 @@ router.post('/support/ticket', async (req, res) => {
         });
 
         const transporter = nodemailer.createTransport({
-            host: 'smtp.gmail.com', // <--- VOLVEMOS AL NOMBRE OFICIAL
-            port: 465,              // Puerto Seguro SSL (El favorito de Railway)
-            secure: true,           // OBLIGATORIO: true para puerto 465
+            service: 'gmail',  // <--- LA CLAVE MAESTRA
             auth: {
                 user: process.env.EMAIL_USER,
                 pass: process.env.EMAIL_PASS
-            },
-            tls: {
-                rejectUnauthorized: false
             }
         });
 
-        // Mensaje para confirmar en los logs que el cambio subió
-        console.log(">>> CONFIGURACIÓN RAILWAY: SMTP GMAIL PUERTO 465 <<<");
+        // Cambiamos el mensaje para saber 100% que este código subió
+        console.log(">>> INTENTO FINAL: MODO SERVICE GMAIL <<<");
         const htmlContent = `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #e2e8f0; border-radius: 10px; overflow: hidden;">
             <div style="background-color: #1e3a8a; color: white; padding: 20px; text-align: center;">
