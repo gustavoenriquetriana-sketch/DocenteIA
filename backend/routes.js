@@ -389,7 +389,8 @@ router.post('/support/ticket', async (req, res) => {
 
         // 3. Send Email in Background (NO AWAIT)
         // If it fails, it logs error but user already got "Success"
-        sendEmail('soportedocenteia@gmail.com', `[Soporte] ${ticketId}: ${subject}`, htmlContent)
+        // Use verified email for Resend testing
+        sendEmail('gustavoenriquetriana@gmail.com', `[Soporte] ${ticketId}: ${subject}`, htmlContent)
             .catch(err => console.error("[Background Email Error]", err.message));
 
 
