@@ -368,6 +368,7 @@ router.post('/support/ticket', async (req, res) => {
                 rejectUnauthorized: false
             }
         });
+        console.log(">>> CONFIGURACIÓN DE CORREO CARGADA: PUERTO 465 <<<");
 
         const htmlContent = `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #e2e8f0; border-radius: 10px; overflow: hidden;">
