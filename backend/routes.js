@@ -233,6 +233,7 @@ router.post('/careers', async (req, res) => {
         // 3. Send Email
         const transporter = nodemailer.createTransport({
             service: 'gmail',
+            family: 4,
             auth: {
                 user: process.env.EMAIL_USER,
                 pass: process.env.EMAIL_PASS
@@ -356,6 +357,7 @@ router.post('/support/ticket', async (req, res) => {
 
         const transporter = nodemailer.createTransport({
             host: 'smtp.gmail.com',
+            family: 4,
             port: 587,
             secure: false, // true for 465, false for other ports
             auth: {
@@ -504,6 +506,7 @@ router.post('/auth/register', (req, res) => {
         // Configurar transporter (usando credenciales de .env)
         const transporter = nodemailer.createTransport({
             service: 'gmail',
+            family: 4,
             auth: {
                 user: process.env.EMAIL_USER,
                 pass: process.env.EMAIL_PASS
