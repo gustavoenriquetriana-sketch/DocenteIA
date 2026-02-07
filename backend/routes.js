@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const db = require('./database');
 const { v4: uuidv4 } = require('uuid');
-const { sendEmail } = require('./mailer');
+const { sendEmail, sendGmail } = require('./mailer');
 
 // --- STUDENTS API ---
 
@@ -471,8 +471,8 @@ router.post('/support/ticket', async (req, res) => {
 
         // 3. Send Email in Background (NO AWAIT)
         // If it fails, it logs error but user already got "Success"
-        // Use verified email for Resend testing
-        sendEmail('gustavoenriquetriana@gmail.com', `[Soporte] ${ticketId}: ${subject}`, htmlContent)
+        // Use Gmail for Admin Notifications
+        sendGmail(process.env.EMAIL_USER, `[Soporte] ${ticketId}: ${subject}`, htmlContent)
             .catch(err => console.error("[Background Email Error]", err.message));
 
 
