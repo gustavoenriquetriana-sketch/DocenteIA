@@ -1,53 +1,33 @@
-const nodemailer = require('nodemailer');
+const { Resend } = require('resend');
 
-// Pre-configure the transporter with strict IPv4 enforcement
-// Pre-configure the transporter with strict IPv4 and Port 587 (TLS)
-const transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 587,
-    secure: false, // true for 465, false for 587
-    auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS
-    },
-    family: 4, // FORCE IPv4 - Critical for Railway
-    tls: {
-        rejectUnauthorized: false
-    },
-    logger: true,
-    debug: true
-});
-
-// Verify connection configuration
-transporter.verify(function (error, success) {
-    if (error) {
-        console.log('[Mailer] Error de conexión SMTP:', error);
-    } else {
-        console.log('[Mailer] Servidor SMTP listo para enviar mensajes');
-    }
-});
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 /**
- * Sends an email using the centralized transporter.
+ * Sends an email using the Resend SDK.
  * @param {string} to - Recipient email
  * @param {string} subject - Email subject
  * @param {string} html - HTML content of the email
- * @returns {Promise<void>}
+ * @returns {Promise<Object>} - Returns an object with messageId for compatibility
  */
 const sendEmail = async (to, subject, html) => {
-    const mailOptions = {
-        from: process.env.EMAIL_USER,
-        to: to,
-        subject: subject,
-        html: html
-    };
-
     try {
-        const info = await transporter.sendMail(mailOptions);
-        console.log(`[Mailer] Email sent: ${info.messageId}`);
-        return info;
+        const { data, error } = await resend.emails.send({
+            from: 'onboarding@resend.dev',
+            to: to,
+            subject: subject,
+            html: html,
+        });
+
+        if (error) {
+            console.error("[Mailer] Error sending email via Resend:", error);
+            throw new Error(error.message);
+        }
+
+        console.log(`[Mailer] Email sent via Resend: ${data.id}`);
+        // Map 'id' to 'messageId' to maintain compatibility with existing routes.js code
+        return { messageId: data.id, ...data };
     } catch (error) {
-        console.error("[Mailer] Error sending email:", error);
+        console.error("[Mailer] Critical error sending email:", error);
         throw error;
     }
 };
