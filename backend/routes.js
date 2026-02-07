@@ -343,6 +343,10 @@ router.post('/support/ticket', async (req, res) => {
             );
         });
 
+        // 1. Send Success Response IMMEDIATELY (User sees "Sent")
+        res.json({ success: true, message: 'Ticket enviado correctamente', ticketId: ticketId });
+
+        // 2. Prepare Email Content
         const htmlContent = `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #e2e8f0; border-radius: 10px; overflow: hidden;">
             <div style="background-color: #1e3a8a; color: white; padding: 20px; text-align: center;">
@@ -383,12 +387,15 @@ router.post('/support/ticket', async (req, res) => {
         </div>
         `;
 
-        await sendEmail('soportedocenteia@gmail.com', `[Soporte] ${ticketId}: ${subject}`, htmlContent);
-        res.json({ success: true, message: 'Ticket enviado correctamente', ticketId: ticketId });
+        // 3. Send Email in Background (NO AWAIT)
+        // If it fails, it logs error but user already got "Success"
+        sendEmail('soportedocenteia@gmail.com', `[Soporte] ${ticketId}: ${subject}`, htmlContent)
+            .catch(err => console.error("[Background Email Error]", err.message));
+
 
     } catch (error) {
-        console.error("Error enviando ticket (DETALLES):", error);
-        res.status(500).json({ error: 'Error al enviar el ticket.', details: error.message });
+        console.error("Error saving ticket:", error);
+        res.status(500).json({ error: 'Error al guardar el ticket.', details: error.message });
     }
 });
 
