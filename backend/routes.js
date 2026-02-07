@@ -357,18 +357,24 @@ router.post('/support/ticket', async (req, res) => {
 
         const transporter = nodemailer.createTransport({
             host: 'smtp.gmail.com',
-            port: 465,              // <--- CAMBIO CLAVE AQUÍ
-            secure: true,           // <--- IMPORTANTE: true para puerto 465
-            family: 4,              // Mantenemos esto (muy bien hecho)
+            port: 587,              // Volvemos al estándar (más compatible con nubes)
+            secure: false,          // OJO: Para 587 esto TIENE que ser false
+            family: 4,              // Mantenemos el fix de IPv4 (Vital)
             auth: {
                 user: process.env.EMAIL_USER,
                 pass: process.env.EMAIL_PASS
             },
             tls: {
                 rejectUnauthorized: false
-            }
+            },
+            // AGREGAMOS ESTOS TIEMPOS DE ESPERA PARA EVITAR EL TIMEOUT
+            connectionTimeout: 10000, // Esperar 10 segundos a que Google responda
+            greetingTimeout: 5000,    // Esperar 5 segundos el saludo
+            socketTimeout: 10000      // Esperar 10 segundos por datos
         });
-        console.log(">>> CONFIGURACIÓN DE CORREO CARGADA: PUERTO 465 <<<");
+
+        // Agregamos esto para confirmar en el log que subió el cambio
+        console.log(">>> INTENTO FINAL: PUERTO 587 CON TIMEOUTS EXTENDIDOS <<<");
 
         const htmlContent = `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #e2e8f0; border-radius: 10px; overflow: hidden;">
