@@ -445,7 +445,7 @@ router.patch('/support/ticket/:id/reopen', (req, res) => {
 
 // --- AUTH API ---
 
-router.post('/auth/register', (req, res) => {
+router.post('/auth/register', async (req, res) => {
     const { name, email } = req.body;
 
     if (!name || !email) {
@@ -468,10 +468,11 @@ router.post('/auth/register', (req, res) => {
         }
 
         // Send Welcome Email
-        sendEmail(
-            email,
-            '¡Bienvenido a DocenteAI! 🎓',
-            `
+        try {
+            const info = await sendEmail(
+                email,
+                '¡Bienvenido a DocenteAI! 🎓',
+                `
             <div style="background-color: #f3f4f6; padding: 40px 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
                 <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
                     <!-- Header -->
@@ -529,8 +530,11 @@ router.post('/auth/register', (req, res) => {
                 </div>
             </div>
             `
-        ).then(info => console.log('Email sent: ' + info.messageId))
-            .catch(err => console.log('Error sending email:', err));
+            );
+            console.log('Email sent: ' + info.messageId);
+        } catch (err) {
+            console.log('Error sending email:', err);
+        }
 
         res.json({ success: true, redirect: 'dashboard.html' });
     });
