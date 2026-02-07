@@ -561,7 +561,7 @@ router.post('/auth/register', async (req, res) => {
             });
         });
 
-        // Send Welcome Email
+        // Send Welcome Email (Fail-Safe)
         try {
             const info = await sendEmail(
                 email,
@@ -627,7 +627,8 @@ router.post('/auth/register', async (req, res) => {
             );
             console.log('Email sent: ' + info.messageId);
         } catch (err) {
-            console.log('Error sending email:', err);
+            console.error('Error sending welcome email (Non-fatal):', err.message);
+            // Proceed without throwing to allow registration
         }
 
         res.json({ success: true, redirect: 'dashboard.html' });
