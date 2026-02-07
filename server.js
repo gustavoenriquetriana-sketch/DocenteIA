@@ -1,6 +1,6 @@
-console.log("¡¡¡TAVO: EL CÓDIGO NUEVO YA LLEGÓ A RAILWAY!!! 🚀"); // <--- ESTO ES LA PRUEBA
+require('dns').setDefaultResultOrder('ipv4first'); // <--- CRITICO: Forzar IPv4 antes de CUALQUIER otra cosa
+console.log("¡¡¡TAVO: EL CÓDIGO NUEVO (FIX IPv6) YA LLEGÓ A RAILWAY!!! 🚀"); // <--- ESTO ES LA PRUEBA
 require('dotenv').config();
-require('dns').setDefaultResultOrder('ipv4first'); // <--- El antídoto IPv6
 const express = require('express');
 const cors = require('cors');
 const path = require('path');

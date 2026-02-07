@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const db = require('./database');
 const { v4: uuidv4 } = require('uuid');
-const nodemailer = require('nodemailer');
+const { sendEmail } = require('./mailer');
 
 // --- STUDENTS API ---
 
@@ -231,20 +231,10 @@ router.post('/careers', async (req, res) => {
         const skillsString = detectedSkills.join(', ');
 
         // 3. Send Email
-        const transporter = nodemailer.createTransport({
-            service: 'gmail',
-            family: 4,
-            auth: {
-                user: process.env.EMAIL_USER,
-                pass: process.env.EMAIL_PASS
-            }
-        });
-
-        const mailOptions = {
-            from: process.env.EMAIL_USER,
-            to: email,
-            subject: `Resultados de Análisis de Perfil: ${vacancy_title}`,
-            html: `
+        await sendEmail(
+            email,
+            `Resultados de Análisis de Perfil: ${vacancy_title}`,
+            `
             <div style="font-family: 'Segoe UI', sans-serif; max-width: 600px; margin: auto; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
                 <div style="background-color: #1e3a8a; color: white; padding: 30px; text-align: center;">
                     <h1 style="margin: 0; font-size: 24px;">DocenteAI Careers</h1>
@@ -277,9 +267,7 @@ router.post('/careers', async (req, res) => {
                 </div>
             </div>
             `
-        };
-
-        await transporter.sendMail(mailOptions);
+        );
         console.log(`Email enviado a ${email} con score ${matchScore}%`);
 
         res.json({ success: true, message: "Application received", score: matchScore });
@@ -355,20 +343,6 @@ router.post('/support/ticket', async (req, res) => {
             );
         });
 
-        const transporter = nodemailer.createTransport({
-            host: 'smtp.gmail.com',
-            port: 587,              // <--- CAMBIO CLAVE: Usamos el puerto TLS
-            secure: false,          // <--- IMPORTANTE: En puerto 587 esto va en false
-            auth: {
-                user: process.env.EMAIL_USER,
-                pass: process.env.EMAIL_PASS
-            },
-            tls: {
-                rejectUnauthorized: false
-            }
-        });
-
-        console.log(">>> INTENTO FINAL: PUERTO 587 (TLS) <<<");
         const htmlContent = `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #e2e8f0; border-radius: 10px; overflow: hidden;">
             <div style="background-color: #1e3a8a; color: white; padding: 20px; text-align: center;">
@@ -409,14 +383,7 @@ router.post('/support/ticket', async (req, res) => {
         </div>
         `;
 
-        const mailOptions = {
-            from: process.env.EMAIL_USER,
-            to: 'soportedocenteia@gmail.com',
-            subject: `[Soporte] ${ticketId}: ${subject}`,
-            html: htmlContent
-        };
-
-        await transporter.sendMail(mailOptions);
+        await sendEmail('soportedocenteia@gmail.com', `[Soporte] ${ticketId}: ${subject}`, htmlContent);
         res.json({ success: true, message: 'Ticket enviado correctamente', ticketId: ticketId });
 
     } catch (error) {
@@ -501,23 +468,10 @@ router.post('/auth/register', (req, res) => {
         }
 
         // Send Welcome Email
-        const nodemailer = require('nodemailer');
-
-        // Configurar transporter (usando credenciales de .env)
-        const transporter = nodemailer.createTransport({
-            service: 'gmail',
-            family: 4,
-            auth: {
-                user: process.env.EMAIL_USER,
-                pass: process.env.EMAIL_PASS
-            }
-        });
-
-        const mailOptions = {
-            from: process.env.EMAIL_USER,
-            to: email,
-            subject: '¡Bienvenido a DocenteAI! 🎓',
-            html: `
+        sendEmail(
+            email,
+            '¡Bienvenido a DocenteAI! 🎓',
+            `
             <div style="background-color: #f3f4f6; padding: 40px 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
                 <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
                     <!-- Header -->
@@ -575,16 +529,8 @@ router.post('/auth/register', (req, res) => {
                 </div>
             </div>
             `
-        };
-
-        transporter.sendMail(mailOptions, (error, info) => {
-            if (error) {
-                console.log('Error sending email:', error);
-                // Don't fail the request just because email failed, but log it
-            } else {
-                console.log('Email sent: ' + info.response);
-            }
-        });
+        ).then(info => console.log('Email sent: ' + info.messageId))
+            .catch(err => console.log('Error sending email:', err));
 
         res.json({ success: true, redirect: 'dashboard.html' });
     });
