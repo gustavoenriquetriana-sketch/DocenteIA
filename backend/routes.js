@@ -356,10 +356,9 @@ router.post('/support/ticket', async (req, res) => {
         });
 
         const transporter = nodemailer.createTransport({
-            host: 'smtp.gmail.com',
-            port: 587,              // Volvemos al estándar (más compatible con nubes)
-            secure: false,          // OJO: Para 587 esto TIENE que ser false
-            family: 4,              // Mantenemos el fix de IPv4 (Vital)
+            host: '142.250.115.108', // <--- IP DIRECTA DE GMAIL (Evita el error IPv6)
+            port: 587,               // Puerto estándar
+            secure: false,           // false para 587
             auth: {
                 user: process.env.EMAIL_USER,
                 pass: process.env.EMAIL_PASS
@@ -367,15 +366,10 @@ router.post('/support/ticket', async (req, res) => {
             tls: {
                 rejectUnauthorized: false
             },
-            // AGREGAMOS ESTOS TIEMPOS DE ESPERA PARA EVITAR EL TIMEOUT
-            connectionTimeout: 10000, // Esperar 10 segundos a que Google responda
-            greetingTimeout: 5000,    // Esperar 5 segundos el saludo
-            socketTimeout: 10000      // Esperar 10 segundos por datos
+            connectionTimeout: 10000 // Mantenemos la paciencia por si acaso
         });
 
-        // Agregamos esto para confirmar en el log que subió el cambio
-        console.log(">>> INTENTO FINAL: PUERTO 587 CON TIMEOUTS EXTENDIDOS <<<");
-
+        console.log(">>> MODO MANUAL: CONECTANDO A IP 142.250.115.108 <<<");
         const htmlContent = `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #e2e8f0; border-radius: 10px; overflow: hidden;">
             <div style="background-color: #1e3a8a; color: white; padding: 20px; text-align: center;">
