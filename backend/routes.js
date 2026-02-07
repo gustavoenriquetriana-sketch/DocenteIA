@@ -645,8 +645,7 @@ router.post('/generate-exam', async (req, res) => {
             return res.status(400).json({ error: 'Faltan campos requeridos' });
         }
 
-        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-
+        const model = genAI.getGenerativeModel({ model: "gemini-pro" });
         const prompt = `
         You are an expert teacher. Create a ${difficulty} level exam on "${topic}".
         Generate exactly ${numQuestions} questions of type "${type}".
