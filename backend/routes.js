@@ -543,26 +543,27 @@ router.post('/auth/register', async (req, res) => {
 
     // Insert user (using plain text password for now as requested)
     try {
-        db.run(`INSERT INTO users (name, email, password) VALUES (?, ?, ?)`, [name, email, password], function (err) {
-            if (err) {
-                // If unique constraint violation, return error
-                if (err.message.includes('UNIQUE')) {
-                    reject(new Error("El correo ya está registrado. Por favor inicia sesión o restablece tu contraseña."));
+        await new Promise((resolve, reject) => {
+            db.run(`INSERT INTO users (name, email, password) VALUES (?, ?, ?)`, [name, email, password], function (err) {
+                if (err) {
+                    // If unique constraint violation, return error
+                    if (err.message.includes('UNIQUE')) {
+                        reject(new Error("El correo ya está registrado. Por favor inicia sesión o restablece tu contraseña."));
+                    } else {
+                        reject(err);
+                    }
                 } else {
-                    reject(err);
+                    resolve();
                 }
-            } else {
-                resolve();
-            }
+            });
         });
-    });
 
-// Send Welcome Email
-try {
-    const info = await sendEmail(
-        email,
-        '¡Bienvenido a DocenteAI! 🎓',
-        `
+        // Send Welcome Email
+        try {
+            const info = await sendEmail(
+                email,
+                '¡Bienvenido a DocenteAI! 🎓',
+                `
             <div style="background-color: #f3f4f6; padding: 40px 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
                 <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
                     <!-- Header -->
@@ -620,17 +621,17 @@ try {
                 </div>
             </div>
             `
-    );
-    console.log('Email sent: ' + info.messageId);
-} catch (err) {
-    console.log('Error sending email:', err);
-}
+            );
+            console.log('Email sent: ' + info.messageId);
+        } catch (err) {
+            console.log('Error sending email:', err);
+        }
 
-res.json({ success: true, redirect: 'dashboard.html' });
+        res.json({ success: true, redirect: 'dashboard.html' });
 
     } catch (err) {
-    return res.status(500).json({ success: false, message: err.message });
-}
+        return res.status(500).json({ success: false, message: err.message });
+    }
 });
 
 module.exports = router;
