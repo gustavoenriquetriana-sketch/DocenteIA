@@ -456,16 +456,23 @@ router.post('/auth/register', async (req, res) => {
     // In a real app we would hash the password.
     const defaultPass = 'docente123';
 
-    db.run(`INSERT INTO users (name, email, password) VALUES (?, ?, ?)`, [name, email, defaultPass], function (err) {
-        if (err) {
-            // If unique constraint violation (already registered), we might want to just log them in or return error
-            if (err.message.includes('UNIQUE')) {
-                // For this "demo" flow, let's just proceed as if success but maybe update name
-                console.log("User exists, logging in...");
-            } else {
-                return res.status(500).json({ success: false, message: err.message });
-            }
-        }
+    try {
+        await new Promise((resolve, reject) => {
+            db.run(`INSERT INTO users (name, email, password) VALUES (?, ?, ?)`, [name, email, defaultPass], function (err) {
+                if (err) {
+                    // If unique constraint violation (already registered), we might want to just log them in or return error
+                    if (err.message.includes('UNIQUE')) {
+                        // For this "demo" flow, let's just proceed as if success but maybe update name
+                        console.log("User exists, logging in...");
+                        resolve();
+                    } else {
+                        reject(err);
+                    }
+                } else {
+                    resolve();
+                }
+            });
+        });
 
         // Send Welcome Email
         try {
@@ -537,7 +544,10 @@ router.post('/auth/register', async (req, res) => {
         }
 
         res.json({ success: true, redirect: 'dashboard.html' });
-    });
+
+    } catch (err) {
+        return res.status(500).json({ success: false, message: err.message });
+    }
 });
 
 module.exports = router;
