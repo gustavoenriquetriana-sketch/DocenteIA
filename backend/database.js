@@ -70,8 +70,18 @@ function initDb() {
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             name TEXT,
             email TEXT UNIQUE,
-            password TEXT
+            password TEXT,
+            reset_token TEXT,
+            reset_expires DATETIME
         )`);
+
+        // Update existing users table if columns don't exist
+        db.run("ALTER TABLE users ADD COLUMN reset_token TEXT", (err) => {
+            // Ignore error if column exists
+        });
+        db.run("ALTER TABLE users ADD COLUMN reset_expires DATETIME", (err) => {
+            // Ignore error if column exists
+        });
 
         // User Settings Table - Drop first to ensure correct schema for this demo
         db.run("DROP TABLE IF EXISTS user_settings", () => {

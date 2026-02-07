@@ -176,6 +176,7 @@ router.post('/leads', (req, res) => {
 });
 
 // --- AUTH API ---
+
 router.post('/auth/login', (req, res) => {
     const { email, password } = req.body;
     db.get("SELECT * FROM users WHERE email = ?", [email], (err, user) => {
@@ -204,39 +205,74 @@ router.post('/auth/forgot-password', (req, res) => {
         if (err) return res.status(500).json({ error: "Internal error" });
         if (!user) return res.status(404).json({ error: "Email no registrado" });
 
-        // Generate temp password
-        const tempPassword = Math.random().toString(36).slice(-8);
+        const crypto = require('crypto');
+        const token = crypto.randomBytes(32).toString('hex');
+        const expires = Date.now() + 3600000; // 1 hour
 
-        // Update DB with temporary password
-        db.run("UPDATE users SET password = ? WHERE email = ?", [tempPassword, email], async (err) => {
-            if (err) return res.status(500).json({ error: "Error updating password" });
+        // DEBUG: Print token to console so I can verify without checking email
+        // console.log(`[DEBUG] Generated Reset Token for ${email}: ${token}`);
+
+        db.run("UPDATE users SET reset_token = ?, reset_expires = ? WHERE email = ?", [token, expires, email], async (err) => {
+            if (err) return res.status(500).json({ error: "Error updating database" });
 
             try {
-                // Send email with temp password
+                const link = `http://localhost:3000/reset-password.html?token=${token}`;
                 const htmlContent = `
                 <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #e2e8f0; border-radius: 10px; overflow: hidden;">
                     <div style="background-color: #1e3a8a; color: white; padding: 20px; text-align: center;">
-                        <h2 style="margin: 0;">Recuperación de Contraseña</h2>
+                        <h2 style="margin: 0;">Restablecer Contraseña</h2>
                     </div>
                     <div style="padding: 20px; background-color: #f8fafc;">
                         <p>Hola <strong>${user.name}</strong>,</p>
-                        <p>Has solicitado restablecer tu contraseña. Aquí tienes tu nueva contraseña temporal:</p>
-                        <div style="background-color: white; padding: 15px; border: 1px solid #e2e8f0; border-radius: 5px; text-align: center; margin: 20px 0;">
-                            <span style="font-size: 24px; font-weight: bold; letter-spacing: 2px; color: #1e3a8a;">${tempPassword}</span>
+                        <p>Has solicitado restablecer tu contraseña. Haz clic en el siguiente enlace para continuar:</p>
+                        <div style="text-align: center; margin: 25px 0;">
+                            <a href="${link}" style="background-color: #2563eb; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold; font-size: 16px;">Restablecer Contraseña</a>
                         </div>
-                        <p style="font-size: 12px; color: #64748b;">Por seguridad, te recomendamos cambiar esta contraseña al iniciar sesión.</p>
+                        <p style="font-size: 12px; color: #64748b; text-align: center;">Este enlace expira en 1 hora.</p>
                     </div>
                 </div>
                 `;
 
-                // Use verified email for Resend testing to avoid 403
+                // Use verified email for Resend testing
                 await sendEmail('gustavoenriquetriana@gmail.com', 'Restablecer Contraseña - DocenteAI', htmlContent);
-
-                res.json({ success: true, message: "Correo enviado con nueva contraseña" });
+                res.json({ success: true, message: "Enlace enviado a tu correo" });
             } catch (error) {
-                console.error("Error sending recovery email:", error);
+                console.error("Error sending reset email:", error);
                 res.status(500).json({ error: "Error al enviar el correo" });
             }
+        });
+    });
+});
+
+router.post('/auth/reset-password', (req, res) => {
+    const { token, newPassword } = req.body;
+
+    db.get("SELECT * FROM users WHERE reset_token = ? AND reset_expires > ?", [token, Date.now()], (err, user) => {
+        if (err) return res.status(500).json({ error: "Internal error" });
+        if (!user) return res.status(400).json({ error: "Token inválido o expirado" });
+
+        db.run("UPDATE users SET password = ?, reset_token = NULL, reset_expires = NULL WHERE id = ?", [newPassword, user.id], async (err) => {
+            if (err) return res.status(500).json({ error: "Error resetting password" });
+
+            // Confirmation Email
+            try {
+                const dateVET = new Date().toLocaleString('es-VE', { timeZone: 'America/Caracas' });
+                const htmlContent = `
+                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #e2e8f0; border-radius: 10px; overflow: hidden;">
+                    <div style="background-color: #16a34a; color: white; padding: 20px; text-align: center;">
+                        <h2 style="margin: 0;">¡Contraseña Actualizada!</h2>
+                    </div>
+                    <div style="padding: 20px; background-color: #f8fafc;">
+                        <p>Hola <strong>${user.name}</strong>,</p>
+                        <p>Tu contraseña ha sido actualizada exitosamente el <strong>${dateVET}</strong>.</p>
+                        <p style="font-size: 14px; color: #64748b;">Si no hiciste este cambio, contacta a soporte inmediatamente.</p>
+                    </div>
+                </div>
+                `;
+                await sendEmail('gustavoenriquetriana@gmail.com', 'Confirmación de Cambio de Contraseña', htmlContent);
+            } catch (e) { console.error("Error sending confirmation", e); }
+
+            res.json({ success: true, message: "Contraseña actualizada correctamente" });
         });
     });
 });
@@ -499,19 +535,16 @@ router.patch('/support/ticket/:id/reopen', (req, res) => {
 // --- AUTH API ---
 
 router.post('/auth/register', async (req, res) => {
-    const { name, email } = req.body;
+    const { name, email, password } = req.body;
 
-    if (!name || !email) {
+    if (!name || !email || !password) {
         return res.status(400).json({ success: false, message: 'Faltan datos' });
     }
 
-    // Insert user (password default for now or generated)
-    // In a real app we would hash the password.
-    const defaultPass = 'docente123';
-
+    // Insert user (using plain text password for now as requested)
     try {
         await new Promise((resolve, reject) => {
-            db.run(`INSERT INTO users (name, email, password) VALUES (?, ?, ?)`, [name, email, defaultPass], function (err) {
+            db.run(`INSERT INTO users (name, email, password) VALUES (?, ?, ?)`, [name, email, password], function (err) {
                 if (err) {
                     // If unique constraint violation (already registered), we might want to just log them in or return error
                     if (err.message.includes('UNIQUE')) {
