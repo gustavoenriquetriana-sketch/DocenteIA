@@ -3,17 +3,17 @@ const router = express.Router();
 const db = require('./database');
 const { v4: uuidv4 } = require('uuid');
 const { sendEmail, sendGmail } = require('./mailer');
+const { GoogleGenerativeAI } = require("@google/generative-ai");
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
-// --- STUDENTS API ---
 
-// Get all students
 router.get('/students', (req, res) => {
     db.all("SELECT * FROM students", [], (err, rows) => {
         if (err) {
             res.status(400).json({ "error": err.message });
             return;
         }
-        // Add random initials/colors for frontend compatibility
+
         const enrichedRows = rows.map(row => {
             const initials = row.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
             const colors = ['bg-pink-100 text-pink-600', 'bg-indigo-100 text-indigo-600', 'bg-teal-100 text-teal-600', 'bg-purple-100 text-purple-600', 'bg-orange-100 text-orange-600'];
@@ -369,8 +369,7 @@ router.post('/ai/generate', async (req, res) => {
             throw new Error("GEMINI_API_KEY is not defined in environment variables");
         }
 
-        const { GoogleGenerativeAI } = require("@google/generative-ai");
-        const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+
         const model = genAI.getGenerativeModel({ model: "gemini-flash-latest" });
 
 
@@ -639,7 +638,7 @@ router.post('/auth/register', async (req, res) => {
 });
 
 // --- AI Exam Generator Route ---
-router.post('/api/generate-exam', async (req, res) => {
+router.post('/generate-exam', async (req, res) => {
     try {
         const { topic, difficulty, numQuestions, type } = req.body;
 
