@@ -1,0 +1,1312 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DocenteAI</title>
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎓</text></svg>">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Share+Tech+Mono&display=swap"
+        rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .font-mono-card {
+            font-family: 'Share Tech Mono', monospace;
+        }
+
+        .animate-fade-in-up {
+            animation: fadeInUp 0.3s ease-out forwards;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            background: #2563eb;
+            cursor: pointer;
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.2);
+            margin-top: -8px;
+        }
+
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 4px;
+            cursor: pointer;
+            background: #e2e8f0;
+            border-radius: 2px;
+        }
+
+        /* Optimization: Use GPU for animations */
+        .gpu-accelerated {
+            will-change: transform;
+            transform: translateZ(0);
+        }
+    </style>
+</head>
+
+<body class="bg-transparent text-slate-800 relative selection:bg-blue-100 selection:text-blue-900">
+
+    <div class="fixed inset-0 -z-10 h-full w-full bg-slate-50">
+        <div
+            class="absolute h-full w-full bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]">
+        </div>
+        <div
+            class="absolute top-0 left-0 -translate-x-1/4 -translate-y-1/4 w-[600px] h-[600px] rounded-full bg-blue-400/30 blur-[120px] animate-pulse gpu-accelerated">
+        </div>
+        <div class="absolute bottom-0 right-0 translate-x-1/4 translate-y-1/4 w-[600px] h-[600px] rounded-full bg-purple-400/30 blur-[120px] animate-pulse gpu-accelerated"
+            style="animation-delay: 2s"></div>
+        <div
+            class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] rounded-full bg-indigo-300/20 blur-[100px] gpu-accelerated">
+        </div>
+    </div>
+
+    <nav
+        class="fixed w-full z-50 h-20 flex items-center border-b border-white/10 bg-white/60 backdrop-blur-xl shadow-sm transition-all supports-[backdrop-filter]:bg-white/40">
+        <div class="max-w-7xl w-full mx-auto px-6 flex justify-between items-center">
+            <div class="flex items-center gap-3 cursor-pointer group" onclick="window.scrollTo(0,0)">
+                <div
+                    class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-blue-600/20 group-hover:scale-110 transition duration-300">
+                    <i class="fa-solid fa-graduation-cap text-lg"></i>
+                </div>
+                <span
+                    class="font-bold text-xl tracking-tight text-slate-900 group-hover:text-blue-700 transition">Docente<span
+                        class="text-blue-600">AI</span></span>
+            </div>
+
+            <div
+                class="hidden md:flex items-center gap-1 p-1 bg-white/50 backdrop-blur-md rounded-full border border-slate-200/60 shadow-inner">
+                <a href="#features"
+                    class="px-5 py-2 rounded-full text-sm font-bold text-slate-600 hover:text-blue-700 hover:bg-white transition-all duration-300">Funcionalidades</a>
+                <a href="#demo"
+                    class="px-5 py-2 rounded-full text-sm font-bold text-slate-600 hover:text-blue-700 hover:bg-white transition-all duration-300">Demo</a>
+                <a href="#planes"
+                    class="px-5 py-2 rounded-full text-sm font-bold text-slate-600 hover:text-blue-700 hover:bg-white transition-all duration-300">Precios</a>
+                <a href="#nosotros"
+                    class="px-5 py-2 rounded-full text-sm font-bold text-slate-600 hover:text-blue-700 hover:bg-white transition-all duration-300">Equipo</a>
+            </div>
+
+            <div class="flex items-center gap-4">
+                <button onclick="openModal('modal-pago')"
+                    class="bg-slate-900 hover:bg-blue-700 text-white text-sm px-6 py-2.5 rounded-full font-bold transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 flex items-center gap-2">
+                    <i class="fa-solid fa-right-to-bracket text-xs"></i> Entrar
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <header class="pt-32 pb-20 px-4 text-center relative overflow-hidden">
+        <!-- Floating Elements -->
+        <div
+            class="absolute top-20 left-10 w-24 h-24 bg-blue-400 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob gpu-accelerated">
+        </div>
+        <div
+            class="absolute top-20 right-10 w-24 h-24 bg-purple-400 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000 gpu-accelerated">
+        </div>
+        <div
+            class="absolute -bottom-8 left-20 w-24 h-24 bg-pink-400 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-4000 gpu-accelerated">
+        </div>
+
+        <div class="max-w-4xl mx-auto relative z-10">
+            <span
+                class="bg-white/60 backdrop-blur-md text-blue-800 text-[10px] font-bold px-4 py-1.5 rounded-full uppercase tracking-widest border border-white/50 mb-8 inline-block shadow-sm">
+                Impulsado por UNEXPO
+            </span>
+            <h1 class="text-5xl md:text-7xl font-extrabold mb-8 leading-tight text-slate-900 tracking-tight">
+                Dedícate a Enseñar,<br><span
+                    class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600">nosotros
+                    automatizamos el resto.</span>
+            </h1>
+            <p class="text-xl text-slate-600 mb-10 max-w-2xl mx-auto leading-relaxed font-medium">
+                Olvídate de las hojas de cálculo y los reportes manuales. DocenteAI es tu asistente inteligente para
+                gestionar notas, asistencia y consultas en segundos.
+            </p>
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
+                <button onclick="openModal('modal-pago')"
+                    class="group bg-slate-900 text-white px-8 py-4 rounded-full font-bold text-sm shadow-xl hover:shadow-2xl hover:bg-slate-800 transition transform hover:-translate-y-1 flex items-center justify-center gap-2">
+                    Empezar Ahora <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition"></i>
+                </button>
+                <a href="#demo"
+                    class="bg-white/50 backdrop-blur-md text-slate-700 border border-white/60 px-8 py-4 rounded-full font-bold text-sm hover:bg-white transition shadow-lg hover:shadow-xl hover:-translate-y-1 flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-play text-blue-500"></i> Ver Demo
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- FEATURES SECTION -->
+    <section id="features" class="py-24 relative">
+        <div class="max-w-6xl mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold text-slate-900">Todo lo que necesitas en un solo lugar</h2>
+                <p class="text-slate-500 mt-3 text-sm font-medium">Herramientas potentes diseñadas para la realidad
+                    académica actual.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Feature 1 -->
+                <div
+                    class="md:col-span-2 bg-white/40 backdrop-blur-xl p-8 rounded-[2rem] border border-white/60 shadow-lg hover:shadow-xl transition group relative overflow-hidden">
+                    <div
+                        class="absolute top-0 right-0 w-64 h-64 bg-blue-100 rounded-full blur-3xl -mr-32 -mt-32 opacity-50 group-hover:opacity-100 transition">
+                    </div>
+                    <div class="relative z-10">
+                        <div
+                            class="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-600 mb-6 group-hover:scale-110 transition">
+                            <i class="fa-solid fa-chart-pie text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-900 mb-2">Analítica Predictiva</h3>
+                        <p class="text-slate-600 text-sm leading-relaxed max-w-md">Nuestros algoritmos analizan el
+                            rendimiento de tus estudiantes y detectan patrones de riesgo antes de que sea tarde.
+                            Visualiza tendencias y toma decisiones basadas en datos.</p>
+                    </div>
+                </div>
+
+                <!-- Feature 2 -->
+                <div
+                    class="bg-gradient-to-br from-indigo-600 to-blue-700 p-8 rounded-[2rem] shadow-lg text-white hover:shadow-xl transition relative overflow-hidden group">
+                    <div class="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition"></div>
+                    <div class="relative z-10 h-full flex flex-col justify-between">
+                        <div>
+                            <div
+                                class="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center text-white mb-6 backdrop-blur-sm">
+                                <i class="fa-solid fa-file-pdf text-xl"></i>
+                            </div>
+                            <h3 class="text-xl font-bold mb-2">Reportes PDF</h3>
+                            <p class="text-blue-100 text-sm leading-relaxed">Genera actas de notas y listados oficiales
+                                con un solo clic. Formatos compatibles con DACE/Control de Estudios.</p>
+                        </div>
+                        <div class="mt-8 flex justify-end">
+                            <i
+                                class="fa-solid fa-file-lines text-6xl opacity-20 transform group-hover:scale-110 transition"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Feature 3 -->
+                <div
+                    class="bg-white/40 backdrop-blur-xl p-8 rounded-[2rem] border border-white/60 shadow-lg hover:shadow-xl transition group">
+                    <div
+                        class="w-12 h-12 bg-purple-50 rounded-2xl flex items-center justify-center text-purple-600 mb-6 group-hover:scale-110 transition">
+                        <i class="fa-solid fa-robot text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-2">Asistente IA</h3>
+                    <p class="text-slate-600 text-sm leading-relaxed">Chatbot integrado entrenado con reglamentos
+                        universitarios. Responde dudas frecuentes y redacta correos automáticamente.</p>
+                </div>
+
+                <!-- Feature 4 -->
+                <div
+                    class="md:col-span-2 bg-white/40 backdrop-blur-xl p-8 rounded-[2rem] border border-white/60 shadow-lg hover:shadow-xl transition group relative overflow-hidden">
+                    <div
+                        class="absolute bottom-0 left-0 w-64 h-64 bg-green-100 rounded-full blur-3xl -ml-32 -mb-32 opacity-50 group-hover:opacity-100 transition">
+                    </div>
+                    <div class="flex flex-col md:flex-row items-center gap-8 relative z-10">
+                        <div class="flex-1">
+                            <div
+                                class="w-12 h-12 bg-green-50 rounded-2xl flex items-center justify-center text-green-600 mb-6 group-hover:scale-110 transition">
+                                <i class="fa-brands fa-whatsapp text-xl"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-slate-900 mb-2">Soporte Directo</h3>
+                            <p class="text-slate-600 text-sm leading-relaxed">¿Problemas técnicos? Contacta a soporte
+                                directamente desde tu panel o vía WhatsApp. Estamos aquí para asegurarnos de que tu
+                                clase no se detenga.</p>
+                        </div>
+                        <div class="w-full md:w-1/3 bg-white/60 rounded-xl p-4 border border-white/50 shadow-sm">
+                            <div class="flex items-center gap-3 mb-3 border-b border-slate-100 pb-2">
+                                <div
+                                    class="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center text-green-600">
+                                    <i class="fa-solid fa-headset text-xs"></i>
+                                </div>
+                                <div>
+                                    <p class="text-xs font-bold text-slate-800">Soporte</p>
+                                    <p class="text-[10px] text-slate-400">En línea</p>
+                                </div>
+                            </div>
+                            <div class="space-y-2">
+                                <div class="bg-blue-50 p-2 rounded-lg rounded-tl-none text-[10px] text-slate-600 w-3/4">
+                                    Hola, ¿en qué podemos ayudarte hoy?</div>
+                                <div
+                                    class="bg-white border border-slate-100 p-2 rounded-lg rounded-tr-none text-[10px] text-slate-600 w-3/4 ml-auto">
+                                    Necesito corregir una nota...</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="demo" class="py-24 scroll-mt-20">
+        <div class="max-w-6xl mx-auto px-4">
+            <div class="flex items-center gap-2 mb-8 justify-center">
+                <span
+                    class="px-3 py-1 bg-indigo-50 text-indigo-600 rounded-full text-[10px] font-bold uppercase tracking-wider border border-indigo-100">Vista
+                    Previa</span>
+            </div>
+
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-slate-900">Potencia tu gestión académica</h2>
+                <p class="text-slate-500 mt-3 text-sm font-medium">Una interfaz limpia, rápida y diseñada para docentes
+                    modernos.</p>
+            </div>
+
+            <div class="relative group cursor-pointer" onclick="openModal('modal-pago')">
+                <!-- Browser Chrome -->
+                <div
+                    class="bg-slate-900 rounded-t-2xl p-4 flex items-center gap-4 border-b border-white/10 shadow-2xl relative z-10">
+                    <div class="flex gap-2">
+                        <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                        <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                        <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                    </div>
+                    <div
+                        class="bg-slate-800 rounded-lg px-4 py-1.5 text-xs text-slate-400 font-mono flex-1 text-center border border-white/5">
+                        <i class="fa-solid fa-lock text-[10px] mr-2"></i>app.docenteai.ve/dashboard
+                    </div>
+                </div>
+
+                <!-- Screen Content (Mockup CSS) -->
+                <div
+                    class="bg-slate-50 border-x border-b border-slate-200 rounded-b-2xl shadow-2xl overflow-hidden relative min-h-[500px]">
+                    <!-- Sidebar Mockup -->
+                    <div
+                        class="absolute left-0 top-0 bottom-0 w-64 bg-white border-r border-slate-200 hidden md:block p-6">
+                        <div class="flex items-center gap-2 mb-8 text-slate-900 font-bold">
+                            <div
+                                class="w-6 h-6 bg-blue-900 rounded flex items-center justify-center text-white text-xs">
+                                <i class="fa-solid fa-graduation-cap"></i>
+                            </div> DocenteAI
+                        </div>
+                        <div class="space-y-4">
+                            <div
+                                class="flex items-center gap-3 text-blue-600 bg-blue-50 px-3 py-2 rounded-lg font-medium text-sm">
+                                <i class="fa-solid fa-house"></i> Inicio
+                            </div>
+                            <div class="flex items-center gap-3 text-slate-500 px-3 py-2 font-medium text-sm"><i
+                                    class="fa-solid fa-users"></i> Estudiantes</div>
+                            <div class="flex items-center gap-3 text-slate-500 px-3 py-2 font-medium text-sm"><i
+                                    class="fa-solid fa-calendar"></i> Agenda</div>
+                        </div>
+                    </div>
+
+                    <!-- Main Content Mockup -->
+                    <div class="p-8 md:pl-72">
+                        <div class="flex justify-between items-center mb-8">
+                            <div>
+                                <h3 class="font-bold text-xl text-slate-800">Panel de Control</h3>
+                                <p class="text-xs text-slate-500">Bienvenido, Profesor Gustavo</p>
+                            </div>
+                            <div
+                                class="w-10 h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center">
+                                <i class="fa-regular fa-bell"></i>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                            <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+                                <div class="text-slate-400 text-xs font-bold uppercase mb-2">Total Estudiantes</div>
+                                <div class="text-3xl font-bold text-slate-800">145</div>
+                            </div>
+                            <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+                                <div class="text-slate-400 text-xs font-bold uppercase mb-2">Promedio General</div>
+                                <div class="text-3xl font-bold text-green-600">16.4</div>
+                            </div>
+                            <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+                                <div class="text-slate-400 text-xs font-bold uppercase mb-2">Próxima Clase</div>
+                                <div class="text-lg font-bold text-slate-800 truncate">Mecatrónica III - 2:00 PM</div>
+                            </div>
+                        </div>
+                        <div
+                            class="bg-white border border-slate-200 rounded-xl h-64 flex items-center justify-center text-slate-400 italic text-sm">
+                            <i class="fa-solid fa-chart-line mr-2"></i> Gráfico de Rendimiento Semestral
+                        </div>
+                    </div>
+
+                    <!-- Overlay CTA -->
+                    <div
+                        class="absolute inset-0 bg-slate-900/50 backdrop-blur-[2px] flex items-center justify-center opacity-0 group-hover:opacity-100 transition duration-300">
+                        <button
+                            class="bg-blue-600 text-white px-8 py-4 rounded-full font-bold shadow-2xl hover:bg-blue-500 transition transform hover:scale-105 flex items-center gap-3">
+                            <i class="fa-solid fa-rocket"></i> Ver Demo Interactiva
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <p class="text-center text-xs text-slate-400 mt-8 font-medium">Haz clic en la imagen para probar la versión
+                demo sin registro.</p>
+        </div>
+    </section>
+
+    <section id="calculadora" class="py-24 relative scroll-mt-20">
+        <div class="max-w-4xl mx-auto px-4">
+            <div class="text-center mb-12">
+                <span
+                    class="bg-blue-50/50 backdrop-blur-sm text-blue-700 text-[10px] font-bold px-3 py-1 rounded-full uppercase border border-blue-100/50 shadow-sm">Calculadora
+                    de Impacto</span>
+                <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mt-4">¿Cuánto vale tu tiempo?</h2>
+            </div>
+            <div
+                class="bg-white/60 backdrop-blur-xl rounded-[2.5rem] shadow-2xl border border-white/50 p-6 md:p-12 flex flex-col md:flex-row gap-12 items-center relative z-10 ring-1 ring-white/60">
+                <div class="flex-1 w-full space-y-8">
+                    <div>
+                        <div class="flex justify-between mb-4"><label
+                                class="font-bold text-sm text-slate-700 flex items-center gap-2">
+                                <div class="w-8 h-8 rounded-lg bg-blue-50/80 flex items-center justify-center"><i
+                                        class="fa-regular fa-clock text-blue-600"></i></div> Horas admin semanales
+                            </label><span id="display-hours"
+                                class="font-bold text-blue-700 text-lg bg-blue-50/50 px-4 py-1 rounded-lg border border-blue-100/50">8h</span>
+                        </div>
+                        <input type="range" id="input-hours" min="1" max="20" value="8" class="w-full"
+                            oninput="calcularAhorro()">
+                        <div class="flex justify-between text-xs text-slate-400 mt-2 font-medium px-1">
+                            <span>1h</span><span>10h</span><span>20h</span>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block font-bold text-sm text-slate-700 mb-3 flex items-center gap-2">
+                            <div class="w-8 h-8 rounded-lg bg-green-50/80 flex items-center justify-center"><i
+                                    class="fa-solid fa-dollar-sign text-green-600"></i></div> Valor de tu hora ($USD)
+                        </label>
+                        <input type="number" id="input-rate" value="15"
+                            class="w-full border border-slate-200/60 bg-white/50 rounded-xl p-4 font-bold text-slate-700 text-lg outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition pl-4 shadow-sm backdrop-blur-sm"
+                            oninput="calcularAhorro()">
+                    </div>
+                </div>
+                <div
+                    class="w-full md:w-96 bg-gradient-to-br from-blue-950/95 to-slate-900/95 backdrop-blur-md rounded-[2rem] p-10 text-white shadow-2xl relative overflow-hidden transform hover:scale-[1.02] transition duration-500 border border-white/10">
+                    <div
+                        class="absolute top-0 right-0 w-48 h-48 bg-blue-500 rounded-full blur-[80px] opacity-40 -mr-10 -mt-10 animate-pulse">
+                    </div>
+                    <div class="absolute bottom-0 left-0 w-48 h-48 bg-purple-500 rounded-full blur-[80px] opacity-30 -ml-10 -mb-10 animate-pulse"
+                        style="animation-delay: 1.5s"></div>
+                    <div class="relative z-10 text-center space-y-8">
+                        <div
+                            class="inline-block bg-green-500/20 border border-green-500/30 rounded-full px-4 py-1.5 backdrop-blur-md shadow-sm">
+                            <p
+                                class="text-[11px] font-bold text-green-300 uppercase tracking-wider flex items-center gap-2">
+                                <i class="fa-solid fa-rocket"></i> <span id="roi-text">Se paga solo en 1h</span>
+                            </p>
+                        </div>
+                        <div>
+                            <p class="text-blue-200/80 text-xs font-bold uppercase mb-2 tracking-wider">Ahorro Mensual
+                                Estimado</p>
+                            <div class="text-6xl font-extrabold tracking-tight drop-shadow-lg" id="result-savings">$480
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-6 border-t border-white/10 pt-6">
+                            <div>
+                                <p class="text-[10px] text-slate-400 uppercase font-bold mb-1 tracking-wider">Semestre
+                                </p>
+                                <p class="text-xl font-bold text-white" id="result-semester">$2,880</p>
+                            </div>
+                            <div>
+                                <p class="text-[10px] text-slate-400 uppercase font-bold mb-1 tracking-wider">Tiempo
+                                    Libre</p>
+                                <p class="text-xl font-bold text-white" id="result-time">144h</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="planes" class="py-24 scroll-mt-20">
+        <div class="max-w-4xl mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold text-slate-900">Planes Accesibles</h2>
+                <p class="text-sm text-slate-500 mt-2 font-medium">Diseñados para el docente venezolano.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-3xl mx-auto">
+                <div
+                    class="bg-white/40 backdrop-blur-xl rounded-3xl p-8 border border-white/60 shadow-xl hover:shadow-2xl transition hover:-translate-y-2 hover:bg-white/60 group">
+                    <h3 class="text-xl font-bold text-slate-900 group-hover:text-blue-700 transition">Individual</h3>
+                    <p class="text-xs text-slate-500 mt-2 mb-6 leading-relaxed font-medium">Perfecto para profesores que
+                        quieren organizarse.</p>
+                    <div class="mb-8"><span class="text-5xl font-extrabold text-slate-900">$3.99</span><span
+                            class="text-slate-500 text-sm font-medium">/mes</span></div>
+                    <ul class="space-y-4 mb-8 text-sm font-medium">
+                        <li class="flex items-center gap-3 text-slate-700">
+                            <div
+                                class="w-6 h-6 rounded-full bg-green-100/60 flex items-center justify-center text-green-600">
+                                <i class="fa-solid fa-check text-xs"></i>
+                            </div> 1 Usuario
+                        </li>
+                        <li class="flex items-center gap-3 text-slate-700">
+                            <div
+                                class="w-6 h-6 rounded-full bg-green-100/60 flex items-center justify-center text-green-600">
+                                <i class="fa-solid fa-check text-xs"></i>
+                            </div> Agenda Ilimitada
+                        </li>
+                        <li class="flex items-center gap-3 text-slate-700">
+                            <div
+                                class="w-6 h-6 rounded-full bg-green-100/60 flex items-center justify-center text-green-600">
+                                <i class="fa-solid fa-check text-xs"></i>
+                            </div> Redactor IA
+                        </li>
+                    </ul>
+                    <button onclick="openModal('modal-pago')"
+                        class="w-full bg-white/50 border border-slate-300/50 text-slate-800 py-4 rounded-xl font-bold text-sm hover:bg-blue-600 hover:text-white hover:border-blue-600 transition shadow-sm backdrop-blur-sm">Comenzar
+                        Ahora</button>
+                </div>
+                <div
+                    class="bg-gradient-to-br from-blue-900/95 to-blue-800/95 backdrop-blur-xl rounded-3xl p-8 border border-white/10 shadow-2xl text-white transform md:scale-105 z-10 relative overflow-hidden">
+                    <div class="absolute inset-0 bg-blue-600/20 mix-blend-overlay pointer-events-none"></div>
+                    <div
+                        class="absolute top-4 right-4 bg-gradient-to-r from-orange-500 to-orange-400 text-[10px] font-bold px-3 py-1 rounded-full shadow-lg">
+                        TOP</div>
+                    <h3 class="text-xl font-bold relative">Institucional</h3>
+                    <p class="text-xs text-blue-100 mt-2 mb-6 leading-relaxed font-medium relative">Para departamentos y
+                        facultades enteras.</p>
+                    <div class="mb-8 relative"><span class="text-5xl font-extrabold">$250</span><span
+                            class="text-blue-200 text-sm">/semestre</span></div>
+                    <div
+                        class="inline-block bg-blue-800/50 border border-blue-500/30 rounded-lg px-3 py-1 mb-6 relative backdrop-blur-sm">
+                        <p class="text-[10px] font-bold text-blue-100">Pack 50 Usuarios</p>
+                    </div>
+                    <ul class="space-y-4 mb-8 text-sm text-blue-50 font-medium relative">
+                        <li class="flex items-center gap-3"><i class="fa-solid fa-check text-orange-300"></i> Panel
+                            Admin</li>
+                        <li class="flex items-center gap-3"><i class="fa-solid fa-check text-orange-300"></i> Soporte
+                            Prioritario</li>
+                        <li class="flex items-center gap-3"><i class="fa-solid fa-check text-orange-300"></i>
+                            Capacitación</li>
+                    </ul>
+                    <button onclick="openModal('modal-ventas')"
+                        class="w-full bg-white/90 text-blue-900 border border-white/80 py-4 rounded-xl font-bold text-sm hover:bg-white transition shadow-lg relative">Contactar
+                        Ventas</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="nosotros" class="py-24 scroll-mt-20">
+        <div class="max-w-6xl mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold text-slate-900">Equipo Fundador</h2>
+                <p class="text-slate-500 mt-3 text-sm font-medium">Mentes multidisciplinarias detrás de DocenteAI.</p>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
+                <div
+                    class="bg-white/40 backdrop-blur-xl p-8 rounded-3xl shadow-lg border border-white/50 border-t-4 border-t-rose-500 hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 group text-center relative hover:bg-white/60">
+                    <div
+                        class="relative w-24 h-24 mx-auto mb-5 rounded-full overflow-hidden border-4 border-rose-50/50 shadow-sm group-hover:border-rose-200 transition-all">
+                        <img src="img/isabella.jpg"
+                            onerror="this.src='https://ui-avatars.com/api/?name=Isabella+Gomez&background=fecdd3&color=9f1239&size=256'"
+                            class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                    </div>
+                    <h4 class="font-bold text-lg text-slate-800 mb-3">Isabella Gómez</h4>
+                    <div class="mb-4"><span
+                            class="bg-rose-50/80 text-rose-600 text-[10px] font-bold px-3 py-1.5 rounded-full uppercase tracking-wider border border-rose-100/50">Gerente
+                            Proyecto</span></div>
+                    <p class="text-xs font-medium text-slate-600 mb-6 leading-relaxed">Liderazgo estratégico y
+                        validación del modelo de negocio.</p>
+                    <div class="flex justify-center gap-4 opacity-80 group-hover:opacity-100 transition"><a href="#"
+                            class="text-slate-400 hover:text-rose-600 transition hover:scale-110"><i
+                                class="fa-brands fa-linkedin text-xl"></i></a><a href="#"
+                            class="text-slate-400 hover:text-slate-800 transition hover:scale-110"><i
+                                class="fa-brands fa-github text-xl"></i></a></div>
+                </div>
+                <div
+                    class="bg-white/40 backdrop-blur-xl p-8 rounded-3xl shadow-lg border border-white/50 border-t-4 border-t-orange-500 hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 group text-center relative hover:bg-white/60">
+                    <div
+                        class="relative w-24 h-24 mx-auto mb-5 rounded-full overflow-hidden border-4 border-orange-50/50 shadow-sm group-hover:border-orange-200 transition-all">
+                        <img src="img/jesus.jpg"
+                            onerror="this.src='https://ui-avatars.com/api/?name=Jesus+Alfonzo&background=fed7aa&color=9a3412&size=256'"
+                            class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                    </div>
+                    <h4 class="font-bold text-lg text-slate-800 mb-3">Jesús Alfonzo</h4>
+                    <div class="mb-4"><span
+                            class="bg-orange-50/80 text-orange-600 text-[10px] font-bold px-3 py-1.5 rounded-full uppercase tracking-wider border border-orange-100/50">Líder
+                            Desarrollo</span></div>
+                    <p class="text-xs font-medium text-slate-600 mb-6 leading-relaxed">Arquitectura de software y
+                        ecosistema tecnológico.</p>
+                    <div class="flex justify-center gap-4 opacity-80 group-hover:opacity-100 transition"><a href="#"
+                            class="text-slate-400 hover:text-orange-600 transition hover:scale-110"><i
+                                class="fa-brands fa-linkedin text-xl"></i></a><a href="#"
+                            class="text-slate-400 hover:text-slate-800 transition hover:scale-110"><i
+                                class="fa-brands fa-github text-xl"></i></a></div>
+                </div>
+                <div
+                    class="bg-white/40 backdrop-blur-xl p-8 rounded-3xl shadow-lg border border-white/50 border-t-4 border-t-emerald-500 hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 group text-center relative hover:bg-white/60">
+                    <div
+                        class="relative w-24 h-24 mx-auto mb-5 rounded-full overflow-hidden border-4 border-emerald-50/50 shadow-sm group-hover:border-emerald-200 transition-all">
+                        <img src="img/simon.jpg"
+                            onerror="this.src='https://ui-avatars.com/api/?name=Simon+Garrido&background=bbf7d0&color=166534&size=256'"
+                            class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                    </div>
+                    <h4 class="font-bold text-lg text-slate-800 mb-3">Simón Garrido</h4>
+                    <div class="mb-4"><span
+                            class="bg-emerald-50/80 text-emerald-600 text-[10px] font-bold px-3 py-1.5 rounded-full uppercase tracking-wider border border-emerald-100/50">Integración
+                            Edu</span></div>
+                    <p class="text-xs font-medium text-slate-600 mb-6 leading-relaxed">Puente entre el producto y las
+                        necesidades docentes.</p>
+                    <div class="flex justify-center gap-4 opacity-80 group-hover:opacity-100 transition"><a href="#"
+                            class="text-slate-400 hover:text-emerald-600 transition hover:scale-110"><i
+                                class="fa-brands fa-linkedin text-xl"></i></a><a href="#"
+                            class="text-slate-400 hover:text-slate-800 transition hover:scale-110"><i
+                                class="fa-brands fa-github text-xl"></i></a></div>
+                </div>
+                <div
+                    class="bg-white/40 backdrop-blur-xl p-8 rounded-3xl shadow-lg border border-white/50 border-t-4 border-t-blue-600 hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 group text-center relative hover:bg-white/60 overflow-hidden">
+                    <div
+                        class="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-blue-100/50 to-transparent rounded-bl-full opacity-50 pointer-events-none">
+                    </div>
+                    <div
+                        class="relative w-24 h-24 mx-auto mb-5 rounded-full overflow-hidden border-4 border-blue-50/50 shadow-sm group-hover:border-blue-200 transition-all">
+                        <img src="img/tavo.jpg"
+                            onerror="this.src='https://ui-avatars.com/api/?name=Gustavo+Triana&background=bfdbfe&color=1e40af&size=256'"
+                            class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                    </div>
+                    <h4 class="font-bold text-lg text-slate-900 mb-3">Gustavo Triana</h4>
+                    <div class="mb-4"><span
+                            class="bg-blue-50/80 text-blue-700 text-[10px] font-bold px-3 py-1.5 rounded-full uppercase tracking-wider border border-blue-100/50">Finanzas
+                            & Ops</span></div>
+                    <p class="text-xs font-medium text-slate-600 mb-6 leading-relaxed">Gestión financiera y eficiencia
+                        operativa del SaaS.</p>
+                    <div class="flex justify-center gap-4 opacity-80 group-hover:opacity-100 transition"><a href="#"
+                            class="text-slate-400 hover:text-blue-600 transition hover:scale-110"><i
+                                class="fa-brands fa-linkedin text-xl"></i></a><a href="#"
+                            class="text-slate-400 hover:text-slate-800 transition hover:scale-110"><i
+                                class="fa-brands fa-github text-xl"></i></a></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-slate-950 py-24 px-4 relative overflow-hidden">
+        <div class="absolute inset-0 bg-blue-900/20 mix-blend-overlay pointer-events-none"></div>
+        <div
+            class="max-w-5xl mx-auto bg-slate-900/60 backdrop-blur-xl rounded-[2.5rem] p-14 border border-slate-800/80 flex flex-col md:flex-row items-center justify-between gap-10 relative overflow-hidden shadow-2xl">
+            <div class="relative z-10">
+                <span
+                    class="bg-blue-500/20 text-blue-300 text-[10px] font-bold px-3 py-1 rounded-full uppercase border border-blue-500/30 mb-4 inline-block backdrop-blur-sm">Hiring</span>
+                <h3 class="text-3xl md:text-4xl font-bold text-white mb-4">¿Te apasiona la IA y la Educación?</h3>
+                <p class="text-slate-400 text-base font-medium max-w-md leading-relaxed">Estamos buscando talento
+                    excepcional para escalar nuestro impacto en Venezuela.</p>
+            </div>
+            <button onclick="openModal('modal-vacantes')"
+                class="relative z-10 bg-white border border-white/50 text-slate-900 px-8 py-4 rounded-xl font-bold text-sm hover:bg-blue-50 transition whitespace-nowrap shadow-lg hover:shadow-xl hover:-translate-y-0.5 flex items-center gap-2">Ver
+                Vacantes <i class="fa-solid fa-arrow-right"></i></button>
+            <div
+                class="absolute top-0 right-0 w-96 h-96 bg-blue-600 rounded-full blur-[150px] opacity-25 pointer-events-none -mr-20 -mt-20 animate-pulse">
+            </div>
+        </div>
+    </section>
+
+    <section id="mapa"
+        class="w-full h-96 grayscale hover:grayscale-0 transition-all duration-700 border-t border-white/20 relative z-10 scroll-mt-20">
+        <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3923.367683938927!2d-66.61750002417757!3d10.471600089660233!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8c2b00dc9e205bb9%3A0x89e27c02c4c3e3e2!2sUNEXPO%20Guarenas!5e0!3m2!1ses!2sve!4v1709240000000!5m2!1ses!2sve"
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3923.367683938927!2d-66.61750002417757!3d10.471600089660233!2m3!1f0!2f1!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8c2b00dc9e205bb9%3A0x89e27c02c4c3e3e2!2sUNEXPO%20Guarenas!5e0!3m2!1ses!2sve!4v1709240000000!5m2!1ses!2sve"
+            width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"></iframe>
+    </section>
+
+    <footer class="bg-slate-950 text-slate-300 pt-24 pb-12 border-t border-white/5 relative z-10 overflow-hidden">
+        <div class="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-blue-500/50 to-transparent">
+        </div>
+        <div class="absolute -top-20 left-1/4 w-96 h-96 bg-blue-900/20 rounded-full blur-[100px] pointer-events-none">
+        </div>
+
+        <div class="max-w-6xl mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-12 mb-16 relative z-10">
+            <div class="col-span-1 md:col-span-1">
+                <div class="flex items-center gap-3 mb-6">
+                    <div
+                        class="w-10 h-10 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg">
+                        <i class="fa-solid fa-graduation-cap text-white text-lg"></i>
+                    </div>
+                    <span class="font-bold text-2xl tracking-tight text-white">DocenteAI</span>
+                </div>
+                <p class="text-sm text-slate-400 leading-relaxed font-medium pr-4">La plataforma definitiva para la
+                    gestión académica en Venezuela. Automatiza, analiza y enseña mejor.</p>
+            </div>
+            <div>
+                <h4 class="font-bold mb-6 text-white text-sm uppercase tracking-wider">Explorar</h4>
+                <ul class="space-y-4 text-sm font-medium">
+                    <li><a href="#features"
+                            class="hover:text-blue-400 transition hover:translate-x-1 inline-block">Funcionalidades</a>
+                    </li>
+                    <li><a href="#demo" class="hover:text-blue-400 transition hover:translate-x-1 inline-block">Demo en
+                            Vivo</a></li>
+                    <li><a href="#planes"
+                            class="hover:text-blue-400 transition hover:translate-x-1 inline-block">Planes</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-bold mb-6 text-white text-sm uppercase tracking-wider">Legal</h4>
+                <ul class="space-y-4 text-sm font-medium">
+                    <li><button onclick="openLegalModal('Términos de Servicio')"
+                            class="hover:text-blue-400 transition hover:translate-x-1 inline-block text-left">Términos</button>
+                    </li>
+                    <li><button onclick="openLegalModal('Política de Privacidad')"
+                            class="hover:text-blue-400 transition hover:translate-x-1 inline-block text-left">Privacidad</button>
+                    </li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-bold mb-6 text-white text-sm uppercase tracking-wider">Contacto</h4>
+                <ul class="space-y-4 text-sm font-medium">
+                    <li><a href="mailto:contacto@docenteai.ve"
+                            class="flex items-center gap-3 hover:text-white transition group"><i
+                                class="fa-solid fa-envelope text-slate-500 group-hover:text-blue-400 transition"></i>
+                            soporte@docenteai.ve</a></li>
+                    <li><a href="#mapa" class="flex items-center gap-3 hover:text-white transition group"><i
+                                class="fa-solid fa-location-dot text-slate-500 group-hover:text-blue-400 transition"></i>
+                            Guarenas, VE</a></li>
+                    <li>
+                        <div class="flex gap-4 mt-2">
+                            <a href="#"
+                                class="w-8 h-8 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center hover:bg-blue-600 hover:border-blue-500 transition hover:-translate-y-1"><i
+                                    class="fa-brands fa-twitter text-xs"></i></a>
+                            <a href="#"
+                                class="w-8 h-8 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center hover:bg-blue-600 hover:border-blue-500 transition hover:-translate-y-1"><i
+                                    class="fa-brands fa-linkedin-in text-xs"></i></a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="border-t border-slate-800 pt-8 text-center text-xs text-slate-500 font-medium relative z-10">
+            <p>© 2026 DocenteAI Inc. Desarrollado con ❤️ en UNEXPO.</p>
+        </div>
+    </footer>
+
+    <div id="toast-warning"
+        class="fixed bottom-5 right-5 bg-white/90 backdrop-blur-md border-l-4 border-red-500 text-slate-800 px-6 py-4 rounded-2xl shadow-2xl flex items-center gap-4 transform translate-y-20 opacity-0 transition-all duration-500 z-[90] border border-white/50">
+        <div class="text-red-500 bg-red-50/80 p-2.5 rounded-full"><i class="fa-solid fa-circle-exclamation text-xl"></i>
+        </div>
+        <div>
+            <h4 class="font-bold text-sm">Faltan Datos</h4>
+            <p class="text-xs text-slate-500 font-medium">Por favor completa todos los campos.</p>
+        </div>
+    </div>
+
+    <div id="modal-legal" class="fixed inset-0 z-[80] hidden overflow-y-auto">
+        <div class="absolute inset-0 bg-slate-950/60 backdrop-blur-md transition-opacity duration-300"
+            onclick="closeModal('modal-legal')"></div>
+        <div class="relative flex min-h-screen items-center justify-center p-4">
+            <div
+                class="bg-white/90 backdrop-blur-2xl rounded-3xl shadow-2xl w-full max-w-2xl overflow-hidden transform transition-all scale-100 relative animate-fade-in-up border border-white/60 flex flex-col max-h-[80vh]">
+                <div
+                    class="bg-white/50 p-6 border-b border-slate-200/50 flex justify-between items-center sticky top-0 z-10 backdrop-blur-md">
+                    <h3 id="legal-title" class="text-xl font-bold text-slate-900">Legal</h3>
+                    <button onclick="closeModal('modal-legal')"
+                        class="w-8 h-8 rounded-full bg-slate-100/50 flex items-center justify-center text-slate-400 hover:text-slate-800 hover:bg-slate-200/50 transition"><i
+                            class="fa-solid fa-xmark text-lg"></i></button>
+                </div>
+                <div class="p-8 overflow-y-auto">
+                    <p class="text-sm text-slate-600 leading-relaxed mb-6 font-medium">Bienvenido a DocenteAI. Al
+                        utilizar nuestros servicios, usted acepta cumplir con los siguientes términos y condiciones. Nos
+                        reservamos el derecho de modificar estos términos en cualquier momento.</p>
+                    <h4 class="font-bold text-slate-800 mb-3 text-sm flex items-center gap-2"><i
+                            class="fa-solid fa-gavel text-blue-500"></i> 1. Uso del Servicio</h4>
+                    <p class="text-sm text-slate-600 leading-relaxed mb-6 font-medium pl-6 border-l-2 border-blue-100">
+                        Nuestra plataforma está diseñada para uso académico y administrativo por parte de docentes. El
+                        uso indebido de la IA o la generación de contenido inapropiado resultará en la suspensión de la
+                        cuenta.</p>
+                    <h4 class="font-bold text-slate-800 mb-3 text-sm flex items-center gap-2"><i
+                            class="fa-solid fa-copyright text-blue-500"></i> 2. Propiedad Intelectual</h4>
+                    <p class="text-sm text-slate-600 leading-relaxed mb-6 font-medium pl-6 border-l-2 border-blue-100">
+                        Todo el contenido generado, código fuente y diseños son propiedad exclusiva de DocenteAI y el
+                        equipo de desarrollo de la UNEXPO Guarenas.</p>
+                    <h4 class="font-bold text-slate-800 mb-3 text-sm flex items-center gap-2"><i
+                            class="fa-solid fa-shield-halved text-blue-500"></i> 3. Privacidad de Datos</h4>
+                    <p class="text-sm text-slate-600 leading-relaxed font-medium pl-6 border-l-2 border-blue-100">Nos
+                        tomamos muy en serio su privacidad. Los datos de estudiantes y calificaciones están encriptados
+                        y no son compartidos con terceros sin consentimiento explícito.</p>
+                </div>
+                <div
+                    class="p-6 border-t border-slate-200/50 bg-white/50 text-right sticky bottom-0 z-10 backdrop-blur-md">
+                    <button onclick="closeModal('modal-legal')"
+                        class="bg-slate-900 text-white px-8 py-3 rounded-xl font-bold text-sm hover:bg-slate-800 transition shadow-lg">Entendido</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-pago" class="fixed inset-0 z-[60] hidden overflow-y-auto">
+        <div class="absolute inset-0 bg-slate-950/80 backdrop-blur-xl transition-opacity duration-300"
+            onclick="closeModal('modal-pago')"></div>
+        <div class="relative flex min-h-screen items-center justify-center p-4">
+            <div
+                class="bg-white rounded-3xl shadow-2xl w-full max-w-5xl overflow-hidden transform transition-all scale-100 relative flex flex-col md:flex-row shadow-slate-900/50 animate-fade-in-up">
+
+                <!-- Sección 1: Datos Personales (Izquierda) -->
+                <div class="p-8 md:p-12 md:w-5/12 bg-slate-50 border-r border-slate-200">
+                    <div class="mb-10">
+                        <span
+                            class="bg-blue-100 text-blue-700 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider mb-4 inline-block">Paso
+                            1</span>
+                        <h3 class="text-2xl font-bold text-slate-900 mb-2">Crear Cuenta</h3>
+                        <p class="text-slate-500 text-sm font-medium">Tus datos para acceder a la plataforma.</p>
+                    </div>
+
+                    <div class="space-y-6">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 uppercase mb-2 tracking-wider">Nombre
+                                Completo</label>
+                            <input id="reg-nombre" type="text" placeholder="Ej: Gustavo Triana"
+                                class="w-full p-4 border border-slate-300 bg-white rounded-xl focus:outline-none focus:border-blue-600 focus:ring-4 focus:ring-blue-100 transition text-sm font-bold text-slate-800 placeholder:font-normal shadow-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 uppercase mb-2 tracking-wider">Correo
+                                Institucional</label>
+                            <input id="reg-email" type="email" placeholder="profesor@unexpo.edu.ve"
+                                class="w-full p-4 border border-slate-300 bg-white rounded-xl focus:outline-none focus:border-blue-600 focus:ring-4 focus:ring-blue-100 transition text-sm font-bold text-slate-800 placeholder:font-normal shadow-sm">
+                        </div>
+                        <div>
+                            <label
+                                class="block text-xs font-bold text-slate-700 uppercase mb-2 tracking-wider">Contraseña</label>
+                            <input id="reg-pass" type="password" placeholder="••••••••"
+                                class="w-full p-4 border border-slate-300 bg-white rounded-xl focus:outline-none focus:border-blue-600 focus:ring-4 focus:ring-blue-100 transition text-sm font-bold text-slate-800 placeholder:font-normal shadow-sm">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sección 2: Pago (Derecha) -->
+                <div class="p-8 md:p-12 md:w-7/12 bg-white flex flex-col justify-between relative">
+                    <div>
+                        <div class="flex justify-between items-center mb-10">
+                            <div>
+                                <span
+                                    class="bg-indigo-100 text-indigo-700 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider mb-2 inline-block">Paso
+                                    2</span>
+                                <h3 class="text-2xl font-bold text-slate-900">Pago Seguro</h3>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Total a pagar
+                                </p>
+                                <p class="text-4xl font-black text-slate-900 tracking-tight">$3.99</p>
+                            </div>
+                        </div>
+
+                        <!-- Tarjeta Visual -->
+                        <div
+                            class="bg-slate-900 rounded-2xl p-8 text-white mb-8 shadow-2xl relative overflow-hidden group border border-slate-800">
+                            <div
+                                class="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full blur-3xl -mr-32 -mt-32">
+                            </div>
+                            <div class="flex justify-between items-start mb-10">
+                                <i class="fa-solid fa-chip text-yellow-500/80 text-3xl"></i>
+                                <i class="fa-brands fa-cc-visa text-4xl opacity-80"></i>
+                            </div>
+                            <p id="card-num-display"
+                                class="text-2xl font-mono tracking-widest mb-2 text-white/90 drop-shadow-md">0000 0000
+                                0000 0000</p>
+                            <div class="flex justify-between items-end mt-8">
+                                <div>
+                                    <p class="text-[9px] text-slate-400 uppercase tracking-widest mb-1">Titular</p>
+                                    <p id="card-name-display"
+                                        class="text-xs font-bold uppercase tracking-wider text-slate-200">NOMBRE
+                                        APELLIDO</p>
+                                </div>
+                                <div>
+                                    <p class="text-[9px] text-slate-400 uppercase tracking-widest mb-1">Expira</p>
+                                    <p id="card-date-display" class="text-xs font-bold font-mono text-slate-200">MM/YY
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="space-y-4">
+                            <div>
+                                <input id="pay-card" type="text" maxlength="19" placeholder="Número de Tarjeta"
+                                    onchange="updateCard()"
+                                    class="w-full p-4 border border-slate-200 bg-slate-50 rounded-xl text-sm font-bold focus:outline-none focus:border-indigo-500 focus:bg-white transition focus:ring-4 focus:ring-indigo-50 placeholder:font-normal">
+                            </div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <input id="pay-date" type="text" maxlength="5" placeholder="MM/YY"
+                                    onchange="updateCard()"
+                                    class="w-full p-4 border border-slate-200 bg-slate-50 rounded-xl text-sm font-bold focus:outline-none focus:border-indigo-500 focus:bg-white transition text-center focus:ring-4 focus:ring-indigo-50 placeholder:font-normal">
+                                <input id="pay-cvc" type="text" maxlength="3" placeholder="CVC"
+                                    class="w-full p-4 border border-slate-200 bg-slate-50 rounded-xl text-sm font-bold focus:outline-none focus:border-indigo-500 focus:bg-white transition text-center focus:ring-4 focus:ring-indigo-50 placeholder:font-normal">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-8 border-t border-slate-100 pt-6 flex flex-col gap-4">
+                        <button onclick="procesarPago()"
+                            class="w-full py-4 bg-slate-900 text-white font-bold rounded-xl shadow-xl hover:bg-black transition flex items-center justify-center gap-3 text-sm transform active:scale-[0.99] border border-slate-800">
+                            <i class="fa-solid fa-lock text-emerald-400"></i> Pagar y Activar Cuenta
+                        </button>
+                        <button onclick="closeModal('modal-pago')"
+                            class="text-slate-400 hover:text-slate-600 text-xs font-bold transition text-center">Cancelar
+                            Operación</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-ventas" class="fixed inset-0 z-[60] hidden overflow-y-auto">
+        <div class="absolute inset-0 bg-slate-950/60 backdrop-blur-md transition-opacity duration-300"
+            onclick="closeModal('modal-ventas')"></div>
+        <div class="relative flex min-h-screen items-center justify-center p-4">
+            <div
+                class="bg-white/90 backdrop-blur-2xl rounded-[2rem] shadow-2xl w-full max-w-lg overflow-hidden transform transition-all scale-100 relative animate-fade-in-up border border-white/60">
+                <div id="form-view">
+                    <div class="bg-blue-900 p-10 text-white flex justify-between items-start relative overflow-hidden">
+                        <div
+                            class="absolute top-0 right-0 w-64 h-64 bg-blue-700 rounded-full blur-[100px] -mr-20 -mt-20 pointer-events-none opacity-60 animate-pulse">
+                        </div>
+                        <div class="relative z-10">
+                            <div>
+                                <h3 class="text-2xl font-bold">Licencia Institucional</h3>
+                                <p class="text-blue-200 text-sm mt-2 font-medium">Plan para Universidades</p>
+                            </div>
+                        </div><i class="fa-solid fa-building-columns text-5xl opacity-20 relative z-10"></i>
+                    </div>
+                    <div class="p-6 md:p-10 space-y-6 bg-slate-50/50 backdrop-blur-md">
+                        <div class="grid grid-cols-2 gap-6">
+                            <div><label
+                                    class="block text-xs font-bold text-slate-700 uppercase mb-2 tracking-wider">Nombre</label><input
+                                    type="text" id="lead-name" required placeholder="Tu nombre"
+                                    class="w-full p-4 border border-slate-200/80 bg-white/80 rounded-xl focus:outline-none focus:border-blue-900 focus:ring-2 focus:ring-blue-900/10 transition text-sm font-medium shadow-sm backdrop-blur-sm">
+                            </div>
+                            <div><label
+                                    class="block text-xs font-bold text-slate-700 uppercase mb-2 tracking-wider">Cargo</label><input
+                                    type="text" id="lead-role" required placeholder="Ej: Decano"
+                                    class="w-full p-4 border border-slate-200/80 bg-white/80 rounded-xl focus:outline-none focus:border-blue-900 focus:ring-2 focus:ring-blue-900/10 transition text-sm font-medium shadow-sm backdrop-blur-sm">
+                            </div>
+                        </div>
+                        <div><label
+                                class="block text-xs font-bold text-slate-700 uppercase mb-2 tracking-wider">Institución</label><input
+                                type="text" id="lead-institution" required placeholder="Ej: UNEXPO Guarenas"
+                                class="w-full p-4 border border-slate-200/80 bg-white/80 rounded-xl focus:outline-none focus:border-blue-900 focus:ring-2 focus:ring-blue-900/10 transition text-sm font-medium shadow-sm backdrop-blur-sm">
+                        </div>
+                        <div><label class="block text-xs font-bold text-slate-700 uppercase mb-2 tracking-wider">Nº
+                                Docentes</label><select id="lead-size" required
+                                class="w-full p-4 border border-slate-200/80 bg-white/80 rounded-xl focus:outline-none focus:border-blue-900 focus:ring-2 focus:ring-blue-900/10 transition text-sm font-medium shadow-sm appearance-none backdrop-blur-sm">
+                                <option value="" disabled selected>Selecciona cantidad</option>
+                                <option value="10-50">10 - 50 Docentes</option>
+                                <option value="51-200">51 - 200 Docentes</option>
+                                <option value="+200">+200 Docentes (Campus)</option>
+                            </select></div>
+                        <div class="pt-8 flex gap-4"><button onclick="closeModal('modal-ventas')"
+                                class="flex-1 py-4 border border-slate-300/80 bg-white/80 text-slate-700 font-bold rounded-xl hover:bg-slate-50/80 transition text-sm shadow-sm backdrop-blur-sm">Cerrar</button><button
+                                id="btn-solicitar-demo" type="button"
+                                class="flex-1 py-4 bg-blue-900 text-white font-bold rounded-xl shadow-lg hover:bg-blue-800 transition transform active:scale-[0.98] text-sm hover:shadow-xl">Solicitar
+                                Demo</button></div>
+                    </div>
+                </div>
+                <div id="success-view" class="hidden text-center p-12 bg-slate-50/50 backdrop-blur-md">
+                    <div
+                        class="w-24 h-24 bg-green-100/80 rounded-full flex items-center justify-center mx-auto mb-8 text-green-600 animate-[fadeInUp_0.5s_ease-out] shadow-sm border border-green-200/50 backdrop-blur-sm">
+                        <i class="fa-solid fa-check text-5xl"></i>
+                    </div>
+                    <h3 class="text-3xl font-bold text-slate-900 mb-4">¡Solicitud Recibida!</h3>
+                    <p class="text-slate-500 text-sm mb-10 leading-relaxed font-medium max-w-xs mx-auto">Gracias por tu
+                        interés. Nuestro equipo comercial se pondrá en contacto contigo en menos de 24 horas.</p><button
+                        onclick="closeModal('modal-ventas')"
+                        class="w-full py-4 bg-slate-900 text-white font-bold rounded-xl shadow-lg hover:bg-slate-800 transition text-sm hover:shadow-xl hover:-translate-y-0.5">Entendido,
+                        cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-vacantes" class="fixed inset-0 z-[60] hidden overflow-y-auto">
+        <div class="absolute inset-0 bg-slate-950/60 backdrop-blur-md transition-opacity duration-300"
+            onclick="closeModal('modal-vacantes')"></div>
+        <div class="relative flex min-h-screen items-center justify-center p-4">
+            <div
+                class="bg-white/90 backdrop-blur-2xl rounded-[2rem] shadow-2xl w-full max-w-md overflow-hidden transform transition-all scale-100 relative animate-fade-in-up border border-white/60">
+                <div class="bg-slate-900 p-8 text-white flex justify-between items-center relative overflow-hidden">
+                    <div
+                        class="absolute top-0 right-0 w-64 h-64 bg-blue-800 rounded-full blur-[100px] -mr-20 -mt-20 pointer-events-none opacity-40 animate-pulse">
+                    </div>
+                    <h3 class="text-xl font-bold relative z-10" id="vacancies-title">Vacantes Disponibles</h3><button
+                        onclick="closeModal('modal-vacantes')"
+                        class="text-slate-400 hover:text-white transition relative z-10 bg-white/10 w-8 h-8 rounded-full flex items-center justify-center hover:bg-white/20"><i
+                            class="fa-solid fa-xmark text-sm"></i></button>
+                </div>
+
+                <!-- VIEW 1: LIST -->
+                <div id="vacancies-list" class="p-6 md:p-8 space-y-5 bg-slate-50/50 backdrop-blur-md">
+                    <div onclick="openApplicationForm('Ingeniero(a) de IA y Backend')"
+                        class="border border-slate-200/80 bg-white/80 rounded-2xl p-6 hover:bg-blue-50/50 transition cursor-pointer group shadow-sm hover:border-blue-200 hover:shadow-md backdrop-blur-sm">
+                        <h4 class="font-bold text-slate-900 group-hover:text-blue-700 transition">Ingeniero(a) de IA y
+                            Backend</h4>
+                        <p class="text-xs text-slate-500 mt-2 mb-4 font-medium leading-relaxed">Especialista en Machine
+                            Learning y arquitectura de software.</p><span
+                            class="bg-blue-100/80 text-blue-700 text-[10px] font-bold px-3 py-1.5 rounded-full uppercase tracking-wider border border-blue-200/50">Tiempo
+                            Completo</span>
+                    </div>
+                    <div onclick="openApplicationForm('Especialista en Marketing B2B')"
+                        class="border border-slate-200/80 bg-white/80 rounded-2xl p-6 hover:bg-orange-50/50 transition cursor-pointer group shadow-sm hover:border-orange-200 hover:shadow-md backdrop-blur-sm">
+                        <h4 class="font-bold text-slate-900 group-hover:text-orange-700 transition">Especialista en
+                            Marketing B2B</h4>
+                        <p class="text-xs text-slate-500 mt-2 mb-4 font-medium leading-relaxed">Orientado a Growth
+                            Hacking y negociación institucional.</p><span
+                            class="bg-orange-100/80 text-orange-700 text-[10px] font-bold px-3 py-1.5 rounded-full uppercase tracking-wider border border-orange-200/50">Híbrido</span>
+                    </div>
+                    <button onclick="openApplicationForm('Candidatura Espontánea')"
+                        class="w-full py-4 bg-slate-200 text-slate-700 font-bold rounded-xl hover:bg-slate-300 transition mt-2 text-sm">Otra
+                        Vacante</button>
+                </div>
+
+                <!-- VIEW 2: FORM -->
+                <div id="application-form-view" class="hidden p-6 md:p-8 space-y-5 bg-slate-50/50 backdrop-blur-md">
+                    <p class="text-sm text-slate-500 mb-4">Postulando a: <strong id="app-vacancy-title"
+                            class="text-blue-700"></strong></p>
+                    <input type="hidden" id="app-hidden-title">
+
+                    <div><label class="block text-xs font-bold text-slate-700 uppercase mb-2">Nombre Completo</label>
+                        <input type="text" id="app-name" class="w-full p-3 border border-slate-200 rounded-xl text-sm">
+                    </div>
+
+                    <div><label class="block text-xs font-bold text-slate-700 uppercase mb-2">Correo Electrónico</label>
+                        <input type="email" id="app-email"
+                            class="w-full p-3 border border-slate-200 rounded-xl text-sm">
+                    </div>
+
+                    <div><label class="block text-xs font-bold text-slate-700 uppercase mb-2">LinkedIn / GitHub <span
+                                class="text-red-500">*</span></label>
+                        <input type="text" id="app-link" placeholder="https://..."
+                            class="w-full p-3 border border-slate-200 rounded-xl text-sm">
+                    </div>
+
+                    <div class="flex gap-3 pt-4">
+                        <button onclick="showVacanciesList()"
+                            class="flex-1 py-3 border border-slate-300 rounded-xl text-slate-600 font-bold text-sm">Volver</button>
+                        <button onclick="submitApplication()"
+                            class="flex-1 py-3 bg-blue-900 text-white rounded-xl font-bold text-sm shadow-lg hover:bg-blue-800">Enviar
+                            Solicitud</button>
+                    </div>
+                </div>
+
+                <!-- VIEW 3: SIMULATOR -->
+                <div id="analysis-view" class="hidden p-12 text-center bg-slate-50/50 backdrop-blur-md">
+                    <div class="mb-6">
+                        <i class="fa-solid fa-microchip text-4xl text-blue-600 animate-pulse"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-800 mb-2">Analizando perfil...</h3>
+                    <p class="text-xs text-slate-500">Comparando stack tecnológico y experiencia</p>
+
+                    <div class="w-full bg-slate-200 rounded-full h-2.5 mt-6 overflow-hidden">
+                        <div class="bg-blue-600 h-2.5 rounded-full animate-[progress_2s_ease-in-out_forwards]"
+                            style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Optimización: Debounce para evitar lag en escritura
+        function debounce(func, timeout = 300) {
+            let timer;
+            return (...args) => {
+                clearTimeout(timer);
+                timer = setTimeout(() => { func.apply(this, args); }, timeout);
+            };
+        }
+
+        function openModal(id) {
+            if (id === 'modal-ventas') { document.getElementById('form-view').classList.remove('hidden'); document.getElementById('success-view').classList.add('hidden'); }
+            document.getElementById(id).classList.remove('hidden');
+        }
+        function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+        function openLegalModal(title) { document.getElementById('legal-title').innerText = title; openModal('modal-legal'); }
+
+        function showWarning(msg) {
+            const toast = document.getElementById('toast-warning');
+            const msgEl = toast.querySelector('p');
+            msgEl.innerText = msg;
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            setTimeout(() => { toast.classList.add('translate-y-20', 'opacity-0'); }, 3000);
+        }
+
+        // LÓGICA TARJETA (Optimizada con requestAnimationFrame)
+        let rafIdCard = null;
+        function updateCard() {
+            if (rafIdCard) cancelAnimationFrame(rafIdCard);
+
+            rafIdCard = requestAnimationFrame(() => {
+                const num = document.getElementById('pay-card').value;
+                const date = document.getElementById('pay-date').value;
+
+                const numDisplay = document.getElementById('card-num-display');
+                const dateDisplay = document.getElementById('card-date-display');
+
+                if (numDisplay) numDisplay.innerText = num || '0000 0000 0000 0000';
+                if (dateDisplay) dateDisplay.innerText = date || 'MM/YY';
+            });
+        }
+
+        function procesarPago() {
+            const nombre = document.getElementById('reg-nombre').value;
+            const email = document.getElementById('reg-email').value;
+            const pass = document.getElementById('reg-pass').value;
+            const card = document.getElementById('pay-card').value;
+            const date = document.getElementById('pay-date').value;
+            const cvc = document.getElementById('pay-cvc').value;
+
+            if (!nombre || !email || !pass || !card || !date || !cvc) {
+                showWarning("Por favor completa todos los campos para continuar.");
+                return;
+            }
+
+            const btn = document.querySelector('#modal-pago button[onclick="procesarPago()"]');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Procesando...';
+            btn.classList.add('opacity-75', 'cursor-not-allowed');
+            btn.disabled = true;
+
+            fetch('/api/auth/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name: nombre, email: email, password: pass })
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        btn.innerHTML = '<i class="fa-solid fa-check"></i> ¡Bienvenido!';
+                        btn.classList.replace('bg-slate-900', 'bg-green-600');
+
+                        // Sync Data
+                        localStorage.setItem('userEmail', email);
+                        localStorage.setItem('userName', nombre);
+                        if (card && card.length >= 4) {
+                            localStorage.setItem('cardLast4', card.slice(-4));
+                        } else {
+                            localStorage.setItem('cardLast4', '4242'); // Default
+                        }
+
+                        // Redirect ONLY on success
+                        setTimeout(() => { window.location.href = 'dashboard.html'; }, 1000);
+                    } else {
+                        showWarning('Error: ' + (data.message || 'Fallo en registro'));
+                        btn.innerHTML = originalText;
+                        btn.classList.remove('opacity-75', 'cursor-not-allowed');
+                        btn.disabled = false;
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                    showWarning('Error de conexión con el servidor.');
+                    btn.innerHTML = originalText;
+                    btn.classList.remove('opacity-75', 'cursor-not-allowed');
+                    btn.disabled = false;
+                });
+        }
+
+        // Lógica del Botón "Solicitar Demo"
+        document.addEventListener('DOMContentLoaded', () => {
+            const btnDemo = document.getElementById('btn-solicitar-demo');
+            if (btnDemo) {
+                btnDemo.addEventListener('click', () => {
+
+                    const name = document.getElementById('lead-name').value;
+                    const role = document.getElementById('lead-role').value;
+                    const institution = document.getElementById('lead-institution').value;
+                    const size = document.getElementById('lead-size').value;
+
+                    // Validación
+                    if (!name || !role || !institution || !size) {
+                        if (typeof Swal !== 'undefined') {
+                            Swal.fire({
+                                icon: 'warning',
+                                title: 'Campos Incompletos',
+                                text: 'Por favor completa todos los campos.',
+                                customClass: { popup: 'rounded-2xl' }
+                            });
+                        } else {
+                            alert("Por favor completa todos los campos.");
+                        }
+                        return;
+                    }
+
+                    // Loading State
+                    const originalText = btnDemo.innerHTML;
+                    btnDemo.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Enviando...';
+                    btnDemo.disabled = true;
+
+                    // API Call
+                    fetch('/api/leads', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ name, role, institution, size })
+                    })
+                        .then(res => res.json())
+                        .then(data => {
+                            if (data.success) {
+                                closeModal('modal-ventas');
+
+                                // Reset Form
+                                document.getElementById('lead-name').value = '';
+                                document.getElementById('lead-role').value = '';
+                                document.getElementById('lead-institution').value = '';
+                                document.getElementById('lead-size').value = '';
+
+                                // Success Alert
+                                if (typeof Swal !== 'undefined') {
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: '¡Solicitud Recibida!',
+                                        text: `Hemos registrado el interés de ${institution}. Un asesor te contactará pronto.`,
+                                        confirmButtonColor: '#1e3a8a',
+                                        customClass: { popup: 'rounded-2xl' }
+                                    });
+                                } else {
+                                    alert(`¡Solicitud Recibida! Hemos registrado el interés de ${institution}.`);
+                                }
+                            } else {
+                                if (typeof Swal !== 'undefined') {
+                                    Swal.fire({ icon: 'error', title: 'Error', text: data.message });
+                                } else {
+                                    alert('Error: ' + data.message);
+                                }
+                            }
+                        })
+                        .catch(err => {
+                            console.error(err);
+                            alert('Error de conexión.');
+                        })
+                        .finally(() => {
+                            btnDemo.innerHTML = originalText;
+                            btnDemo.disabled = false;
+                        });
+                });
+            }
+        });
+
+        // Optimización de la calculadora
+        const calcularAhorro = debounce(() => {
+            requestAnimationFrame(() => {
+                const hoursInput = document.getElementById('input-hours');
+                const rateInput = document.getElementById('input-rate');
+
+                if (!hoursInput || !rateInput) return;
+
+                const hours = parseFloat(hoursInput.value) || 0;
+                const rate = parseFloat(rateInput.value) || 0;
+                const subsPrice = 3.99;
+
+                document.getElementById('display-hours').innerText = hours + 'h';
+
+                const monthlySavings = (hours * rate) * 4;
+                const semesterSavings = monthlySavings * 6;
+                const semesterTime = hours * 24;
+
+                // Avoid division by zero
+                const hoursToPay = rate > 0 ? (subsPrice / rate).toFixed(1) : 0;
+
+                let roiMessage = "Se paga sola en " + hoursToPay + "h";
+                if (hoursToPay < 1 && hoursToPay > 0) roiMessage = "Se paga sola en minutos";
+
+                document.getElementById('result-savings').innerText = '$' + monthlySavings.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+                document.getElementById('result-semester').innerText = '$' + semesterSavings.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+                document.getElementById('result-time').innerText = semesterTime + 'h';
+                document.getElementById('roi-text').innerText = roiMessage;
+            });
+        }, 150); // Keep 150ms, it's reasonable. The RequestAnimationFrame handles the paint.
+
+        // Initial run
+        setTimeout(calcularAhorro, 500);
+
+        // --- LÓGICA DE VACANTES (Gamificación) ---
+        function openApplicationForm(title) {
+            document.getElementById('vacancies-list').classList.add('hidden');
+            document.getElementById('application-form-view').classList.remove('hidden');
+            document.getElementById('app-vacancy-title').innerText = title;
+            document.getElementById('app-hidden-title').value = title;
+            document.getElementById('vacancies-title').innerText = "Postulación";
+        }
+
+        function showVacanciesList() {
+            document.getElementById('vacancies-list').classList.remove('hidden');
+            document.getElementById('application-form-view').classList.add('hidden');
+            document.getElementById('vacancies-title').innerText = "Vacantes Disponibles";
+        }
+
+        function submitApplication() {
+            const name = document.getElementById('app-name').value;
+            const email = document.getElementById('app-email').value;
+            const link = document.getElementById('app-link').value;
+            const vacancy_title = document.getElementById('app-hidden-title').value;
+
+            if (!name || !email || !link) {
+                if (typeof Swal !== 'undefined') {
+                    Swal.fire({ icon: 'warning', title: 'Faltan datos', text: 'El enlace a tu perfil es obligatorio para evaluar tu código.', customClass: { popup: 'rounded-2xl' } });
+                } else {
+                    alert("Por favor completa todos los campos.");
+                }
+                return;
+            }
+
+            // Show Analysis Loader
+            document.getElementById('application-form-view').classList.add('hidden');
+            document.getElementById('analysis-view').classList.remove('hidden');
+
+            // Simulate Analysis Delay (2s)
+            setTimeout(() => {
+                // Determine random compatibility (85% - 98%)
+                const compatibility = Math.floor(Math.random() * (99 - 85) + 85);
+
+                fetch('/api/careers', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, email, profile_link: link, vacancy_title })
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                        closeModal('modal-vacantes');
+                        // Reset views for next time
+                        setTimeout(() => {
+                            showVacanciesList();
+                            document.getElementById('analysis-view').classList.add('hidden');
+                            document.getElementById('app-name').value = '';
+                            document.getElementById('app-email').value = '';
+                            document.getElementById('app-link').value = '';
+                        }, 500);
+
+                        if (typeof Swal !== 'undefined') {
+                            Swal.fire({
+                                icon: 'success',
+                                title: `Compatibilidad: ${compatibility}%`,
+                                text: `¡Impresionante! Tu perfil tiene una alta compatibilidad con ${vacancy_title}. Te contactaremos pronto.`,
+                                confirmButtonColor: '#1e3a8a',
+                                customClass: { popup: 'rounded-2xl' }
+                            });
+                        } else {
+                            alert(`¡Compatibilidad: ${compatibility}%! Perfil recibido.`);
+                        }
+                    })
+                    .catch(err => {
+                        console.error(err);
+                        closeModal('modal-vacantes');
+                        alert("Error enviando solicitud.");
+                    });
+
+            }, 2500); // 2.5s simulation
+        }
+    </script>
+    <script>
+        // Start savings counter
+        if (typeof calcularAhorro === 'function') setTimeout(calcularAhorro, 500);
+    </script>
+</body>
+
+</html>
