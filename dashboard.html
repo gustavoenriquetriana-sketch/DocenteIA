@@ -429,6 +429,91 @@
                     </div>
                 </div>
 
+                <div id="view-examenes" class="max-w-5xl mx-auto force-hidden fade-in">
+                    <h1 class="text-2xl font-bold text-slate-800 mb-6 flex items-center gap-3">
+                        <i class="fa-solid fa-wand-magic-sparkles text-purple-600"></i> Generador de Exámenes
+                    </h1>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        <!-- Configuration Card -->
+                        <div class="lg:col-span-1">
+                            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm sticky top-6">
+                                <h3 class="font-bold text-slate-700 mb-4 text-sm uppercase tracking-wide">Configuración
+                                </h3>
+                                <div class="space-y-4">
+                                    <div>
+                                        <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Tema del
+                                            Examen</label>
+                                        <input type="text" id="exam-topic"
+                                            placeholder="Ej: Historia de Venezuela, Derivadas..."
+                                            class="w-full p-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-purple-500 transition">
+                                    </div>
+
+                                    <div>
+                                        <label
+                                            class="block text-xs font-bold text-slate-500 uppercase mb-2">Dificultad</label>
+                                        <select id="exam-difficulty"
+                                            class="w-full p-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-purple-500 bg-white">
+                                            <option value="Básico">Básico</option>
+                                            <option value="Intermedio" selected>Intermedio</option>
+                                            <option value="Avanzado">Avanzado</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="grid grid-cols-2 gap-4">
+                                        <div>
+                                            <label
+                                                class="block text-xs font-bold text-slate-500 uppercase mb-2">Preguntas</label>
+                                            <input type="number" id="exam-count" value="5" min="1" max="10"
+                                                class="w-full p-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-purple-500">
+                                        </div>
+                                        <div>
+                                            <label
+                                                class="block text-xs font-bold text-slate-500 uppercase mb-2">Tipo</label>
+                                            <select id="exam-type"
+                                                class="w-full p-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-purple-500 bg-white">
+                                                <option value="Selección Simple">Selección Simple</option>
+                                                <option value="Verdadero/Falso">Verdadero/Falso</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <button onclick="generateExam()" id="btn-generate-exam"
+                                        class="w-full bg-slate-900 text-white py-3 rounded-xl font-bold text-sm hover:bg-purple-600 transition shadow-lg flex items-center justify-center gap-2 mt-2">
+                                        <i class="fa-solid fa-bolt"></i> Generar con IA
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Results Area -->
+                        <div class="lg:col-span-2">
+                            <div id="exam-loading"
+                                class="hidden flex flex-col items-center justify-center py-20 bg-white rounded-2xl border border-slate-200 border-dashed">
+                                <div
+                                    class="w-12 h-12 border-4 border-purple-200 border-t-purple-600 rounded-full animate-spin mb-4">
+                                </div>
+                                <p class="text-slate-500 font-medium animate-pulse">Diseñando evaluación...</p>
+                            </div>
+
+                            <div id="exam-empty"
+                                class="flex flex-col items-center justify-center py-20 bg-slate-50 rounded-2xl border border-slate-200 border-dashed text-center px-6">
+                                <div
+                                    class="w-16 h-16 bg-purple-50 rounded-full flex items-center justify-center text-purple-300 mb-4">
+                                    <i class="fa-solid fa-file-pen text-2xl"></i>
+                                </div>
+                                <h3 class="text-slate-900 font-bold mb-1">Sin Examen Generado</h3>
+                                <p class="text-slate-500 text-sm max-w-xs">Configura los parámetros a la izquierda y
+                                    deja que la IA cree tu evaluación en segundos.</p>
+                            </div>
+
+                            <div id="exam-results" class="space-y-6 hidden">
+                                <!-- Results will be injected here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div id="view-configuracion" class="max-w-5xl mx-auto force-hidden fade-in">
                     <h1 class="text-2xl font-bold text-slate-800 mb-6">Configuración y Soporte</h1>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -1089,7 +1174,7 @@
             }
 
             function nav(viewId) {
-                ['resumen', 'redactor', 'estudiantes', 'agenda', 'configuracion'].forEach(id => {
+                ['resumen', 'redactor', 'estudiantes', 'agenda', 'configuracion', 'examenes'].forEach(id => {
                     const view = document.getElementById('view-' + id);
                     const btn = document.getElementById('btn-' + id);
                     if (view) view.classList.add('force-hidden');
@@ -1097,7 +1182,14 @@
                 });
                 document.getElementById('view-' + viewId).classList.remove('force-hidden');
                 document.getElementById('btn-' + viewId).classList.replace('inactive-nav', 'active-nav');
-                const titles = { resumen: 'Panel de Control', redactor: 'Redactor IA', estudiantes: 'Base de Datos', agenda: 'Agenda Semanal', configuracion: 'Ajustes' };
+                const titles = {
+                    resumen: 'Panel de Control',
+                    redactor: 'Redactor IA',
+                    estudiantes: 'Base de Datos',
+                    agenda: 'Agenda Semanal',
+                    configuracion: 'Ajustes',
+                    examenes: 'Generador de Exámenes'
+                };
                 document.getElementById('page-title').innerText = titles[viewId];
                 if (viewId === 'agenda') renderCalendar();
                 if (viewId === 'estudiantes') fetchStudents();
@@ -1477,6 +1569,104 @@
                             loadSupportHistory();
                         }
                     });
+            }
+
+            function generateExam() {
+                const topic = document.getElementById('exam-topic').value;
+                const difficulty = document.getElementById('exam-difficulty').value;
+                const numQuestions = document.getElementById('exam-count').value;
+                const type = document.getElementById('exam-type').value;
+
+                if (!topic) {
+                    showToast('Info', 'Por favor ingresa un tema.', 'error');
+                    return;
+                }
+
+                // UI State: Loading
+                const btn = document.getElementById('btn-generate-exam');
+                const loading = document.getElementById('exam-loading');
+                const empty = document.getElementById('exam-empty');
+                const results = document.getElementById('exam-results');
+
+                const originalText = btn.innerHTML;
+                btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Generando...';
+                btn.disabled = true;
+
+                loading.classList.remove('hidden');
+                empty.classList.add('hidden');
+                results.classList.add('hidden');
+
+                fetch('/api/generate-exam', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ topic, difficulty, numQuestions, type })
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success) {
+                            renderExam(data.data, topic);
+                        } else {
+                            showToast('Error', 'No se pudo generar el examen.');
+                            empty.classList.remove('hidden');
+                        }
+                    })
+                    .catch(err => {
+                        console.error(err);
+                        showToast('Error', 'Fallo de conexión.');
+                        empty.classList.remove('hidden');
+                    })
+                    .finally(() => {
+                        btn.innerHTML = originalText;
+                        btn.disabled = false;
+                        loading.classList.add('hidden');
+                    });
+            }
+
+            function renderExam(questions, topic) {
+                const results = document.getElementById('exam-results');
+                results.innerHTML = `
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="font-bold text-slate-800 text-lg">Examen: ${topic}</h3>
+                        <button onclick="window.print()" class="text-slate-500 hover:text-slate-800 text-sm font-medium"><i class="fa-solid fa-print"></i> Imprimir</button>
+                    </div>
+                `;
+
+                questions.forEach((q, index) => {
+                    let optionsHTML = '';
+                    if (q.options && Array.isArray(q.options)) {
+                        optionsHTML = '<div class="grid grid-cols-1 md:grid-cols-2 gap-3 mt-3">';
+                        q.options.forEach(opt => {
+                            const isCorrect = opt === q.correctAnswer;
+                            // Only highlight correct answer for teacher's view
+                            const borderClass = isCorrect ? 'border-green-200 bg-green-50' : 'border-slate-200 hover:bg-slate-50';
+                            const textClass = isCorrect ? 'text-green-800 font-bold' : 'text-slate-600';
+                            const icon = isCorrect ? '<i class="fa-solid fa-check text-green-600 float-right mt-1"></i>' : '';
+
+                            optionsHTML += `
+                                <div class="p-3 border ${borderClass} rounded-lg text-sm ${textClass} transition">
+                                    ${opt} ${icon}
+                                </div>
+                            `;
+                        });
+                        optionsHTML += '</div>';
+                    }
+
+                    results.innerHTML += `
+                        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm transition hover:shadow-md">
+                            <div class="flex gap-4">
+                                <div class="w-8 h-8 flex-shrink-0 bg-slate-900 text-white rounded-lg flex items-center justify-center font-bold text-sm">
+                                    ${index + 1}
+                                </div>
+                                <div class="flex-1">
+                                    <p class="text-slate-800 font-medium text-base mb-2">${q.question}</p>
+                                    ${optionsHTML}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                results.classList.remove('hidden');
             }
 
             renderCalendar();

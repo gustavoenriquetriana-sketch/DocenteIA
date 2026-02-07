@@ -638,4 +638,61 @@ router.post('/auth/register', async (req, res) => {
     }
 });
 
+// --- AI Exam Generator Route ---
+router.post('/api/generate-exam', async (req, res) => {
+    try {
+        const { topic, difficulty, numQuestions, type } = req.body;
+
+        if (!topic || !difficulty || !numQuestions || !type) {
+            return res.status(400).json({ error: 'Faltan campos requeridos' });
+        }
+
+        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
+        const prompt = `
+        You are an expert teacher. Create a ${difficulty} level exam on "${topic}".
+        Generate exactly ${numQuestions} questions of type "${type}".
+        
+        Return the response STRICTLY as a JSON array of objects. 
+        Do not include any markdown formatting like \`\`\`json or \`\`\`.
+        
+        Example format for Multiple Choice:
+        [
+            {
+                "question": "What is 2+2?",
+                "options": ["3", "4", "5", "6"],
+                "correctAnswer": "4"
+            }
+        ]
+
+        Example format for True/False:
+        [
+            {
+                "question": "The sky is blue.",
+                "options": ["True", "False"],
+                "correctAnswer": "True"
+            }
+        ]
+        `;
+
+        const result = await model.generateContent(prompt);
+        const response = await result.response;
+        let text = response.text();
+
+        // Clean up markdown if Gemini adds it despite instructions
+        text = text.replace(/```json/g, '').replace(/```/g, '').trim();
+
+        const examData = JSON.parse(text);
+
+        // Optionally save to DB
+        // db.exams.push({ topic, date: new Date(), questions: examData });
+
+        res.json({ success: true, data: examData });
+
+    } catch (error) {
+        console.error("Error generating exam:", error);
+        res.status(500).json({ error: "Error al generar el examen con IA" });
+    }
+});
+
 module.exports = router;
