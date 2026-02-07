@@ -176,23 +176,68 @@ router.post('/leads', (req, res) => {
 });
 
 // --- AUTH API ---
-router.post('/login', (req, res) => {
+router.post('/auth/login', (req, res) => {
     const { email, password } = req.body;
     db.get("SELECT * FROM users WHERE email = ?", [email], (err, user) => {
         if (err) return res.status(500).json({ error: "Internal error" });
         if (!user) return res.status(404).json({ error: "User not found" });
 
-        // In a real app, use bcrypt to compare hashes!
+        // WARNING: Plain text for demo purposes! Use bcrypt in production.
         if (user.password === password) {
-            // Mock token
+            // Mock token - in real app use JWT
+            const token = "mock-jwt-token-" + require('crypto').randomBytes(16).toString('hex');
             res.json({
+                success: true,
                 message: "Login success",
-                token: "mock-jwt-token-" + uuidv4(),
-                user: { name: "Gustavo Triana", email: user.email }
+                token: token,
+                user: { id: user.id, name: user.name, email: user.email }
             });
         } else {
-            res.status(401).json({ error: "Invalid password" });
+            res.status(401).json({ success: false, error: "Invalid password" });
         }
+    });
+});
+
+router.post('/auth/forgot-password', (req, res) => {
+    const { email } = req.body;
+    db.get("SELECT * FROM users WHERE email = ?", [email], (err, user) => {
+        if (err) return res.status(500).json({ error: "Internal error" });
+        if (!user) return res.status(404).json({ error: "Email no registrado" });
+
+        // Generate temp password
+        const tempPassword = Math.random().toString(36).slice(-8);
+
+        // Update DB with temporary password
+        db.run("UPDATE users SET password = ? WHERE email = ?", [tempPassword, email], async (err) => {
+            if (err) return res.status(500).json({ error: "Error updating password" });
+
+            try {
+                // Send email with temp password
+                const htmlContent = `
+                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #e2e8f0; border-radius: 10px; overflow: hidden;">
+                    <div style="background-color: #1e3a8a; color: white; padding: 20px; text-align: center;">
+                        <h2 style="margin: 0;">Recuperación de Contraseña</h2>
+                    </div>
+                    <div style="padding: 20px; background-color: #f8fafc;">
+                        <p>Hola <strong>${user.name}</strong>,</p>
+                        <p>Has solicitado restablecer tu contraseña. Aquí tienes tu nueva contraseña temporal:</p>
+                        <div style="background-color: white; padding: 15px; border: 1px solid #e2e8f0; border-radius: 5px; text-align: center; margin: 20px 0;">
+                            <span style="font-size: 24px; font-weight: bold; letter-spacing: 2px; color: #1e3a8a;">${tempPassword}</span>
+                        </div>
+                        <p style="font-size: 12px; color: #64748b;">Por seguridad, te recomendamos cambiar esta contraseña al iniciar sesión.</p>
+                    </div>
+                </div>
+                `;
+
+                // Use verified email for Resend testing to avoid 403
+                await sendEmail('gustavoenriquetriana@gmail.com', 'Restablecer Contraseña - DocenteAI', htmlContent);
+
+                res.json({ success: true, message: "Correo enviado con nueva contraseña" });
+            } catch (error) {
+                console.error("Error sending recovery email:", error);
+                res.status(500).json({ error: "Error al enviar el correo" });
+            }
+        });
     });
 });
 

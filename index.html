@@ -106,13 +106,94 @@
             </div>
 
             <div class="flex items-center gap-4">
-                <button onclick="openModal('modal-pago')"
+                <button onclick="openModal('modal-login')"
                     class="bg-slate-900 hover:bg-blue-700 text-white text-sm px-6 py-2.5 rounded-full font-bold transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 flex items-center gap-2">
                     <i class="fa-solid fa-right-to-bracket text-xs"></i> Entrar
                 </button>
             </div>
         </div>
     </nav>
+
+    <!-- LOGIN MODAL -->
+    <div id="modal-login" class="fixed inset-0 z-[70] hidden overflow-y-auto">
+        <div class="absolute inset-0 bg-slate-950/80 backdrop-blur-sm transition-opacity duration-300"
+            onclick="closeModal('modal-login')"></div>
+        <div class="relative flex min-h-screen items-center justify-center p-4">
+            <div
+                class="bg-white rounded-3xl shadow-2xl w-full max-w-md overflow-hidden transform transition-all scale-100 relative animate-fade-in-up md:p-8 p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-2xl font-bold text-slate-900">Iniciar Sesión</h3>
+                    <button onclick="closeModal('modal-login')" class="text-slate-400 hover:text-slate-600"><i
+                            class="fa-solid fa-xmark text-xl"></i></button>
+                </div>
+
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 uppercase mb-2">Correo
+                            Institucional</label>
+                        <input id="login-email" type="email" placeholder="profesor@unexpo.edu.ve"
+                            class="w-full p-4 border border-slate-200 bg-slate-50 rounded-xl focus:outline-none focus:border-blue-600 focus:bg-white transition text-sm font-bold text-slate-800">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 uppercase mb-2">Contraseña</label>
+                        <input id="login-pass" type="password" placeholder="••••••••"
+                            class="w-full p-4 border border-slate-200 bg-slate-50 rounded-xl focus:outline-none focus:border-blue-600 focus:bg-white transition text-sm font-bold text-slate-800">
+                        <div class="text-right mt-2">
+                            <button onclick="openForgotPassword()"
+                                class="text-xs font-bold text-blue-600 hover:text-blue-800">¿Olvidaste tu
+                                contraseña?</button>
+                        </div>
+                    </div>
+
+                    <button onclick="login()" id="btn-login"
+                        class="w-full bg-slate-900 text-white py-4 rounded-xl font-bold text-sm hover:bg-blue-800 transition shadow-lg mt-2">Entrar</button>
+                </div>
+
+                <div class="mt-8 text-center border-t border-slate-100 pt-6">
+                    <p class="text-sm text-slate-500 font-medium">¿No tienes cuenta? <button
+                            onclick="switchToRegister()" class="text-blue-600 font-bold hover:text-blue-800">Regístrate
+                            aquí</button></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FORGOT PASSWORD MODAL -->
+    <div id="modal-forgot-password" class="fixed inset-0 z-[80] hidden overflow-y-auto">
+        <div class="absolute inset-0 bg-slate-950/80 backdrop-blur-sm transition-opacity duration-300"
+            onclick="closeModal('modal-forgot-password')"></div>
+        <div class="relative flex min-h-screen items-center justify-center p-4">
+            <div
+                class="bg-white rounded-3xl shadow-2xl w-full max-w-md overflow-hidden transform transition-all scale-100 relative animate-fade-in-up md:p-8 p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-xl font-bold text-slate-900">Recuperar Contraseña</h3>
+                    <button onclick="closeModal('modal-forgot-password')" class="text-slate-400 hover:text-slate-600"><i
+                            class="fa-solid fa-xmark text-xl"></i></button>
+                </div>
+
+                <p class="text-sm text-slate-500 mb-6 font-medium">Ingresa tu correo institucional y te enviaremos una
+                    contraseña temporal.</p>
+
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 uppercase mb-2">Correo
+                            Institucional</label>
+                        <input id="forgot-email" type="email" placeholder="profesor@unexpo.edu.ve"
+                            class="w-full p-4 border border-slate-200 bg-slate-50 rounded-xl focus:outline-none focus:border-blue-600 focus:bg-white transition text-sm font-bold text-slate-800">
+                    </div>
+
+                    <button onclick="sendRecoveryEmail()" id="btn-recovery"
+                        class="w-full bg-blue-600 text-white py-4 rounded-xl font-bold text-sm hover:bg-blue-700 transition shadow-lg mt-2">Enviar
+                        Correo de Recuperación</button>
+                </div>
+
+                <div class="mt-6 text-center">
+                    <button onclick="backToLogin()" class="text-sm font-bold text-slate-400 hover:text-slate-600">Volver
+                        a Iniciar Sesión</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <header class="pt-32 pb-20 px-4 text-center relative overflow-hidden">
         <!-- Floating Elements -->
@@ -1302,10 +1383,125 @@
 
             }, 2500); // 2.5s simulation
         }
-    </script>
-    <script>
-        // Start savings counter
-        if (typeof calcularAhorro === 'function') setTimeout(calcularAhorro, 500);
+        function openForgotPassword() {
+            closeModal('modal-login');
+            openModal('modal-forgot-password');
+        }
+
+        function backToLogin() {
+            closeModal('modal-forgot-password');
+            openModal('modal-login');
+        }
+
+        function switchToRegister() {
+            closeModal('modal-login');
+            openModal('modal-pago');
+        }
+
+        function login() {
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-pass').value;
+            const btn = document.getElementById('btn-login');
+
+            if (!email || !password) {
+                if (typeof Swal !== 'undefined') {
+                    Swal.fire({ icon: 'warning', title: 'Campos vacíos', text: 'Por favor ingresa tu correo y contraseña.' });
+                } else {
+                    alert('Por favor ingresa tu correo y contraseña.');
+                }
+                return;
+            }
+
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Iniciando...';
+            btn.disabled = true;
+
+            fetch('/api/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password })
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        // Save session
+                        localStorage.setItem('userEmail', data.user.email);
+                        localStorage.setItem('userName', data.user.name);
+                        localStorage.setItem('authToken', data.token);
+
+                        btn.innerHTML = '<i class="fa-solid fa-check"></i> ¡Éxito!';
+                        btn.classList.replace('bg-slate-900', 'bg-green-600');
+
+                        setTimeout(() => {
+                            window.location.href = 'dashboard.html';
+                        }, 1000);
+                    } else {
+                        if (typeof Swal !== 'undefined') {
+                            Swal.fire({ icon: 'error', title: 'Error de acceso', text: data.error || 'Credenciales inválidas.' });
+                        } else {
+                            alert(data.error || 'Credenciales inválidas.');
+                        }
+                        btn.innerHTML = originalText;
+                        btn.disabled = false;
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                    alert('Error de conexión.');
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                });
+        }
+
+        function sendRecoveryEmail() {
+            const email = document.getElementById('forgot-email').value;
+            const btn = document.getElementById('btn-recovery');
+
+            if (!email) {
+                alert('Ingresa tu correo institucional.');
+                return;
+            }
+
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Enviando...';
+            btn.disabled = true;
+
+            fetch('/api/auth/forgot-password', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email })
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        if (typeof Swal !== 'undefined') {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Correo Enviado',
+                                text: 'Revisa tu bandeja de entrada. Te hemos enviado una contraseña temporal.'
+                            });
+                        } else {
+                            alert('Correo enviado. Revisa tu bandeja.');
+                        }
+                        closeModal('modal-forgot-password');
+                        openModal('modal-login');
+                    } else {
+                        if (typeof Swal !== 'undefined') {
+                            Swal.fire({ icon: 'error', title: 'Error', text: data.error });
+                        } else {
+                            alert(data.error);
+                        }
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                    alert('Error de conexión.');
+                })
+                .finally(() => {
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                });
+        }
     </script>
 </body>
 
