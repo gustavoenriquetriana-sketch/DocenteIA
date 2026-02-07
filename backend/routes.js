@@ -370,8 +370,7 @@ router.post('/ai/generate', async (req, res) => {
         }
 
 
-        const model = genAI.getGenerativeModel({ model: "gemini-flash-latest" });
-
+        const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
 
         const name = userName || "Profesor de la UNEXPO";
