@@ -356,15 +356,19 @@ router.post('/support/ticket', async (req, res) => {
         });
 
         const transporter = nodemailer.createTransport({
-            service: 'gmail',  // <--- LA CLAVE MAESTRA
+            host: 'smtp.gmail.com',
+            port: 587,              // <--- CAMBIO CLAVE: Usamos el puerto TLS
+            secure: false,          // <--- IMPORTANTE: En puerto 587 esto va en false
             auth: {
                 user: process.env.EMAIL_USER,
                 pass: process.env.EMAIL_PASS
+            },
+            tls: {
+                rejectUnauthorized: false
             }
         });
 
-        // Cambiamos el mensaje para saber 100% que este código subió
-        console.log(">>> INTENTO FINAL: MODO SERVICE GMAIL <<<");
+        console.log(">>> INTENTO FINAL: PUERTO 587 (TLS) <<<");
         const htmlContent = `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #e2e8f0; border-radius: 10px; overflow: hidden;">
             <div style="background-color: #1e3a8a; color: white; padding: 20px; text-align: center;">
