@@ -217,6 +217,7 @@ router.post('/auth/forgot-password', (req, res) => {
 
             try {
                 const link = `https://docenteia-production.up.railway.app/reset-password.html?token=${token}`;
+                console.log(`[DEBUG] Generando link de reset para ${email}: ${link}`);
                 const htmlContent = `
                 <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #e2e8f0; border-radius: 10px; overflow: hidden;">
                     <div style="background-color: #1e3a8a; color: white; padding: 20px; text-align: center;">
@@ -540,6 +541,8 @@ router.post('/auth/register', async (req, res) => {
     if (!name || !email || !password) {
         return res.status(400).json({ success: false, message: 'Faltan datos' });
     }
+
+    console.log(`[DEBUG] Registrando usuario: ${name}, ${email}, Password Length: ${password ? password.length : 0}`);
 
     // Insert user (using plain text password for now as requested)
     try {
