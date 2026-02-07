@@ -356,20 +356,20 @@ router.post('/support/ticket', async (req, res) => {
         });
 
         const transporter = nodemailer.createTransport({
-            host: '142.250.115.108', // <--- IP DIRECTA DE GMAIL (Evita el error IPv6)
-            port: 587,               // Puerto estándar
-            secure: false,           // false para 587
+            host: 'smtp.gmail.com', // <--- VOLVEMOS AL NOMBRE OFICIAL
+            port: 465,              // Puerto Seguro SSL (El favorito de Railway)
+            secure: true,           // OBLIGATORIO: true para puerto 465
             auth: {
                 user: process.env.EMAIL_USER,
                 pass: process.env.EMAIL_PASS
             },
             tls: {
                 rejectUnauthorized: false
-            },
-            connectionTimeout: 10000 // Mantenemos la paciencia por si acaso
+            }
         });
 
-        console.log(">>> MODO MANUAL: CONECTANDO A IP 142.250.115.108 <<<");
+        // Mensaje para confirmar en los logs que el cambio subió
+        console.log(">>> CONFIGURACIÓN RAILWAY: SMTP GMAIL PUERTO 465 <<<");
         const htmlContent = `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #e2e8f0; border-radius: 10px; overflow: hidden;">
             <div style="background-color: #1e3a8a; color: white; padding: 20px; text-align: center;">
