@@ -216,7 +216,7 @@ router.post('/auth/forgot-password', (req, res) => {
             if (err) return res.status(500).json({ error: "Error updating database" });
 
             try {
-                const link = `http://localhost:3000/reset-password.html?token=${token}`;
+                const link = `https://docenteia-production.up.railway.app/reset-password.html?token=${token}`;
                 const htmlContent = `
                 <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #e2e8f0; border-radius: 10px; overflow: hidden;">
                     <div style="background-color: #1e3a8a; color: white; padding: 20px; text-align: center;">
@@ -233,8 +233,8 @@ router.post('/auth/forgot-password', (req, res) => {
                 </div>
                 `;
 
-                // Use verified email for Resend testing
-                await sendEmail('gustavoenriquetriana@gmail.com', 'Restablecer Contraseña - DocenteAI', htmlContent);
+                // In production, send to the actual user
+                await sendEmail(user.email, 'Restablecer Contraseña - DocenteAI', htmlContent);
                 res.json({ success: true, message: "Enlace enviado a tu correo" });
             } catch (error) {
                 console.error("Error sending reset email:", error);
@@ -269,7 +269,7 @@ router.post('/auth/reset-password', (req, res) => {
                     </div>
                 </div>
                 `;
-                await sendEmail('gustavoenriquetriana@gmail.com', 'Confirmación de Cambio de Contraseña', htmlContent);
+                await sendEmail(user.email, 'Confirmación de Cambio de Contraseña', htmlContent);
             } catch (e) { console.error("Error sending confirmation", e); }
 
             res.json({ success: true, message: "Contraseña actualizada correctamente" });
@@ -607,7 +607,7 @@ router.post('/auth/register', async (req, res) => {
 
                         <!-- CTA Button -->
                         <div style="margin-top: 40px; text-align: center;">
-                            <a href="http://localhost:3000/dashboard.html" style="display: inline-block; background-color: #2563eb; color: #ffffff; padding: 14px 32px; text-decoration: none; border-radius: 6px; font-weight: bold; font-size: 16px; box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);">Ir a mi Dashboard</a>
+                            <a href="https://docenteia-production.up.railway.app/dashboard.html" style="display: inline-block; background-color: #2563eb; color: #ffffff; padding: 14px 32px; text-decoration: none; border-radius: 6px; font-weight: bold; font-size: 16px; box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);">Ir a mi Dashboard</a>
                         </div>
                     </div>
 
