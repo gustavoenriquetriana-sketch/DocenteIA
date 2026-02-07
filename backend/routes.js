@@ -358,7 +358,7 @@ router.post('/support/ticket', async (req, res) => {
         const transporter = nodemailer.createTransport({
             host: 'smtp.gmail.com',
             family: 4,
-            port: 587,
+            port: 465,
             secure: false, // true for 465, false for other ports
             auth: {
                 user: process.env.EMAIL_USER,
