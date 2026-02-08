@@ -5,6 +5,11 @@ const { v4: uuidv4 } = require('uuid');
 const { sendEmail, sendGmail } = require('./mailer');
 const Groq = require("groq-sdk");
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+const multer = require('multer');
+const pdfParse = require('pdf-parse');
+
+// Configure multer for PDF uploads (memory storage)
+const upload = multer({ storage: multer.memoryStorage() });
 
 
 router.get('/students', (req, res) => {
@@ -692,6 +697,80 @@ router.post('/generate-exam', async (req, res) => {
     } catch (error) {
         console.error("Error generating exam:", error.message);
         res.status(500).json({ error: "Error al generar el examen con IA", details: error.message });
+    }
+});
+
+// --- AI ACADEMIC PLANNING FROM PDF ---
+router.post('/api/generate-planning', upload.single('syllabus'), async (req, res) => {
+    try {
+        if (!req.file) {
+            return res.status(400).json({ error: 'No se recibió ningún archivo PDF' });
+        }
+
+        console.log('Archivo recibido:', req.file.originalname, 'Tamaño:', req.file.size);
+
+        // Parse PDF buffer to extract text
+        const pdfData = await pdfParse(req.file.buffer);
+        const extractedText = pdfData.text;
+
+        console.log('Texto extraído del PDF (primeros 500 caracteres):', extractedText.substring(0, 500));
+
+        // Prepare Groq prompt for academic planning
+        const systemPrompt = `Actúa como un experto planificador académico venezolano. Basado en el siguiente contenido del programa de la materia (syllabus), genera una planificación semestral de 16 semanas estructurada y pedagógicamente sólida.
+
+INSTRUCCIONES CRÍTICAS:
+1. Devuelve SOLAMENTE un objeto JSON válido, sin texto adicional antes o después.
+2. La estructura DEBE ser exactamente:
+{
+  "weeks": [
+    {
+      "week": 1,
+      "topic": "Tema principal de la semana",
+      "objectives": "Objetivos específicos de aprendizaje",
+      "bibliography": "Referencias bibliográficas relevantes"
+    },
+    ...
+  ]
+}
+3. Genera exactamente 16 semanas.
+4. Si el syllabus no tiene suficiente información, distribuye el contenido disponible de forma lógica y pedagógica.
+5. Los temas deben progresar de lo simple a lo complejo.
+6. Usa terminología académica apropiada en español.`;
+
+        const userPrompt = `Contenido del Syllabus:\n\n${extractedText}\n\nGenera la planificación de 16 semanas en formato JSON.`;
+
+        // Call Groq API
+        const completion = await groq.chat.completions.create({
+            messages: [
+                { role: "system", content: systemPrompt },
+                { role: "user", content: userPrompt }
+            ],
+            model: "llama-3.3-70b-versatile",
+            response_format: { type: "json_object" }
+        });
+
+        const responseText = completion.choices[0]?.message?.content || "{}";
+        console.log('Respuesta de Groq:', responseText.substring(0, 200));
+
+        const planningData = JSON.parse(responseText);
+
+        // Validate response structure
+        if (!planningData.weeks || !Array.isArray(planningData.weeks)) {
+            return res.status(500).json({ error: 'La IA no devolvió un formato válido' });
+        }
+
+        res.json({
+            success: true,
+            planning: planningData.weeks,
+            filename: req.file.originalname
+        });
+
+    } catch (error) {
+        console.error("Error en generate-planning:", error.message);
+        res.status(500).json({
+            error: "Error al procesar el PDF y generar la planificación",
+            details: error.message
+        });
     }
 });
 

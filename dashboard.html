@@ -128,6 +128,11 @@
                     <i class="fa-solid fa-wand-magic-sparkles w-5"></i> <span
                         class="font-medium text-sm">Exámenes</span>
                 </button>
+                <button onclick="nav('planificacion'); toggleSidebar()" id="btn-planificacion"
+                    class="w-full flex items-center gap-3 px-4 py-3 rounded-xl inactive-nav transition-all duration-200">
+                    <i class="fa-solid fa-calendar-days w-5"></i> <span class="font-medium text-sm">📅
+                        Planificación</span>
+                </button>
                 <button onclick="nav('configuracion'); toggleSidebar()" id="btn-configuracion"
                     class="w-full flex items-center gap-3 px-4 py-3 rounded-xl inactive-nav transition-all duration-200 mt-2">
                     <i class="fa-solid fa-gear w-5"></i> <span class="font-medium text-sm">Configuración</span>
@@ -633,6 +638,90 @@
                                 <button onclick="toggleHistoryModal(); loadSupportHistory()"
                                     class="w-10 py-2.5 border border-slate-300 text-slate-500 rounded-xl text-sm font-bold hover:text-blue-600 hover:border-blue-600 transition flex items-center justify-center"
                                     title="Historial"><i class="fa-solid fa-clock-rotate-left"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Planificación Académica desde PDF -->
+                <div id="view-planificacion" class="hidden">
+                    <div class="max-w-5xl mx-auto">
+                        <div class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm">
+                            <div class="flex items-center gap-3 mb-6">
+                                <div class="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center">
+                                    <i class="fa-solid fa-file-pdf text-blue-600 text-xl"></i>
+                                </div>
+                                <div>
+                                    <h2 class="text-xl font-bold text-slate-800">Generador de Planificación Académica
+                                    </h2>
+                                    <p class="text-sm text-slate-500">Sube el PDF del programa de materia (syllabus) y
+                                        genera automáticamente una planificación semestral de 16 semanas</p>
+                                </div>
+                            </div>
+
+                            <!-- File Upload Area -->
+                            <div
+                                class="mb-6 p-6 border-2 border-dashed border-slate-300 rounded-xl hover:border-blue-400 transition bg-slate-50">
+                                <div class="text-center">
+                                    <i class="fa-solid fa-cloud-arrow-up text-4xl text-slate-400 mb-3"></i>
+                                    <label for="syllabus-file" class="block">
+                                        <span
+                                            class="text-sm font-bold text-slate-700 cursor-pointer hover:text-blue-600">Selecciona
+                                            el archivo PDF del programa</span>
+                                        <input type="file" id="syllabus-file" accept=".pdf" class="hidden"
+                                            onchange="handleFileSelect(event)">
+                                    </label>
+                                    <p id="file-name" class="text-xs text-slate-500 mt-2"></p>
+                                </div>
+                            </div>
+
+                            <!-- Generate Button -->
+                            <button id="btn-generate-planning" onclick="uploadSyllabus()" disabled
+                                class="w-full py-4 bg-blue-600 text-white rounded-xl font-bold text-sm hover:bg-blue-700 shadow-md transition disabled:bg-slate-300 disabled:cursor-not-allowed flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-wand-magic-sparkles"></i>
+                                <span id="btn-text">Generar Planificación con IA</span>
+                            </button>
+
+                            <!-- Loading State -->
+                            <div id="planning-loading" class="hidden mt-6 text-center py-8">
+                                <i class="fa-solid fa-spinner fa-spin text-4xl text-blue-600 mb-3"></i>
+                                <p class="text-sm font-bold text-slate-700">Analizando el programa y generando
+                                    planificación...</p>
+                                <p class="text-xs text-slate-500 mt-1">Esto puede tomar hasta 30 segundos</p>
+                            </div>
+
+                            <!-- Results Container -->
+                            <div id="planning-results" class="hidden mt-6">
+                                <div class="flex justify-between items-center mb-4">
+                                    <h3 class="font-bold text-lg text-slate-800">Planificación Generada</h3>
+                                    <button onclick="downloadPlanningPDF()"
+                                        class="px-4 py-2 bg-red-500 text-white rounded-lg text-sm font-bold hover:bg-red-600 shadow-sm transition flex items-center gap-2">
+                                        <i class="fa-solid fa-file-pdf"></i> Descargar PDF
+                                    </button>
+                                </div>
+                                <div class="overflow-x-auto rounded-xl border border-slate-200">
+                                    <table class="w-full text-left border-collapse">
+                                        <thead class="bg-slate-50">
+                                            <tr>
+                                                <th
+                                                    class="p-4 border-b border-slate-200 text-xs font-bold text-slate-600 uppercase">
+                                                    Semana</th>
+                                                <th
+                                                    class="p-4 border-b border-slate-200 text-xs font-bold text-slate-600 uppercase">
+                                                    Tema</th>
+                                                <th
+                                                    class="p-4 border-b border-slate-200 text-xs font-bold text-slate-600 uppercase">
+                                                    Objetivos</th>
+                                                <th
+                                                    class="p-4 border-b border-slate-200 text-xs font-bold text-slate-600 uppercase">
+                                                    Bibliografía</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="planning-table-body" class="text-sm text-slate-700">
+                                            <!-- Rows will be generated here -->
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -1382,6 +1471,152 @@
                     .catch(err => {
                         out.innerHTML = 'Error al generar texto';
                     });
+            }
+
+            // --- ACADEMIC PLANNING FUNCTIONS ---
+            let currentPlanningData = null;
+
+            function handleFileSelect(event) {
+                const file = event.target.files[0];
+                if (file) {
+                    document.getElementById('file-name').textContent = `Archivo seleccionado: ${file.name}`;
+                    document.getElementById('btn-generate-planning').disabled = false;
+                } else {
+                    document.getElementById('file-name').textContent = '';
+                    document.getElementById('btn-generate-planning').disabled = true;
+                }
+            }
+
+            async function uploadSyllabus() {
+                const fileInput = document.getElementById('syllabus-file');
+                const file = fileInput.files[0];
+
+                if (!file) {
+                    alert('Por favor selecciona un archivo PDF');
+                    return;
+                }
+
+                // Show loading state
+                document.getElementById('planning-loading').classList.remove('hidden');
+                document.getElementById('planning-results').classList.add('hidden');
+                document.getElementById('btn-generate-planning').disabled = true;
+
+                try {
+                    const formData = new FormData();
+                    formData.append('syllabus', file);
+
+                    const response = await fetch('/api/generate-planning', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    const data = await response.json();
+
+                    if (!response.ok) {
+                        throw new Error(data.error || 'Error al generar la planificación');
+                    }
+
+                    // Store planning data for PDF export
+                    currentPlanningData = data.planning;
+
+                    // Render table
+                    renderPlanningTable(data.planning);
+
+                    // Hide loading, show results
+                    document.getElementById('planning-loading').classList.add('hidden');
+                    document.getElementById('planning-results').classList.remove('hidden');
+
+                    showToast("Planificación Generada", "Se ha creado exitosamente la planificación de 16 semanas");
+
+                } catch (error) {
+                    console.error('Error uploading syllabus:', error);
+                    document.getElementById('planning-loading').classList.add('hidden');
+                    alert('Error: ' + error.message);
+                } finally {
+                    document.getElementById('btn-generate-planning').disabled = false;
+                }
+            }
+
+            function renderPlanningTable(weeks) {
+                const tbody = document.getElementById('planning-table-body');
+                tbody.innerHTML = '';
+
+                weeks.forEach(week => {
+                    const row = document.createElement('tr');
+                    row.className = 'border-b border-slate-100 hover:bg-slate-50 transition';
+                    row.innerHTML = `
+                        <td class="p-4 font-bold text-blue-600">${week.week}</td>
+                        <td class="p-4">${week.topic || 'N/A'}</td>
+                        <td class="p-4 text-xs">${week.objectives || 'N/A'}</td>
+                        <td class="p-4 text-xs">${week.bibliography || 'N/A'}</td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            }
+
+            function downloadPlanningPDF() {
+                if (!currentPlanningData) {
+                    alert('No hay ninguna planificación para exportar');
+                    return;
+                }
+
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF();
+
+                // Title
+                doc.setFontSize(16);
+                doc.setFont(undefined, 'bold');
+                doc.text('Planificación Académica Semestral', 105, 20, { align: 'center' });
+
+                doc.setFontSize(10);
+                doc.setFont(undefined, 'normal');
+                doc.text('16 Semanas - Generado con DocenteAI', 105, 28, { align: 'center' });
+
+                let y = 40;
+                const pageHeight = doc.internal.pageSize.height;
+                const margin = 20;
+
+                currentPlanningData.forEach((week, index) => {
+                    // Check if need new page
+                    if (y > pageHeight - 60) {
+                        doc.addPage();
+                        y = 20;
+                    }
+
+                    // Week header
+                    doc.setFontSize(12);
+                    doc.setFont(undefined, 'bold');
+                    doc.setTextColor(37, 99, 235); // Blue
+                    doc.text(`Semana ${week.week}`, margin, y);
+                    y += 8;
+
+                    // Topic
+                    doc.setFontSize(10);
+                    doc.setFont(undefined, 'bold');
+                    doc.setTextColor(0, 0, 0);
+                    doc.text(`Tema: ${week.topic}`, margin, y);
+                    y += 6;
+
+                    // Objectives
+                    doc.setFont(undefined, 'normal');
+                    doc.setFontSize(9);
+                    const objectivesLines = doc.splitTextToSize(`Objetivos: ${week.objectives}`, 170);
+                    doc.text(objectivesLines, margin, y);
+                    y += (objectivesLines.length * 5);
+
+                    // Bibliography
+                    const biblioLines = doc.splitTextToSize(`Bibliografía: ${week.bibliography}`, 170);
+                    doc.text(biblioLines, margin, y);
+                    y += (biblioLines.length * 5) + 6;
+                });
+
+                // Footer
+                doc.setFontSize(8);
+                doc.setTextColor(150, 150, 150);
+                doc.text(`Generado el ${new Date().toLocaleDateString('es-VE')} con DocenteAI`, 105, pageHeight - 10, { align: 'center' });
+
+                doc.save('Planificacion_Academica_16_Semanas.pdf');
+                showToast("PDF Descargado", "La planificación ha sido exportada exitosamente");
             }
 
             function askLogout() { document.getElementById('modal-logout').classList.remove('force-hidden'); }
