@@ -520,77 +520,7 @@
                     </div>
                 </div>
 
-                <div id="view-examenes" class="max-w-5xl mx-auto force-hidden fade-in">
-                    <h1 class="text-2xl font-bold text-slate-800 mb-6 flex items-center gap-3">
-                        <i class="fa-solid fa-wand-magic-sparkles text-purple-600"></i> Generador de Exámenes
-                    </h1>
-                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                        <div class="lg:col-span-1">
-                            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm sticky top-6">
-                                <h3 class="font-bold text-slate-700 mb-4 text-sm uppercase tracking-wide">Configuración
-                                </h3>
-                                <div class="space-y-4">
-                                    <div>
-                                        <label
-                                            class="block text-xs font-bold text-slate-500 uppercase mb-2">Tema</label>
-                                        <input type="text" id="exam-topic" placeholder="Ej: Historia..."
-                                            class="w-full p-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-purple-500 transition">
-                                    </div>
-                                    <div>
-                                        <label
-                                            class="block text-xs font-bold text-slate-500 uppercase mb-2">Dificultad</label>
-                                        <select id="exam-difficulty"
-                                            class="w-full p-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-purple-500 bg-white">
-                                            <option value="Básico">Básico</option>
-                                            <option value="Intermedio" selected>Intermedio</option>
-                                            <option value="Avanzado">Avanzado</option>
-                                        </select>
-                                    </div>
-                                    <div class="grid grid-cols-2 gap-4">
-                                        <div>
-                                            <label
-                                                class="block text-xs font-bold text-slate-500 uppercase mb-2">Cant.</label>
-                                            <input type="number" id="exam-count" value="5" min="1" max="10"
-                                                class="w-full p-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-purple-500">
-                                        </div>
-                                        <div>
-                                            <label
-                                                class="block text-xs font-bold text-slate-500 uppercase mb-2">Tipo</label>
-                                            <select id="exam-type"
-                                                class="w-full p-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-purple-500 bg-white">
-                                                <option value="Selección Simple">Selección</option>
-                                                <option value="Verdadero/Falso">V/F</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <button onclick="generateExam()" id="btn-generate-exam"
-                                        class="w-full bg-slate-900 text-white py-3 rounded-xl font-bold text-sm hover:bg-purple-600 transition shadow-lg flex items-center justify-center gap-2 mt-2">
-                                        <i class="fa-solid fa-bolt"></i> Generar
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="lg:col-span-2">
-                            <div id="exam-loading"
-                                class="hidden flex flex-col items-center justify-center py-20 bg-white rounded-2xl border border-slate-200 border-dashed">
-                                <div
-                                    class="w-12 h-12 border-4 border-purple-200 border-t-purple-600 rounded-full animate-spin mb-4">
-                                </div>
-                                <p class="text-slate-500 font-medium animate-pulse">Generando...</p>
-                            </div>
-                            <div id="exam-empty"
-                                class="flex flex-col items-center justify-center py-20 bg-slate-50 rounded-2xl border border-slate-200 border-dashed text-center px-6">
-                                <div
-                                    class="w-16 h-16 bg-purple-50 rounded-full flex items-center justify-center text-purple-300 mb-4">
-                                    <i class="fa-solid fa-file-pen text-2xl"></i>
-                                </div>
-                                <h3 class="text-slate-900 font-bold mb-1">Sin Examen</h3>
-                                <p class="text-slate-500 text-sm">Configura y genera tu evaluación.</p>
-                            </div>
-                            <div id="exam-results" class="space-y-6 hidden"></div>
-                        </div>
-                    </div>
-                </div>
+
 
                 <div id="view-configuracion" class="max-w-5xl mx-auto force-hidden fade-in">
                     <h1 class="text-2xl font-bold text-slate-800 mb-6">Configuración y Soporte</h1>
@@ -1495,6 +1425,96 @@
                     <button onclick="saveField('${field}')" class="text-green-600 text-xs font-bold uppercase hover:text-green-800">Guardar</button>
                 </div>
             `;
+            }
+
+            // --- NAVIGATION LOGIC ---
+            function nav(sectionId) {
+                // Hide all views
+                const views = ['resumen', 'redactor', 'estudiantes', 'agenda', 'examenes', 'configuracion'];
+                views.forEach(id => {
+                    const el = document.getElementById('view-' + id);
+                    if (el) el.classList.add('hidden', 'force-hidden');
+                });
+
+                // Show selected
+                const view = document.getElementById('view-' + sectionId);
+                if (view) view.classList.remove('hidden', 'force-hidden');
+
+                // Update Sidebar
+                document.querySelectorAll('nav button').forEach(btn => {
+                    btn.classList.remove('active-nav', 'bg-blue-50', 'text-blue-600');
+                    btn.classList.add('inactive-nav', 'text-slate-600');
+                });
+                const btn = document.getElementById('btn-' + sectionId);
+                if (btn) {
+                    btn.classList.remove('inactive-nav', 'text-slate-600');
+                    btn.classList.add('active-nav', 'bg-blue-50', 'text-blue-600');
+                }
+
+                if (window.innerWidth < 768) toggleSidebar();
+            }
+
+            // --- DATE DISPLAY ---
+            function updateHeaderDate() {
+                const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                const dateString = new Date().toLocaleDateString('es-VE', dateOptions);
+                const capitalizedDate = dateString.charAt(0).toUpperCase() + dateString.slice(1);
+                const el = document.getElementById('header-date');
+                if (el) el.innerText = capitalizedDate;
+            }
+
+            // --- CALENDAR LOGIC ---
+            function renderCalendar() {
+                const monthNames = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+                const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+                const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+
+                const calendarMonth = document.getElementById('calendar-month');
+                const calendarYear = document.getElementById('calendar-year');
+                if (calendarMonth) calendarMonth.innerText = monthNames[currentMonth];
+                if (calendarYear) calendarYear.innerText = currentYear;
+
+                const grid = document.getElementById('calendar-grid');
+                if (!grid) return;
+
+                grid.innerHTML = '';
+
+                // Empty slots for previous month
+                for (let i = 0; i < firstDay; i++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'bg-slate-50/50';
+                    grid.appendChild(cell);
+                }
+
+                // Days
+                for (let i = 1; i <= daysInMonth; i++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'bg-white p-2 hover:bg-blue-50 transition border-t border-r border-slate-100 relative group cursor-pointer';
+
+                    const isToday = i === today.getDate() && currentMonth === today.getMonth() && currentYear === today.getFullYear();
+                    const dayClass = isToday ? 'bg-blue-600 text-white w-6 h-6 rounded-full flex items-center justify-center shadow-md' : 'text-slate-700';
+
+                    cell.innerHTML = `<span class="text-xs font-bold ${dayClass}">${i}</span>`;
+                    grid.appendChild(cell);
+                }
+            }
+
+            function changeMonth(offset) {
+                currentMonth += offset;
+                if (currentMonth < 0) {
+                    currentMonth = 11;
+                    currentYear--;
+                } else if (currentMonth > 11) {
+                    currentMonth = 0;
+                    currentYear++;
+                }
+                renderCalendar();
+            }
+
+            function goToToday() {
+                currentMonth = today.getMonth();
+                currentYear = today.getFullYear();
+                renderCalendar();
             }
 
             function saveField(field) {
