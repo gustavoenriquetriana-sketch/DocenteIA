@@ -890,11 +890,13 @@
                 <div class="w-14 h-14 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-4"><i
                         class="fa-solid fa-right-from-bracket text-2xl text-red-500"></i></div>
                 <div class="grid grid-cols-2 gap-5">
-                    <div><label
-                            class="block text-xs font-bold text-slate-500 uppercase mb-2 ml-1">Expiración</label><input
-                            <div class="flex gap-3"><button onclick="closeLogoutModal()"
-                            class="flex-1 py-2.5 rounded-xl border border-slate-200 text-slate-600 font-bold hover:bg-slate-50 text-sm">Cancelar</button><button
-                            onclick="confirmLogout()"
+                    <div class="mb-6">
+                        <p class="text-sm font-bold text-slate-800">¿Estás seguro de que deseas salir?</p>
+                    </div>
+                    <div class="flex gap-4">
+                        <button onclick="closeLogoutModal()"
+                            class="flex-1 py-2.5 rounded-xl border border-slate-200 text-slate-600 font-bold hover:bg-slate-50 text-sm">Cancelar</button>
+                        <button onclick="confirmLogout()"
                             class="flex-1 py-2.5 rounded-xl bg-red-500 text-white font-bold hover:bg-red-600 shadow-lg text-sm">Salir</button>
                     </div>
                 </div>
@@ -1014,12 +1016,7 @@
                 let tasks = []; // Load from API
                 let currentExamData = []; // Store the exam data for PDF export
 
-                function updateHeaderDate() {
-                    const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-                    const dateString = new Date().toLocaleDateString('es-VE', dateOptions);
-                    const capitalizedDate = dateString.charAt(0).toUpperCase() + dateString.slice(1);
-                    document.getElementById('header-date').innerText = capitalizedDate;
-                }
+
 
                 function fetchTasks() {
                     fetch('/api/tasks')
@@ -1065,6 +1062,7 @@
 
                 // Init
                 fetchTasks();
+                fetchStudents();
                 loadSettings();
 
                 function loadSettings() {
@@ -1407,6 +1405,22 @@
                         btn.classList.remove('inactive-nav', 'text-slate-600');
                         btn.classList.add('active-nav', 'bg-blue-50', 'text-blue-600');
                     }
+
+                    // Title Update
+                    const titles = {
+                        resumen: 'Panel de Control',
+                        redactor: 'Redactor IA',
+                        estudiantes: 'Base de Datos',
+                        agenda: 'Agenda Semanal',
+                        configuracion: 'Ajustes',
+                        examenes: 'Generador de Exámenes'
+                    };
+                    const titleEl = document.getElementById('page-title');
+                    if (titleEl) titleEl.innerText = titles[sectionId] || 'DocenteIA';
+
+                    // Data Fetching
+                    if (sectionId === 'agenda') renderCalendar();
+                    if (sectionId === 'estudiantes') fetchStudents();
 
                     if (window.innerWidth < 768) toggleSidebar();
                 }
