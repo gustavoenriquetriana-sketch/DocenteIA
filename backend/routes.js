@@ -701,7 +701,7 @@ router.post('/generate-exam', async (req, res) => {
 });
 
 // --- AI ACADEMIC PLANNING FROM PDF ---
-router.post('/api/generate-planning', upload.single('syllabus'), async (req, res) => {
+router.post('/generate-planning', upload.single('syllabus'), async (req, res) => {
     try {
         if (!req.file) {
             return res.status(400).json({ error: 'No se recibió ningún archivo PDF' });
@@ -715,7 +715,7 @@ router.post('/api/generate-planning', upload.single('syllabus'), async (req, res
 
         // Parse PDF buffer to extract text
         const pdfData = await pdfParse(req.file.buffer);
-        const extractedText = pdfData.text;
+        const extractedText = pdfData.text.substring(0, 20000);
 
         console.log('Texto extraído del PDF (primeros 500 caracteres):', extractedText.substring(0, 500));
 
@@ -748,12 +748,7 @@ REGLAS CRÍTICAS:
         const htmlResult = completion.choices[0]?.message?.content || "<p>No se pudo generar contenido</p>";
         console.log('Respuesta de Groq (primeros 300 caracteres):', htmlResult.substring(0, 300));
 
-        const planningData = JSON.parse(responseText);
 
-        // Validate response structure
-        if (!planningData.weeks || !Array.isArray(planningData.weeks)) {
-            return res.status(500).json({ error: 'La IA no devolvió un formato válido' });
-        }
 
         res.json({
             success: true,
