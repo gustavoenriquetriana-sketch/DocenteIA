@@ -3,8 +3,8 @@ const router = express.Router();
 const db = require('./database');
 const { v4: uuidv4 } = require('uuid');
 const { sendEmail, sendGmail } = require('./mailer');
-const { GoogleGenerativeAI } = require("@google/generative-ai");
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+const Groq = require("groq-sdk");
+const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
 
 router.get('/students', (req, res) => {
@@ -365,15 +365,11 @@ router.post('/ai/generate', async (req, res) => {
     try {
         const { prompt, userName } = req.body;
 
-        if (!process.env.GEMINI_API_KEY) {
-            throw new Error("GEMINI_API_KEY is not defined in environment variables");
+        if (!process.env.GROQ_API_KEY) {
+            throw new Error("GROQ_API_KEY is not defined");
         }
 
-
-        console.log('DEBUG: API Key present?', process.env.GEMINI_API_KEY ? 'Yes' : 'No');
-        const model = genAI.getGenerativeModel({ model: "gemini-1.0-pro" });
-
-
+        console.log('DEBUG: Groq API Key present?', process.env.GROQ_API_KEY ? 'Yes' : 'No');
 
         const name = userName || "Profesor de la UNEXPO";
         const systemInstruction = `Eres el Profesor ${name} (Ingeniería Mecatrónica, UNEXPO).
@@ -387,14 +383,17 @@ router.post('/ai/generate', async (req, res) => {
         Usuario: "Examen mañana salon 1"
         IA: "Estimados estudiantes, les informo que el examen será mañana en el Salón 1. Saludos, Prof. ${name}."
 
-        Firma siempre como: "Saludos, Prof. ${name}".
+        Firma siempre como: "Saludos, Prof. ${name}".`;
 
-        Solicitud del usuario: `;
-        const fullPrompt = systemInstruction + prompt;
+        const completion = await groq.chat.completions.create({
+            messages: [
+                { role: "system", content: systemInstruction },
+                { role: "user", content: prompt }
+            ],
+            model: "llama3-70b-8192",
+        });
 
-        const result = await model.generateContent(fullPrompt);
-        const response = await result.response;
-        const text = response.text();
+        const text = completion.choices[0]?.message?.content || "";
 
         res.json({ result: text });
     } catch (error) {
@@ -647,46 +646,46 @@ router.post('/generate-exam', async (req, res) => {
             return res.status(400).json({ error: 'Faltan campos requeridos' });
         }
 
-        console.log('DEBUG: API Key present?', process.env.GEMINI_API_KEY ? 'Yes' : 'No');
-        const model = genAI.getGenerativeModel({ model: "gemini-1.0-pro" });
+        console.log('DEBUG: Groq API Key present?', process.env.GROQ_API_KEY ? 'Yes' : 'No');
 
-        const prompt = `
-        You are an expert teacher. Create a ${difficulty} level exam on "${topic}".
+        const systemPrompt = `You are an expert teacher. Create a ${difficulty} level exam on "${topic}".
         Generate exactly ${numQuestions} questions of type "${type}".
         
-        Return the response STRICTLY as a JSON array of objects. 
-        Do not include any markdown formatting like \`\`\`json or \`\`\`.
+        Return the response STRICTLY as a JSON object with a "questions" key containing an array of objects.
+        The JSON must be valid and adhere to this structure:
+        {
+          "questions": [
+            {
+              "question": "Question text here",
+              "options": ["Option A", "Option B", "Option C", "Option D"], // Only for Multiple Choice
+              "correctAnswer": "Correct Option"
+            }
+          ]
+        }
         
-        Example format for Multiple Choice:
-        [
+        Example for True/False:
+        {
+          "questions": [
             {
-                "question": "What is 2+2?",
-                "options": ["3", "4", "5", "6"],
-                "correctAnswer": "4"
+               "question": "The sky is blue",
+               "options": ["True", "False"],
+               "correctAnswer": "True"
             }
-        ]
+          ]
+        }`;
 
-        Example format for True/False:
-        [
-            {
-                "question": "The sky is blue.",
-                "options": ["True", "False"],
-                "correctAnswer": "True"
-            }
-        ]
-        `;
+        const completion = await groq.chat.completions.create({
+            messages: [
+                { role: "system", content: systemPrompt },
+                { role: "user", content: `Generate ${numQuestions} ${type} questions about ${topic}.` }
+            ],
+            model: "llama3-70b-8192",
+            response_format: { type: "json_object" }
+        });
 
-        const result = await model.generateContent(prompt);
-        const response = await result.response;
-        let text = response.text();
-
-        // Clean up markdown if Gemini adds it despite instructions
-        text = text.replace(/```json/g, '').replace(/```/g, '').trim();
-
-        const examData = JSON.parse(text);
-
-        // Optionally save to DB
-        // db.exams.push({ topic, date: new Date(), questions: examData });
+        const text = completion.choices[0]?.message?.content || "{}";
+        const parsed = JSON.parse(text);
+        const examData = parsed.questions || [];
 
         res.json({ success: true, data: examData });
 
