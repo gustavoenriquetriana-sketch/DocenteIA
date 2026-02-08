@@ -707,7 +707,11 @@ router.post('/api/generate-planning', upload.single('syllabus'), async (req, res
             return res.status(400).json({ error: 'No se recibió ningún archivo PDF' });
         }
 
+        // Get custom instruction from user
+        const instruction = req.body.instruction || "Analiza este documento y resume los puntos clave en formato de tabla organizada";
+
         console.log('Archivo recibido:', req.file.originalname, 'Tamaño:', req.file.size);
+        console.log('Instrucción del usuario:', instruction);
 
         // Parse PDF buffer to extract text
         const pdfData = await pdfParse(req.file.buffer);
@@ -715,38 +719,30 @@ router.post('/api/generate-planning', upload.single('syllabus'), async (req, res
 
         console.log('Texto extraído del PDF (primeros 500 caracteres):', extractedText.substring(0, 500));
 
-        // Prepare Groq prompt for academic planning
-        const systemPrompt = `Actúa como un experto planificador académico venezolano. Basado en el siguiente contenido del programa de la materia (syllabus), genera una planificación semestral de 16 semanas estructurada y pedagógicamente sólida.
+        // Prepare Groq prompt with user instruction
+        const systemPrompt = `Contexto: Eres un asistente académico experto. El usuario te ha enviado un documento PDF y necesita que realices una tarea específica con él.
 
-INSTRUCCIONES CRÍTICAS:
-1. Devuelve SOLAMENTE un objeto JSON válido, sin texto adicional antes o después.
-2. La estructura DEBE ser exactamente:
-{
-  "weeks": [
-    {
-      "week": 1,
-      "topic": "Tema principal de la semana",
-      "objectives": "Objetivos específicos de aprendizaje",
-      "bibliography": "Referencias bibliográficas relevantes"
-    },
-    ...
-  ]
-}
-3. Genera exactamente 16 semanas.
-4. Si el syllabus no tiene suficiente información, distribuye el contenido disponible de forma lógica y pedagógica.
-5. Los temas deben progresar de lo simple a lo complejo.
-6. Usa terminología académica apropiada en español.`;
+REGLAS CRÍTICAS:
+1. Lee cuidadosamente la instrucción del usuario.
+2. Analiza el texto del PDF y CUMPLE EXACTAMENTE lo que el usuario solicita.
+3. Devuelve la respuesta en formato HTML limpio y bien estructurado.
+4. Usa elementos HTML apropiados: <table>, <ul>, <ol>, <p>, <h3>, <h4>, <b>, <i>, etc.
+5. NO uses Markdown. SOLO HTML directo.
+6. Asegúrate de que el HTML sea legible y bien formateado.
+7. Si el usuario pide una tabla, usa <table class="w-full border-collapse"><thead><tr><th class="border p-2 bg-slate-100">...</th></tr></thead><tbody>...</tbody></table>
+8. Si el usuario pide una lista, usa <ul class="list-disc ml-6"> o <ol class="list-decimal ml-6">
+9. Usa clases de Tailwind CSS cuando sea apropiado para mejor presentación.`;
 
-        const userPrompt = `Contenido del Syllabus:\n\n${extractedText}\n\nGenera la planificación de 16 semanas en formato JSON.`;
+        const userPrompt = `Instrucción del Usuario: "${instruction}"\n\nTexto extraído del PDF:\n${extractedText}\n\nPor favor, ejecuta la instrucción del usuario y devuelve el resultado en formato HTML limpio.`;
 
-        // Call Groq API
+        // Call Groq API (without JSON mode, we want HTML text)
         const completion = await groq.chat.completions.create({
             messages: [
                 { role: "system", content: systemPrompt },
                 { role: "user", content: userPrompt }
             ],
             model: "llama-3.3-70b-versatile",
-            response_format: { type: "json_object" }
+            temperature: 0.3
         });
 
         const responseText = completion.choices[0]?.message?.content || "{}";
@@ -761,14 +757,14 @@ INSTRUCCIONES CRÍTICAS:
 
         res.json({
             success: true,
-            planning: planningData.weeks,
+            result: htmlResult,
             filename: req.file.originalname
         });
 
     } catch (error) {
         console.error("Error en generate-planning:", error.message);
         res.status(500).json({
-            error: "Error al procesar el PDF y generar la planificación",
+            error: "Error al procesar el PDF y ejecutar la instrucción",
             details: error.message
         });
     }
