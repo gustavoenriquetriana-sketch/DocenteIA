@@ -370,7 +370,8 @@ router.post('/ai/generate', async (req, res) => {
         }
 
 
-        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+        console.log('DEBUG: API Key present?', process.env.GEMINI_API_KEY ? 'Yes' : 'No');
+        const model = genAI.getGenerativeModel({ model: "gemini-1.0-pro" });
 
 
 
@@ -397,7 +398,7 @@ router.post('/ai/generate', async (req, res) => {
 
         res.json({ result: text });
     } catch (error) {
-        console.error("Error calling Gemini API:", error);
+        console.error("Error calling Gemini API:", error.message);
         res.status(500).json({
             error: "Failed to generate content",
             details: error.message
@@ -646,7 +647,8 @@ router.post('/generate-exam', async (req, res) => {
             return res.status(400).json({ error: 'Faltan campos requeridos' });
         }
 
-        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+        console.log('DEBUG: API Key present?', process.env.GEMINI_API_KEY ? 'Yes' : 'No');
+        const model = genAI.getGenerativeModel({ model: "gemini-1.0-pro" });
 
         const prompt = `
         You are an expert teacher. Create a ${difficulty} level exam on "${topic}".
@@ -689,8 +691,8 @@ router.post('/generate-exam', async (req, res) => {
         res.json({ success: true, data: examData });
 
     } catch (error) {
-        console.error("Error generating exam:", error);
-        res.status(500).json({ error: "Error al generar el examen con IA" });
+        console.error("Error generating exam:", error.message);
+        res.status(500).json({ error: "Error al generar el examen con IA", details: error.message });
     }
 });
 
