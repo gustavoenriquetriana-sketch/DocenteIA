@@ -34,4 +34,4 @@ app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
 });
 
-// Forzando reinicio del servidor v3
+// Forzando reinicio del servidor v4 - con pdf-parse instalado
