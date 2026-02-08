@@ -9,6 +9,7 @@
         href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎓</text></svg>">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/driver.js@1.0.1/dist/driver.css" />
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Share+Tech+Mono&display=swap"
         rel="stylesheet">
@@ -105,7 +106,7 @@
             </div>
 
             <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto no-scrollbar">
-                <p class="px-4 text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2">MenÃº Principal</p>
+                <p class="px-4 text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2">Menú Principal</p>
                 <button onclick="nav('resumen'); toggleSidebar()" id="btn-resumen"
                     class="w-full flex items-center gap-3 px-4 py-3 rounded-xl active-nav transition-all duration-200">
                     <i class="fa-solid fa-chart-pie w-5"></i> <span class="font-medium text-sm">Resumen</span>
@@ -146,7 +147,7 @@
                         </div>
                     </div>
                     <button onclick="askLogout()" class="text-slate-500 hover:text-red-400 transition"
-                        title="Cerrar SesiÃ³n">
+                        title="Cerrar Sesión">
                         <i class="fa-solid fa-right-from-bracket"></i>
                     </button>
                 </div>
@@ -196,15 +197,15 @@
                     <div class="p-3 border-b border-slate-50 hover:bg-blue-50 cursor-pointer flex gap-3 transition">
                         <div class="w-2 h-2 bg-blue-500 rounded-full mt-1.5 flex-shrink-0"></div>
                         <div>
-                            <p class="text-sm font-bold text-slate-800">ReuniÃ³n de Departamento</p>
-                            <p class="text-xs text-slate-500">MaÃ±ana, 10:00 AM - Sala 4</p>
+                            <p class="text-sm font-bold text-slate-800">Reunión de Departamento</p>
+                            <p class="text-xs text-slate-500">Mañana, 10:00 AM - Sala 4</p>
                         </div>
                     </div>
                     <div class="p-3 hover:bg-blue-50 cursor-pointer flex gap-3 transition">
                         <div class="w-2 h-2 bg-orange-500 rounded-full mt-1.5 flex-shrink-0"></div>
                         <div>
                             <p class="text-sm font-bold text-slate-800">Notas Pendientes</p>
-                            <p class="text-xs text-slate-500">Falta cargar Sec. MecatrÃ³nica</p>
+                            <p class="text-xs text-slate-500">Falta cargar Sec. Mecatrónica</p>
                         </div>
                     </div>
                 </div>
@@ -264,7 +265,7 @@
                     <div class="bg-white p-6 md:p-8 rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
                         <div
                             class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 md:mb-10 gap-4">
-                            <h3 class="font-bold text-lg text-slate-800">Rendimiento AcadÃ©mico - 2025-2</h3>
+                            <h3 class="font-bold text-lg text-slate-800">Rendimiento Académico - 2025-2</h3>
                             <select onchange="updateChart(this.value)"
                                 class="bg-slate-50 border border-slate-200 text-sm rounded-lg px-4 py-2 font-semibold text-slate-700 cursor-pointer outline-none focus:ring-2 focus:ring-blue-500 transition w-full md:w-auto">
                                 <option value="notas">Promedio General</option>
@@ -304,7 +305,7 @@
                         </div>
                         <div
                             class="flex justify-between mt-6 text-[10px] md:text-xs font-bold text-slate-400 uppercase px-2 md:px-6 tracking-wide text-center">
-                            <span>MatemÃ¡tica</span><span>FÃ­sica</span><span>ProgramaciÃ³n</span><span>ElectrÃ³nica</span>
+                            <span>Matemática</span><span>Física</span><span>Programación</span><span>Electrónica</span>
                         </div>
                     </div>
                 </div>
@@ -323,7 +324,7 @@
                                 <div
                                     class="w-6 h-6 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center shadow-sm">
                                     <i class="fa-solid fa-pen-nib text-[10px]"></i>
-                                </div>Tu InstrucciÃ³n
+                                </div>Tu Instrucción
                             </label>
                             <textarea id="prompt"
                                 class="flex-1 w-full p-4 rounded-xl bg-white border border-slate-300 shadow-sm resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm transition-all placeholder-slate-400 leading-relaxed hover:border-slate-400 h-40 md:h-auto"
@@ -353,7 +354,7 @@
                                 <div
                                     class="absolute inset-0 flex flex-col items-center justify-center text-slate-300 pointer-events-none">
                                     <i class="fa-regular fa-paper-plane text-4xl mb-2"></i>
-                                    <p>El texto aparecerÃ¡ aquÃ­</p>
+                                    <p>El texto aparecerá aquí</p>
                                 </div>
                             </div>
                             <div class="mt-4 flex justify-end"><button onclick="copyToClipboard()"
@@ -367,7 +368,7 @@
                     <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-6 gap-4">
                         <div>
                             <h1 class="text-2xl font-bold text-slate-800">Base de Datos Estudiantes</h1>
-                            <p class="text-slate-500 text-sm mt-1">Semestre 2025-2 â€¢ IngenierÃ­a MecatrÃ³nica</p>
+                            <p class="text-slate-500 text-sm mt-1">Semestre 2025-2 • Ingeniería Mecatrónica</p>
                         </div>
                         <div class="flex gap-2 w-full md:w-auto">
                             <button onclick="toggleNewStudentModal()"
@@ -388,7 +389,7 @@
                                         <th class="p-5">Materia</th>
                                         <th class="p-5">Nota</th>
                                         <th class="p-5">Estado</th>
-                                        <th class="p-5">AcciÃ³n</th>
+                                        <th class="p-5">Acción</th>
                                     </tr>
                                 </thead>
                                 <tbody class="text-sm divide-y divide-slate-100">
@@ -477,7 +478,7 @@
                                                 class="block text-xs font-bold text-slate-500 uppercase mb-2">Tipo</label>
                                             <select id="exam-type"
                                                 class="w-full p-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-purple-500 bg-white">
-                                                <option value="SelecciÃ³n Simple">SelecciÃ³n Simple</option>
+                                                <option value="Selección Simple">Selección Simple</option>
                                                 <option value="Verdadero/Falso">Verdadero/Falso</option>
                                             </select>
                                         </div>
@@ -498,7 +499,7 @@
                                 <div
                                     class="w-12 h-12 border-4 border-purple-200 border-t-purple-600 rounded-full animate-spin mb-4">
                                 </div>
-                                <p class="text-slate-500 font-medium animate-pulse">DiseÃ±ando evaluaciÃ³n...</p>
+                                <p class="text-slate-500 font-medium animate-pulse">Diseñando evaluación...</p>
                             </div>
 
                             <div id="exam-empty"
@@ -508,8 +509,8 @@
                                     <i class="fa-solid fa-file-pen text-2xl"></i>
                                 </div>
                                 <h3 class="text-slate-900 font-bold mb-1">Sin Examen Generado</h3>
-                                <p class="text-slate-500 text-sm max-w-xs">Configura los parÃ¡metros a la izquierda y
-                                    deja que la IA cree tu evaluaciÃ³n en segundos.</p>
+                                <p class="text-slate-500 text-sm max-w-xs">Configura los parámetros a la izquierda y
+                                    deja que la IA cree tu evaluación en segundos.</p>
                             </div>
 
                             <div id="exam-results" class="space-y-6 hidden">
@@ -557,7 +558,7 @@
                                                 class="block text-xs font-bold text-slate-500 uppercase mb-2">Tipo</label>
                                             <select id="exam-type"
                                                 class="w-full p-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-purple-500 bg-white">
-                                                <option value="SelecciÃ³n Simple">SelecciÃ³n</option>
+                                                <option value="Selección Simple">Selección</option>
                                                 <option value="Verdadero/Falso">V/F</option>
                                             </select>
                                         </div>
@@ -584,7 +585,7 @@
                                     <i class="fa-solid fa-file-pen text-2xl"></i>
                                 </div>
                                 <h3 class="text-slate-900 font-bold mb-1">Sin Examen</h3>
-                                <p class="text-slate-500 text-sm">Configura y genera tu evaluaciÃ³n.</p>
+                                <p class="text-slate-500 text-sm">Configura y genera tu evaluación.</p>
                             </div>
                             <div id="exam-results" class="space-y-6 hidden"></div>
                         </div>
@@ -602,7 +603,7 @@
                                 <div>
                                     <h3 id="profile-name-card" class="font-bold text-lg text-slate-800">Gustavo Triana
                                     </h3>
-                                    <p class="text-slate-500 text-sm">Profesor IngenierÃ­a MecatrÃ³nica</p>
+                                    <p class="text-slate-500 text-sm">Profesor Ingeniería Mecatrónica</p>
                                     <p class="text-slate-400 text-xs mt-1">ID: 20211000127</p>
                                 </div>
                             </div>
@@ -618,10 +619,10 @@
                                     </div>
                                 </div>
                                 <div id="pass-container">
-                                    <label class="text-xs font-bold text-slate-400 uppercase">ContraseÃ±a</label>
+                                    <label class="text-xs font-bold text-slate-400 uppercase">Contraseña</label>
                                     <div class="flex justify-between items-center border-b border-slate-100 py-2">
                                         <span id="pass-text"
-                                            class="text-sm font-medium text-slate-700">â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢</span>
+                                            class="text-sm font-medium text-slate-700">••••••••••••</span>
                                         <button onclick="editField('pass')"
                                             class="text-blue-600 text-xs font-bold hover:text-blue-800">Cambiar</button>
                                     </div>
@@ -638,7 +639,7 @@
                                     class="fa-solid fa-crown text-yellow-500"></i> Plan Premium</h3>
                             <p class="text-3xl font-extrabold text-slate-900 mb-1">$3.99 <span
                                     class="text-sm text-slate-400 font-normal">/mes</span></p>
-                            <p class="text-xs text-slate-500 mb-6">PrÃ³ximo cobro: 28 de Febrero, 2026</p>
+                            <p class="text-xs text-slate-500 mb-6">Próximo cobro: 28 de Febrero, 2026</p>
                             <div class="space-y-2 mb-6">
                                 <div class="flex items-center gap-2 text-xs text-slate-600"><i
                                         class="fa-solid fa-check text-green-500"></i> Redactor IA Ilimitado</div>
@@ -649,7 +650,7 @@
                             </div>
                             <button onclick="toggleSubscriptionModal()"
                                 class="w-full py-2.5 rounded-xl border border-slate-300 text-slate-700 font-bold text-sm hover:bg-slate-50 transition">Gestionar
-                                SuscripciÃ³n</button>
+                                Suscripción</button>
                         </div>
 
                         <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
@@ -689,8 +690,8 @@
 
                         <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
                             <h3 class="font-bold text-md text-slate-800 mb-4 flex items-center gap-2"><i
-                                    class="fa-solid fa-headset text-purple-500"></i> Soporte TÃ©cnico</h3>
-                            <p class="text-xs text-slate-500 mb-4">Â¿Tienes problemas? Nuestro equipo responde en menos
+                                    class="fa-solid fa-headset text-purple-500"></i> Soporte Técnico</h3>
+                            <p class="text-xs text-slate-500 mb-4">¿Tienes problemas? Nuestro equipo responde en menos
                                 de 2 horas.</p>
                             <div class="flex gap-3">
                                 <button onclick="toggleSupportChat()"
@@ -720,7 +721,7 @@
             <div id="toast-icon" class="text-green-400"><i class="fa-solid fa-circle-check"></i></div>
             <div>
                 <h4 id="toast-title" class="font-bold text-sm">Éxito</h4>
-                <p id="toast-msg" class="text-xs text-slate-300">AcciÃ³n completada</p>
+                <p id="toast-msg" class="text-xs text-slate-300">Acción completada</p>
             </div>
         </div>
 
@@ -729,7 +730,7 @@
             <div class="bg-blue-600 p-4 flex justify-between items-center text-white">
                 <div>
                     <h3 class="font-bold text-sm">Asistente UNEXPO</h3>
-                    <p class="text-[10px] text-blue-200">En lÃ­nea ahora</p>
+                    <p class="text-[10px] text-blue-200">En línea ahora</p>
                 </div>
                 <button onclick="toggleSupportChat()" class="hover:text-blue-200"><i
                         class="fa-solid fa-xmark"></i></button>
@@ -758,7 +759,7 @@
                         </div>
                         <div>
                             <p class="font-bold text-slate-800 text-sm">Reportar falla</p>
-                            <p class="text-[10px] text-slate-500">Notificar un error tÃ©cnico</p>
+                            <p class="text-[10px] text-slate-500">Notificar un error técnico</p>
                         </div>
                     </div>
                 </button>
@@ -796,7 +797,7 @@
                                 <th class="p-4 border-b border-slate-200">Fecha</th>
                                 <th class="p-4 border-b border-slate-200">Asunto</th>
                                 <th class="p-4 border-b border-slate-200">Estado</th>
-                                <th class="p-4 border-b border-slate-200 text-right">AcciÃ³n</th>
+                                <th class="p-4 border-b border-slate-200">Acción</th>
                             </tr>
                         </thead>
                         <tbody id="history-rows" class="text-sm text-slate-700 divide-y divide-slate-100">
@@ -841,8 +842,9 @@
             <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl relative my-8">
                 <div id="sub-view-summary" class="p-8 flex flex-col transition-all duration-300">
                     <div class="flex justify-between items-center mb-6">
-                        <h3 class="font-bold text-slate-800 text-xl">GestiÃ³n de SuscripciÃ³n</h3>
-                        <button onclick="toggleSubscriptionModal()" class="text-slate-400 hover:text-red-500"><i
+                        <div><label class="block text-xs font-bold text-slate-500 uppercase mb-1.5">Descripción del
+                                Problema</label><textarea id="ticket-desc" rows="4" <button
+                                onclick="toggleSubscriptionModal()" class="text-slate-400 hover:text-red-500"><i
                                 class="fa-solid fa-xmark text-xl"></i></button>
                     </div>
                     <div
@@ -957,8 +959,9 @@
             <div class="bg-white rounded-2xl shadow-2xl p-6 max-w-xs w-full text-center animate-[fadeIn_0.2s_ease-out]">
                 <div class="w-14 h-14 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-4"><i
                         class="fa-solid fa-right-from-bracket text-2xl text-red-500"></i></div>
-                <h3 class="text-lg font-bold text-slate-800 mb-2">Â¿Cerrar SesiÃ³n?</h3>
-                <p class="text-sm text-slate-500 mb-6">TendrÃ¡s que ingresar de nuevo.</p>
+                        <div class="grid grid-cols-2 gap-5">
+                            <div><label
+                                    class="block text-xs font-bold text-slate-500 uppercase mb-2 ml-1">Expiración</label><input
                 <div class="flex gap-3"><button onclick="closeLogoutModal()"
                         class="flex-1 py-2.5 rounded-xl border border-slate-200 text-slate-600 font-bold hover:bg-slate-50 text-sm">Cancelar</button><button
                         onclick="confirmLogout()"
@@ -1011,7 +1014,7 @@
                             class="fa-solid fa-xmark text-lg"></i></button>
                 </div>
                 <div class="p-6 space-y-4">
-                    <div><label class="block text-xs font-bold text-slate-500 uppercase mb-1.5">TÃ­tulo</label><input
+                    <div><label class="block text-xs font-bold text-slate-500 uppercase mb-1.5">Título</label><input
                             type="text" id="task-title" placeholder="Ej: Entrega de Notas"
                             class="w-full p-3 border border-slate-300 rounded-xl text-sm focus:outline-none focus:border-blue-500 transition">
                     </div>
@@ -1052,11 +1055,11 @@
                     <div><label class="block text-xs font-bold text-slate-500 uppercase mb-1.5">Materia</label>
                         <select id="new-student-subject"
                             class="w-full p-3 border border-slate-300 rounded-xl text-sm focus:outline-none focus:border-blue-500 bg-white text-slate-700">
-                            <option value="MecatrÃ³nica">MecatrÃ³nica</option>
-                            <option value="ProgramaciÃ³n">ProgramaciÃ³n</option>
-                            <option value="MatemÃ¡tica">MatemÃ¡tica</option>
-                            <option value="FÃ­sica">FÃ­sica</option>
-                            <option value="ElectrÃ³nica">ElectrÃ³nica</option>
+                            <option value="Mecatrónica">Mecatrónica</option>
+                            <option value="Programación">Programación</option>
+                            <option value="Matemática">Matemática</option>
+                            <option value="Física">Física</option>
+                            <option value="Electrónica">Electrónica</option>
                         </select>
                     </div>
                     <div><label class="block text-xs font-bold text-slate-500 uppercase mb-1.5">Nota Definitiva
@@ -1076,6 +1079,14 @@
             let currentMonth = today.getMonth();
             let currentYear = 2026;
             let tasks = []; // Load from API
+            let currentExamData = []; // Store the exam data for PDF export
+
+            function updateHeaderDate() {
+                const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                const dateString = new Date().toLocaleDateString('es-VE', dateOptions);
+                const capitalizedDate = dateString.charAt(0).toUpperCase() + dateString.slice(1);
+                document.getElementById('header-date').innerText = capitalizedDate;
+            }
 
             function fetchTasks() {
                 fetch('/api/tasks')
@@ -1681,8 +1692,9 @@
                     .then(res => res.json())
                     .then(data => {
                         if (data.success) {
-                            renderExam(data.data, topic);
+                            showToast('Configuración Guardada', 'Preferencia de automatización guardada correctamente', 'success');
                         } else {
+                            showToast('Error', 'No se pudo guardar la configuración', 'error');
                             showToast('Error', 'No se pudo generar el examen.');
                             empty.classList.remove('hidden');
                         }
@@ -1700,11 +1712,19 @@
             }
 
             function renderExam(questions, topic) {
+                currentExamData = questions; // Store data for export
                 const results = document.getElementById('exam-results');
                 results.innerHTML = `
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="font-bold text-slate-800 text-lg">Examen: ${topic}</h3>
-                        <button onclick="window.print()" class="text-slate-500 hover:text-slate-800 text-sm font-medium"><i class="fa-solid fa-print"></i> Imprimir</button>
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-3">
+                        <h3 class="font-bold text-slate-800 text-lg flex items-center gap-2"><i class="fa-solid fa-file-contract text-purple-600"></i> Examen: ${topic}</h3>
+                        <div class="flex gap-2 w-full md:w-auto">
+                            <button onclick="downloadExamPDF('student')" class="flex-1 md:flex-none text-slate-600 hover:text-blue-600 hover:bg-blue-50 border border-slate-200 px-4 py-2 rounded-lg text-xs font-bold transition flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-user-graduate"></i> Descargar (Alumno)
+                            </button>
+                            <button onclick="downloadExamPDF('teacher')" class="flex-1 md:flex-none text-slate-600 hover:text-green-600 hover:bg-green-50 border border-slate-200 px-4 py-2 rounded-lg text-xs font-bold transition flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-chalkboard-user"></i> Solucionario (Profesor)
+                            </button>
+                        </div>
                     </div>
                 `;
 
@@ -1713,8 +1733,21 @@
                     if (q.options && Array.isArray(q.options)) {
                         optionsHTML = '<div class="grid grid-cols-1 md:grid-cols-2 gap-3 mt-3">';
                         q.options.forEach(opt => {
+                            // In web view we show valid check ONLY if it's correct? No, usually initial view is clean or with answer? 
+                            // Request doesn't specify web view, but usually solvable. 
+                            // However, let's keep it "clean" but highlight correct one only if requested or simple clean view. 
+                            // The user said "Descargar Solucionario ... Generates PDF with correct answers". 
+                            // Web view can be just list. Let's keep it simple as in logic.
+
+                            // Original logic highlighted correct answer. Let's keep that but maybe subtle or hidden?
+                            // Actually, let's keep it clean for web view mostly, or minimal. 
+                            // Wait, the previous code ALREADY showed the answer:
+                            // const isCorrect = opt === q.correctAnswer;
+                            // const borderClass = isCorrect ? 'border-green-200 bg-green-50' : ...
+
+                            // Let's keep the web view as is (showing answers to teacher) or maybe hide it? 
+                            // Usually the generator shows the result to the teacher immediately.
                             const isCorrect = opt === q.correctAnswer;
-                            // Only highlight correct answer for teacher's view
                             const borderClass = isCorrect ? 'border-green-200 bg-green-50' : 'border-slate-200 hover:bg-slate-50';
                             const textClass = isCorrect ? 'text-green-800 font-bold' : 'text-slate-600';
                             const icon = isCorrect ? '<i class="fa-solid fa-check text-green-600 float-right mt-1"></i>' : '';
@@ -1746,7 +1779,85 @@
                 results.classList.remove('hidden');
             }
 
+            function downloadExamPDF(mode) {
+                if (!currentExamData || currentExamData.length === 0) {
+                    showToast('Error', 'No hay examen generado.');
+                    return;
+                }
+
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF();
+                const topic = document.getElementById('exam-topic').value || 'Examen';
+                let yPos = 20;
+
+                // Header
+                doc.setFontSize(18);
+                doc.setFont('helvetica', 'bold');
+                doc.text(topic.toUpperCase(), 105, yPos, { align: 'center' });
+                yPos += 10;
+
+                doc.setFontSize(12);
+                doc.setFont('helvetica', 'normal');
+                const title = mode === 'teacher' ? 'SOLUCIONARIO (PROFESOR)' : 'EVALUACIÓN (ALUMNO)';
+                doc.text(title, 105, yPos, { align: 'center' });
+                yPos += 15;
+
+                doc.setLineWidth(0.5);
+                doc.line(20, yPos, 190, yPos);
+                yPos += 15;
+
+                // Questions
+                doc.setFontSize(11);
+
+                currentExamData.forEach((q, index) => {
+                    if (yPos > 270) {
+                        doc.addPage();
+                        yPos = 20;
+                    }
+
+                    // Question Text
+                    doc.setFont('helvetica', 'bold');
+                    const questionText = `${index + 1}. ${q.question}`;
+                    const splitQuestion = doc.splitTextToSize(questionText, 170);
+                    doc.text(splitQuestion, 20, yPos);
+                    yPos += (splitQuestion.length * 5) + 5;
+
+                    // Options
+                    doc.setFont('helvetica', 'normal');
+                    if (q.options && Array.isArray(q.options)) {
+                        q.options.forEach(opt => {
+                            if (yPos > 275) {
+                                doc.addPage();
+                                yPos = 20;
+                            }
+
+                            const isCorrect = mode === 'teacher' && opt === q.correctAnswer;
+                            const marker = isCorrect ? '[ X ]' : '[   ]'; // Mark correct answer only for teacher
+                            // Or bold it? Let's use standard exam format
+
+                            // If teacher, maybe bold the correct answer
+                            if (isCorrect) doc.setFont('helvetica', 'bold');
+                            else doc.setFont('helvetica', 'normal');
+
+                            const optionSub = mode === 'teacher' && isCorrect ? `-> ${opt} (CORRECTA)` : opt;
+                            const optionText = mode === 'teacher' && isCorrect ? `(X) ${opt}` : `( ) ${opt}`;
+
+                            // Let's stick to user request: "Descargar Examen (Alumno): Clean. Descargar Solucionario (Profesor): Highlighted."
+                            const prefix = mode === 'teacher' && opt === q.correctAnswer ? '●' : '○';
+
+                            doc.text(`   ${prefix} ${opt}`, 25, yPos);
+                            yPos += 6;
+                        });
+                    }
+                    yPos += 8;
+                });
+
+                doc.save(`Examen_${topic.replace(/\s+/g, '_')}_${mode}.pdf`);
+                showToast('Descarga Iniciada', 'El PDF se ha generado correctamente.');
+            }
+
             renderCalendar();
+            updateHeaderDate();
         </script>
         <script src="https://cdn.jsdelivr.net/npm/driver.js@1.0.1/dist/driver.js.iife.js"></script>
         <script>
@@ -1759,11 +1870,11 @@
                 const driverObj = driver({
                     showProgress: true,
                     steps: [
-                        { popover: { title: 'Â¡Hola Docente!', description: 'Bienvenido a tu nueva experiencia de gestiÃ³n. Hagamos un recorrido rÃ¡pido.', side: "left", align: 'center' } },
-                        { element: '#tour-sidebar', popover: { title: 'NavegaciÃ³n', description: 'AquÃ­ tienes acceso rÃ¡pido a tu calendario, clases y herramientas.', side: "right", align: 'start' } },
-                        { element: '#tour-assistant', popover: { title: 'Tu Copiloto IA', description: 'Haz clic aquÃ­ para pedir ayuda, crear exÃ¡menes o resolver dudas.', side: "left", align: 'start' } },
+                        { popover: { title: '¡Hola Docente!', description: 'Bienvenido a tu nueva experiencia de gestión. Hagamos un recorrido rápido.', side: "left", align: 'center' } },
+                        { element: '#tour-sidebar', popover: { title: 'Navegación', description: 'Aquí tienes acceso rápido a tu calendario, clases y herramientas.', side: "right", align: 'start' } },
+                        { element: '#tour-assistant', popover: { title: 'Tu Copiloto IA', description: 'Haz clic aquí para pedir ayuda, crear exámenes o resolver dudas.', side: "left", align: 'start' } },
                         // Only show profile card step if visible, otherwise target the sidebar text
-                        { element: document.getElementById('tour-profile-card') && document.getElementById('tour-profile-card').offsetParent !== null ? '#tour-profile-card' : '#tour-sidebar', popover: { title: 'Configuración', description: 'En la secciÃ³n de configuraciÃ³n podrÃ¡s ver tu suscripciÃ³n.', side: "top", align: 'start' } }
+                        { element: document.getElementById('tour-profile-card') && document.getElementById('tour-profile-card').offsetParent !== null ? '#tour-profile-card' : '#tour-sidebar', popover: { title: 'Configuración', description: 'En la sección de configuración podrás ver tu suscripción.', side: "top", align: 'start' } }
                     ]
                 });
 
