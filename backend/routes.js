@@ -390,14 +390,14 @@ router.post('/ai/generate', async (req, res) => {
                 { role: "system", content: systemInstruction },
                 { role: "user", content: prompt }
             ],
-            model: "llama3-70b-8192",
+            model: "llama-3.3-70b-versatile",
         });
 
         const text = completion.choices[0]?.message?.content || "";
 
         res.json({ result: text });
     } catch (error) {
-        console.error("Error calling Gemini API:", error.message);
+        console.error("Error calling Groq API:", error.message);
         res.status(500).json({
             error: "Failed to generate content",
             details: error.message
@@ -679,7 +679,7 @@ router.post('/generate-exam', async (req, res) => {
                 { role: "system", content: systemPrompt },
                 { role: "user", content: `Generate ${numQuestions} ${type} questions about ${topic}.` }
             ],
-            model: "llama3-70b-8192",
+            model: "llama-3.3-70b-versatile",
             response_format: { type: "json_object" }
         });
 
