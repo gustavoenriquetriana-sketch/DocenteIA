@@ -901,150 +901,148 @@
                     </div>
                 </div>
             </div>
+        </div>
 
-            <div id="modal-editar-estudiante"
-                class="force-hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-                <div
-                    class="bg-white rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden transform transition-all scale-100 animate-[fadeIn_0.2s_ease-out]">
-                    <div class="bg-slate-50 px-6 py-4 border-b border-slate-200 flex justify-between items-center">
-                        <h3 class="font-bold text-slate-800">Editar Estudiante</h3><button onclick="toggleEditModal()"
-                            class="text-slate-400 hover:text-red-500 transition"><i
-                                class="fa-solid fa-xmark text-lg"></i></button>
-                    </div>
-                    <div class="p-6 space-y-4">
-                        <div><label
-                                class="block text-xs font-bold text-slate-500 uppercase mb-1.5">Estudiante</label><input
-                                type="text" id="edit-student-name"
-                                class="w-full p-3 border border-slate-200 rounded-xl text-sm bg-slate-50 text-slate-500"
-                                readonly></div>
-                        <div class="grid grid-cols-2 gap-4">
-                            <div><label class="block text-xs font-bold text-slate-500 uppercase mb-1.5">Nota
-                                    Actual</label><input type="number" id="edit-student-grade" step="0.1" min="0"
-                                    max="20"
-                                    class="w-full p-3 border border-slate-300 rounded-xl text-sm focus:outline-none focus:border-blue-500 font-bold text-slate-700">
-                            </div>
-                            <div><label
-                                    class="block text-xs font-bold text-slate-500 uppercase mb-1.5">Estado</label><select
-                                    id="edit-student-status"
-                                    class="w-full p-3 border border-slate-300 rounded-xl text-sm focus:outline-none focus:border-blue-500 bg-white text-slate-700">
-                                    <option value="aprobado">Aprobado</option>
-                                    <option value="riesgo">Riesgo</option>
-                                </select></div>
-                        </div>
-                        <div class="pt-2"><button onclick="saveStudentChanges()"
-                                class="w-full py-3 text-sm font-bold bg-blue-600 text-white rounded-xl hover:bg-blue-700 shadow-md transition active:scale-[0.98]">Guardar
-                                Cambios</button></div>
-                    </div>
+        <div id="modal-editar-estudiante"
+            class="force-hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+            <div
+                class="bg-white rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden transform transition-all scale-100 animate-[fadeIn_0.2s_ease-out]">
+                <div class="bg-slate-50 px-6 py-4 border-b border-slate-200 flex justify-between items-center">
+                    <h3 class="font-bold text-slate-800">Editar Estudiante</h3><button onclick="toggleEditModal()"
+                        class="text-slate-400 hover:text-red-500 transition"><i
+                            class="fa-solid fa-xmark text-lg"></i></button>
                 </div>
-            </div>
-
-            <div id="modal-nueva-tarea"
-                class="force-hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-                <div
-                    class="bg-white rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden transform transition-all scale-100">
-                    <div class="bg-slate-50 px-6 py-4 border-b border-slate-200 flex justify-between items-center">
-                        <h3 class="font-bold text-slate-800">Agendar Tarea</h3><button
-                            onclick="closeModal('modal-nueva-tarea')"
-                            class="text-slate-400 hover:text-red-500 transition"><i
-                                class="fa-solid fa-xmark text-lg"></i></button>
-                    </div>
-                    <div class="p-6 space-y-4">
-                        <div><label class="block text-xs font-bold text-slate-500 uppercase mb-1.5">Título</label><input
-                                type="text" id="task-title" placeholder="Ej: Entrega de Notas"
-                                class="w-full p-3 border border-slate-300 rounded-xl text-sm focus:outline-none focus:border-blue-500 transition">
-                        </div>
-                        <div class="grid grid-cols-2 gap-4">
-                            <div><label
-                                    class="block text-xs font-bold text-slate-500 uppercase mb-1.5">Fecha</label><input
-                                    type="date" id="task-date"
-                                    class="w-full p-3 border border-slate-300 rounded-xl text-sm focus:outline-none focus:border-blue-500 text-slate-600">
-                            </div>
-                            <div><label
-                                    class="block text-xs font-bold text-slate-500 uppercase mb-1.5">Etiqueta</label><select
-                                    id="task-type"
-                                    class="w-full p-3 border border-slate-300 rounded-xl text-sm focus:outline-none focus:border-blue-500 transition bg-white text-slate-600">
-                                    <option value="blue">Clase</option>
-                                    <option value="orange">Examen</option>
-                                </select></div>
-                        </div>
-                        <div class="pt-2"><button onclick="saveTask()"
-                                class="w-full py-3 text-sm font-bold bg-blue-600 text-white rounded-xl hover:bg-blue-700 shadow-md transition active:scale-[0.98]">Guardar
-                                en Agenda</button></div>
-                    </div>
-                </div>
-            </div>
-
-            <div id="modal-nuevo-estudiante"
-                class="force-hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-                <div
-                    class="bg-white rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden transform transition-all scale-100 animate-[fadeIn_0.2s_ease-out]">
-                    <div class="bg-slate-50 px-6 py-4 border-b border-slate-200 flex justify-between items-center">
-                        <h3 class="font-bold text-slate-800">Registrar Estudiante</h3><button
-                            onclick="closeModal('modal-nuevo-estudiante')"
-                            class="text-slate-400 hover:text-red-500 transition"><i
-                                class="fa-solid fa-xmark text-lg"></i></button>
-                    </div>
-                    <div class="p-6 space-y-4">
-                        <div><label class="block text-xs font-bold text-slate-500 uppercase mb-1.5">Nombre
-                                Completo</label><input type="text" id="new-student-name" placeholder="Ej: Maria Perez"
-                                class="w-full p-3 border border-slate-300 rounded-xl text-sm focus:outline-none focus:border-blue-500 transition">
-                        </div>
-                        <div><label class="block text-xs font-bold text-slate-500 uppercase mb-1.5">Materia</label>
-                            <select id="new-student-subject"
-                                class="w-full p-3 border border-slate-300 rounded-xl text-sm focus:outline-none focus:border-blue-500 bg-white text-slate-700">
-                                <option value="Mecatrónica">Mecatrónica</option>
-                                <option value="Programación">Programación</option>
-                                <option value="Matemática">Matemática</option>
-                                <option value="Física">Física</option>
-                                <option value="Electrónica">Electrónica</option>
-                            </select>
-                        </div>
-                        <div><label class="block text-xs font-bold text-slate-500 uppercase mb-1.5">Nota Definitiva
-                                (0-20)</label><input type="number" id="new-student-grade" step="0.1" min="0" max="20"
-                                placeholder="0.0"
+                <div class="p-6 space-y-4">
+                    <div><label class="block text-xs font-bold text-slate-500 uppercase mb-1.5">Estudiante</label><input
+                            type="text" id="edit-student-name"
+                            class="w-full p-3 border border-slate-200 rounded-xl text-sm bg-slate-50 text-slate-500"
+                            readonly></div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div><label class="block text-xs font-bold text-slate-500 uppercase mb-1.5">Nota
+                                Actual</label><input type="number" id="edit-student-grade" step="0.1" min="0" max="20"
                                 class="w-full p-3 border border-slate-300 rounded-xl text-sm focus:outline-none focus:border-blue-500 font-bold text-slate-700">
                         </div>
-                        <div class="pt-2"><button onclick="saveNewStudent()"
-                                class="w-full py-3 text-sm font-bold bg-blue-600 text-white rounded-xl hover:bg-blue-700 shadow-md transition active:scale-[0.98]">Guardar
-                                Estudiante</button></div>
+                        <div><label
+                                class="block text-xs font-bold text-slate-500 uppercase mb-1.5">Estado</label><select
+                                id="edit-student-status"
+                                class="w-full p-3 border border-slate-300 rounded-xl text-sm focus:outline-none focus:border-blue-500 bg-white text-slate-700">
+                                <option value="aprobado">Aprobado</option>
+                                <option value="riesgo">Riesgo</option>
+                            </select></div>
                     </div>
+                    <div class="pt-2"><button onclick="saveStudentChanges()"
+                            class="w-full py-3 text-sm font-bold bg-blue-600 text-white rounded-xl hover:bg-blue-700 shadow-md transition active:scale-[0.98]">Guardar
+                            Cambios</button></div>
                 </div>
             </div>
+        </div>
 
-            <script>
-                const today = new Date();
-                let currentMonth = today.getMonth();
-                let currentYear = 2026;
-                let tasks = []; // Load from API
-                let currentExamData = []; // Store the exam data for PDF export
+        <div id="modal-nueva-tarea"
+            class="force-hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+            <div
+                class="bg-white rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden transform transition-all scale-100">
+                <div class="bg-slate-50 px-6 py-4 border-b border-slate-200 flex justify-between items-center">
+                    <h3 class="font-bold text-slate-800">Agendar Tarea</h3><button
+                        onclick="closeModal('modal-nueva-tarea')"
+                        class="text-slate-400 hover:text-red-500 transition"><i
+                            class="fa-solid fa-xmark text-lg"></i></button>
+                </div>
+                <div class="p-6 space-y-4">
+                    <div><label class="block text-xs font-bold text-slate-500 uppercase mb-1.5">Título</label><input
+                            type="text" id="task-title" placeholder="Ej: Entrega de Notas"
+                            class="w-full p-3 border border-slate-300 rounded-xl text-sm focus:outline-none focus:border-blue-500 transition">
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div><label class="block text-xs font-bold text-slate-500 uppercase mb-1.5">Fecha</label><input
+                                type="date" id="task-date"
+                                class="w-full p-3 border border-slate-300 rounded-xl text-sm focus:outline-none focus:border-blue-500 text-slate-600">
+                        </div>
+                        <div><label
+                                class="block text-xs font-bold text-slate-500 uppercase mb-1.5">Etiqueta</label><select
+                                id="task-type"
+                                class="w-full p-3 border border-slate-300 rounded-xl text-sm focus:outline-none focus:border-blue-500 transition bg-white text-slate-600">
+                                <option value="blue">Clase</option>
+                                <option value="orange">Examen</option>
+                            </select></div>
+                    </div>
+                    <div class="pt-2"><button onclick="saveTask()"
+                            class="w-full py-3 text-sm font-bold bg-blue-600 text-white rounded-xl hover:bg-blue-700 shadow-md transition active:scale-[0.98]">Guardar
+                            en Agenda</button></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="modal-nuevo-estudiante"
+            class="force-hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+            <div
+                class="bg-white rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden transform transition-all scale-100 animate-[fadeIn_0.2s_ease-out]">
+                <div class="bg-slate-50 px-6 py-4 border-b border-slate-200 flex justify-between items-center">
+                    <h3 class="font-bold text-slate-800">Registrar Estudiante</h3><button
+                        onclick="closeModal('modal-nuevo-estudiante')"
+                        class="text-slate-400 hover:text-red-500 transition"><i
+                            class="fa-solid fa-xmark text-lg"></i></button>
+                </div>
+                <div class="p-6 space-y-4">
+                    <div><label class="block text-xs font-bold text-slate-500 uppercase mb-1.5">Nombre
+                            Completo</label><input type="text" id="new-student-name" placeholder="Ej: Maria Perez"
+                            class="w-full p-3 border border-slate-300 rounded-xl text-sm focus:outline-none focus:border-blue-500 transition">
+                    </div>
+                    <div><label class="block text-xs font-bold text-slate-500 uppercase mb-1.5">Materia</label>
+                        <select id="new-student-subject"
+                            class="w-full p-3 border border-slate-300 rounded-xl text-sm focus:outline-none focus:border-blue-500 bg-white text-slate-700">
+                            <option value="Mecatrónica">Mecatrónica</option>
+                            <option value="Programación">Programación</option>
+                            <option value="Matemática">Matemática</option>
+                            <option value="Física">Física</option>
+                            <option value="Electrónica">Electrónica</option>
+                        </select>
+                    </div>
+                    <div><label class="block text-xs font-bold text-slate-500 uppercase mb-1.5">Nota Definitiva
+                            (0-20)</label><input type="number" id="new-student-grade" step="0.1" min="0" max="20"
+                            placeholder="0.0"
+                            class="w-full p-3 border border-slate-300 rounded-xl text-sm focus:outline-none focus:border-blue-500 font-bold text-slate-700">
+                    </div>
+                    <div class="pt-2"><button onclick="saveNewStudent()"
+                            class="w-full py-3 text-sm font-bold bg-blue-600 text-white rounded-xl hover:bg-blue-700 shadow-md transition active:scale-[0.98]">Guardar
+                            Estudiante</button></div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            const today = new Date();
+            let currentMonth = today.getMonth();
+            let currentYear = 2026;
+            let tasks = []; // Load from API
+            let currentExamData = []; // Store the exam data for PDF export
 
 
 
-                function fetchTasks() {
-                    fetch('/api/tasks')
-                        .then(res => res.json())
-                        .then(data => {
-                            tasks = data.data;
-                            renderCalendar();
-                        })
-                        .catch(err => console.error(err));
-                }
+            function fetchTasks() {
+                fetch('/api/tasks')
+                    .then(res => res.json())
+                    .then(data => {
+                        tasks = data.data;
+                        renderCalendar();
+                    })
+                    .catch(err => console.error(err));
+            }
 
-                function fetchStudents() {
-                    fetch('/api/students')
-                        .then(res => res.json())
-                        .then(data => {
-                            const tbody = document.getElementById('students-table-body');
-                            tbody.innerHTML = '';
-                            data.data.forEach(s => {
-                                let statusBadge = '';
-                                if (s.status === 'aprobado') statusBadge = '<span class="bg-green-100 text-green-700 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide border border-green-200">Aprobado</span>';
-                                else if (s.status === 'riesgo') statusBadge = '<span class="bg-yellow-100 text-yellow-700 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide border border-yellow-200">Riesgo</span>';
-                                else statusBadge = '<span class="bg-red-100 text-red-700 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide border border-red-200">Reprobado</span>';
+            function fetchStudents() {
+                fetch('/api/students')
+                    .then(res => res.json())
+                    .then(data => {
+                        const tbody = document.getElementById('students-table-body');
+                        tbody.innerHTML = '';
+                        data.data.forEach(s => {
+                            let statusBadge = '';
+                            if (s.status === 'aprobado') statusBadge = '<span class="bg-green-100 text-green-700 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide border border-green-200">Aprobado</span>';
+                            else if (s.status === 'riesgo') statusBadge = '<span class="bg-yellow-100 text-yellow-700 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide border border-yellow-200">Riesgo</span>';
+                            else statusBadge = '<span class="bg-red-100 text-red-700 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide border border-red-200">Reprobado</span>';
 
-                                const gradeClass = s.grade < 10 ? 'text-red-600' : (s.grade < 14 ? 'text-yellow-600' : 'text-blue-600');
+                            const gradeClass = s.grade < 10 ? 'text-red-600' : (s.grade < 14 ? 'text-yellow-600' : 'text-blue-600');
 
-                                tbody.innerHTML += `
+                            tbody.innerHTML += `
                             <tr class="hover:bg-blue-50/30 transition group">
                                 <td class="p-5 font-bold text-slate-700 flex items-center gap-3">
                                     <div class="w-8 h-8 rounded-full ${s.avatarClass} flex items-center justify-center text-xs">${s.initials}</div>
@@ -1058,607 +1056,607 @@
                                 </td>
                             </tr>
                         `;
-                            });
                         });
-                }
-
-                // Init
-                fetchTasks();
-                fetchStudents();
-                loadSettings();
-
-                function loadSettings() {
-                    fetch('/api/settings')
-                        .then(res => res.json())
-                        .then(data => {
-                            document.getElementById('toggle1').checked = data.reminders;
-                            document.getElementById('toggle2').checked = data.summary;
-                        })
-                        .catch(err => console.error("Error loading settings:", err));
-                }
-
-                function showToast(title, msg, type = 'success') {
-                    const t = document.getElementById('toast-container');
-                    const icon = document.getElementById('toast-icon');
-
-                    document.getElementById('toast-title').innerText = title;
-                    document.getElementById('toast-msg').innerText = msg;
-
-                    // Reset classes
-                    icon.className = '';
-
-                    if (type === 'error') {
-                        icon.innerHTML = '<i class="fa-solid fa-circle-xmark"></i>';
-                        icon.classList.add('text-red-400');
-                    } else {
-                        icon.innerHTML = '<i class="fa-solid fa-circle-check"></i>';
-                        icon.classList.add('text-green-400');
-                    }
-
-                    t.classList.add('show');
-                    setTimeout(() => t.classList.remove('show'), 3000);
-                }
-
-                function saveSettings(type, isChecked) {
-                    const reminders = document.getElementById('toggle1').checked;
-                    const summary = document.getElementById('toggle2').checked;
-
-                    fetch('/api/settings', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ reminders, summary })
-                    })
-                        .then(res => {
-                            if (!res.ok) throw new Error('API Error');
-                            return res.json();
-                        })
-                        .then(data => {
-                            if (data.success) {
-                                showToast('Configuración Guardada', 'Preferencia de automatizaciÃ³n guardada correctamente', 'success');
-                            } else {
-                                showToast('Error', 'No se pudo guardar la configuraciÃ³n', 'error');
-                                // Revert switch if failed? For now, just show error.
-                            }
-                        })
-                        .catch(err => {
-                            console.error(err);
-                            showToast('Error de Conexión', 'No se pudo guardar. Revisa tu internet.', 'error');
-                        });
-                }
-
-                // --- Lógica DE Transición DE TARJETAS (CORREGIDA) ---
-                function showAddCardForm() {
-                    const view1 = document.getElementById('sub-view-summary');
-                    const view2 = document.getElementById('sub-view-add-card');
-                    view1.classList.add('hidden');
-                    view2.classList.remove('hidden');
-                    view2.classList.add('flex');
-                }
-
-                function cancelAddCard() {
-                    const view1 = document.getElementById('sub-view-summary');
-                    const view2 = document.getElementById('sub-view-add-card');
-                    view2.classList.add('hidden');
-                    view2.classList.remove('flex');
-                    view1.classList.remove('hidden');
-                }
-
-                function saveNewCard() {
-                    const btn = document.querySelector('#sub-view-add-card button');
-                    const numInput = document.getElementById('input-card-num').value;
-
-                    if (!numInput || numInput.length < 12) {
-                        showToast('Error', 'Número de tarjeta invÃ¡lido');
-                        return;
-                    }
-
-                    const originalText = btn.innerHTML;
-                    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Verificando...';
-
-                    setTimeout(() => {
-                        // Capture last 4
-                        const last4 = numInput.slice(-4);
-                        localStorage.setItem('cardLast4', last4);
-
-                        // Update UI
-                        const cardDisplay = document.getElementById('current-card-digits');
-                        if (cardDisplay) cardDisplay.innerText = last4;
-
-                        cancelAddCard();
-                        btn.innerHTML = originalText;
-                        showToast('Método Actualizado', 'Tu tarjeta ha sido guardada correctamente.');
-                    }, 1500);
-                }
-
-                function toggleSupportChat() { document.getElementById('modal-support-chat').classList.toggle('force-hidden'); }
-                function toggleTicketModal() { document.getElementById('modal-ticket').classList.toggle('force-hidden'); }
-                function toggleSubscriptionModal() {
-                    const modal = document.getElementById('modal-subscription');
-                    if (modal.classList.contains('force-hidden')) {
-                        cancelAddCard();
-                    }
-                    modal.classList.toggle('force-hidden');
-                }
-
-                function copyToClipboard() {
-                    const outputDiv = document.getElementById('output');
-                    if (outputDiv.innerText.includes("El texto aparecerÃ¡ aquÃ­") || outputDiv.innerText.trim() === "") {
-                        showToast("Vacío", "Primero genera un texto.");
-                        return;
-                    }
-                    const textToCopy = outputDiv.innerText;
-                    navigator.clipboard.writeText(textToCopy).then(() => {
-                        showToast("Copiado", "Texto copiado al portapapeles.");
-                    }).catch(err => {
-                        showToast("Error", "No se pudo copiar.");
                     });
+            }
+
+            // Init
+            fetchTasks();
+            fetchStudents();
+            loadSettings();
+
+            function loadSettings() {
+                fetch('/api/settings')
+                    .then(res => res.json())
+                    .then(data => {
+                        document.getElementById('toggle1').checked = data.reminders;
+                        document.getElementById('toggle2').checked = data.summary;
+                    })
+                    .catch(err => console.error("Error loading settings:", err));
+            }
+
+            function showToast(title, msg, type = 'success') {
+                const t = document.getElementById('toast-container');
+                const icon = document.getElementById('toast-icon');
+
+                document.getElementById('toast-title').innerText = title;
+                document.getElementById('toast-msg').innerText = msg;
+
+                // Reset classes
+                icon.className = '';
+
+                if (type === 'error') {
+                    icon.innerHTML = '<i class="fa-solid fa-circle-xmark"></i>';
+                    icon.classList.add('text-red-400');
+                } else {
+                    icon.innerHTML = '<i class="fa-solid fa-circle-check"></i>';
+                    icon.classList.add('text-green-400');
                 }
 
+                t.classList.add('show');
+                setTimeout(() => t.classList.remove('show'), 3000);
+            }
 
+            function saveSettings(type, isChecked) {
+                const reminders = document.getElementById('toggle1').checked;
+                const summary = document.getElementById('toggle2').checked;
 
-                function updateChart(type) {
-                    const data = { notas: [70, 55, 85, 65], asistencia: [90, 85, 95, 80] };
-                    const labels = { notas: ['14.5', '12.0', '16.5', '13.5'], asistencia: ['90%', '85%', '95%', '80%'] };
-                    const colors = { notas: '#1e3a8a', asistencia: '#16a34a' };
-                    if (!data[type]) type = 'notas';
-                    for (let i = 1; i <= 4; i++) {
-                        const bar = document.getElementById(`bar-${i}`);
-                        const val = document.getElementById(`val-${i}`);
-                        if (bar && val) {
-                            bar.style.height = data[type][i - 1] + '%';
-                            bar.style.backgroundColor = colors[type];
-                            val.innerText = labels[type][i - 1];
+                fetch('/api/settings', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ reminders, summary })
+                })
+                    .then(res => {
+                        if (!res.ok) throw new Error('API Error');
+                        return res.json();
+                    })
+                    .then(data => {
+                        if (data.success) {
+                            showToast('Configuración Guardada', 'Preferencia de automatizaciÃ³n guardada correctamente', 'success');
+                        } else {
+                            showToast('Error', 'No se pudo guardar la configuraciÃ³n', 'error');
+                            // Revert switch if failed? For now, just show error.
                         }
-                    }
+                    })
+                    .catch(err => {
+                        console.error(err);
+                        showToast('Error de Conexión', 'No se pudo guardar. Revisa tu internet.', 'error');
+                    });
+            }
+
+            // --- Lógica DE Transición DE TARJETAS (CORREGIDA) ---
+            function showAddCardForm() {
+                const view1 = document.getElementById('sub-view-summary');
+                const view2 = document.getElementById('sub-view-add-card');
+                view1.classList.add('hidden');
+                view2.classList.remove('hidden');
+                view2.classList.add('flex');
+            }
+
+            function cancelAddCard() {
+                const view1 = document.getElementById('sub-view-summary');
+                const view2 = document.getElementById('sub-view-add-card');
+                view2.classList.add('hidden');
+                view2.classList.remove('flex');
+                view1.classList.remove('hidden');
+            }
+
+            function saveNewCard() {
+                const btn = document.querySelector('#sub-view-add-card button');
+                const numInput = document.getElementById('input-card-num').value;
+
+                if (!numInput || numInput.length < 12) {
+                    showToast('Error', 'Número de tarjeta invÃ¡lido');
+                    return;
                 }
 
+                const originalText = btn.innerHTML;
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Verificando...';
+
+                setTimeout(() => {
+                    // Capture last 4
+                    const last4 = numInput.slice(-4);
+                    localStorage.setItem('cardLast4', last4);
+
+                    // Update UI
+                    const cardDisplay = document.getElementById('current-card-digits');
+                    if (cardDisplay) cardDisplay.innerText = last4;
+
+                    cancelAddCard();
+                    btn.innerHTML = originalText;
+                    showToast('Método Actualizado', 'Tu tarjeta ha sido guardada correctamente.');
+                }, 1500);
+            }
+
+            function toggleSupportChat() { document.getElementById('modal-support-chat').classList.toggle('force-hidden'); }
+            function toggleTicketModal() { document.getElementById('modal-ticket').classList.toggle('force-hidden'); }
+            function toggleSubscriptionModal() {
+                const modal = document.getElementById('modal-subscription');
+                if (modal.classList.contains('force-hidden')) {
+                    cancelAddCard();
+                }
+                modal.classList.toggle('force-hidden');
+            }
+
+            function copyToClipboard() {
+                const outputDiv = document.getElementById('output');
+                if (outputDiv.innerText.includes("El texto aparecerÃ¡ aquÃ­") || outputDiv.innerText.trim() === "") {
+                    showToast("Vacío", "Primero genera un texto.");
+                    return;
+                }
+                const textToCopy = outputDiv.innerText;
+                navigator.clipboard.writeText(textToCopy).then(() => {
+                    showToast("Copiado", "Texto copiado al portapapeles.");
+                }).catch(err => {
+                    showToast("Error", "No se pudo copiar.");
+                });
+            }
 
 
-                function saveTask() {
-                    const title = document.getElementById('task-title').value;
-                    const date = document.getElementById('task-date').value;
-                    const type = document.getElementById('task-type').value;
-                    if (title && date) {
-                        fetch('/api/tasks', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ title, date, type })
-                        })
-                            .then(res => res.json())
-                            .then(data => {
-                                tasks.push(data.data);
-                                closeModal('modal-nueva-tarea');
-                                showToast("Tarea Guardada", "Se ha Añadido a tu agenda.");
-                                const parts = date.split('-');
-                                currentYear = parseInt(parts[0]);
-                                currentMonth = parseInt(parts[1]) - 1;
-                                nav('agenda');
-                            });
+
+            function updateChart(type) {
+                const data = { notas: [70, 55, 85, 65], asistencia: [90, 85, 95, 80] };
+                const labels = { notas: ['14.5', '12.0', '16.5', '13.5'], asistencia: ['90%', '85%', '95%', '80%'] };
+                const colors = { notas: '#1e3a8a', asistencia: '#16a34a' };
+                if (!data[type]) type = 'notas';
+                for (let i = 1; i <= 4; i++) {
+                    const bar = document.getElementById(`bar-${i}`);
+                    const val = document.getElementById(`val-${i}`);
+                    if (bar && val) {
+                        bar.style.height = data[type][i - 1] + '%';
+                        bar.style.backgroundColor = colors[type];
+                        val.innerText = labels[type][i - 1];
                     }
                 }
+            }
 
-                function exportarPDF() {
-                    const btn = document.getElementById('btn-exportar');
-                    const original = btn.innerHTML;
-                    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Generando...';
-                    btn.classList.add('opacity-75', 'cursor-not-allowed');
-                    setTimeout(() => {
-                        const blob = new Blob(["LISTA DE ESTUDIANTES 2025-2"], { type: "text/plain" });
-                        const a = document.createElement("a");
-                        a.href = URL.createObjectURL(blob);
-                        a.download = "Lista_Estudiantes.txt";
-                        a.click();
-                        btn.innerHTML = original;
-                        btn.classList.remove('opacity-75', 'cursor-not-allowed');
-                        showToast("Descarga Lista", "Reporte generado correctamente.");
-                    }, 1500);
-                }
 
-                function toggleNewStudentModal() { document.getElementById('modal-nuevo-estudiante').classList.toggle('force-hidden'); }
 
-                function saveNewStudent() {
-                    const name = document.getElementById('new-student-name').value;
-                    const subject = document.getElementById('new-student-subject').value;
-                    const grade = document.getElementById('new-student-grade').value;
-
-                    if (!name || !grade) {
-                        showToast('Error', 'Por favor completa todos los campos.');
-                        return;
-                    }
-
-                    if (grade < 0 || grade > 20) {
-                        showToast('Error', 'La nota debe estar entre 0 y 20.');
-                        return;
-                    }
-
-                    const btn = document.querySelector('#modal-nuevo-estudiante button');
-                    const originalText = btn.innerText;
-                    btn.innerText = 'Guardando...';
-                    btn.disabled = true;
-
-                    fetch('/api/students', {
+            function saveTask() {
+                const title = document.getElementById('task-title').value;
+                const date = document.getElementById('task-date').value;
+                const type = document.getElementById('task-type').value;
+                if (title && date) {
+                    fetch('/api/tasks', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ name, subject, grade })
+                        body: JSON.stringify({ title, date, type })
                     })
                         .then(res => res.json())
                         .then(data => {
-                            if (data.error) {
-                                showToast('Error', data.error);
-                            } else {
-                                showToast('Éxito', 'Estudiante registrado correctamente.');
-                                toggleNewStudentModal();
-                                document.getElementById('new-student-name').value = '';
-                                document.getElementById('new-student-grade').value = '';
-                                fetchStudents(); // Reload table
-                            }
-                        })
-                        .catch(err => {
-                            console.error(err);
-                            showToast('Error', 'No se pudo conectar con el servidor.');
-                        })
-                        .finally(() => {
-                            btn.innerText = originalText;
-                            btn.disabled = false;
+                            tasks.push(data.data);
+                            closeModal('modal-nueva-tarea');
+                            showToast("Tarea Guardada", "Se ha Añadido a tu agenda.");
+                            const parts = date.split('-');
+                            currentYear = parseInt(parts[0]);
+                            currentMonth = parseInt(parts[1]) - 1;
+                            nav('agenda');
                         });
                 }
+            }
 
-                function toggleEditModal() { document.getElementById('modal-editar-estudiante').classList.toggle('force-hidden'); }
-                let currentEditId = null;
-                function openEditModal(name, grade, statusValue, id) {
-                    document.getElementById('edit-student-name').value = name;
-                    document.getElementById('edit-student-grade').value = grade;
-                    document.getElementById('edit-student-status').value = statusValue.toLowerCase();
-                    currentEditId = id;
+            function exportarPDF() {
+                const btn = document.getElementById('btn-exportar');
+                const original = btn.innerHTML;
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Generando...';
+                btn.classList.add('opacity-75', 'cursor-not-allowed');
+                setTimeout(() => {
+                    const blob = new Blob(["LISTA DE ESTUDIANTES 2025-2"], { type: "text/plain" });
+                    const a = document.createElement("a");
+                    a.href = URL.createObjectURL(blob);
+                    a.download = "Lista_Estudiantes.txt";
+                    a.click();
+                    btn.innerHTML = original;
+                    btn.classList.remove('opacity-75', 'cursor-not-allowed');
+                    showToast("Descarga Lista", "Reporte generado correctamente.");
+                }, 1500);
+            }
+
+            function toggleNewStudentModal() { document.getElementById('modal-nuevo-estudiante').classList.toggle('force-hidden'); }
+
+            function saveNewStudent() {
+                const name = document.getElementById('new-student-name').value;
+                const subject = document.getElementById('new-student-subject').value;
+                const grade = document.getElementById('new-student-grade').value;
+
+                if (!name || !grade) {
+                    showToast('Error', 'Por favor completa todos los campos.');
+                    return;
+                }
+
+                if (grade < 0 || grade > 20) {
+                    showToast('Error', 'La nota debe estar entre 0 y 20.');
+                    return;
+                }
+
+                const btn = document.querySelector('#modal-nuevo-estudiante button');
+                const originalText = btn.innerText;
+                btn.innerText = 'Guardando...';
+                btn.disabled = true;
+
+                fetch('/api/students', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, subject, grade })
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.error) {
+                            showToast('Error', data.error);
+                        } else {
+                            showToast('Éxito', 'Estudiante registrado correctamente.');
+                            toggleNewStudentModal();
+                            document.getElementById('new-student-name').value = '';
+                            document.getElementById('new-student-grade').value = '';
+                            fetchStudents(); // Reload table
+                        }
+                    })
+                    .catch(err => {
+                        console.error(err);
+                        showToast('Error', 'No se pudo conectar con el servidor.');
+                    })
+                    .finally(() => {
+                        btn.innerText = originalText;
+                        btn.disabled = false;
+                    });
+            }
+
+            function toggleEditModal() { document.getElementById('modal-editar-estudiante').classList.toggle('force-hidden'); }
+            let currentEditId = null;
+            function openEditModal(name, grade, statusValue, id) {
+                document.getElementById('edit-student-name').value = name;
+                document.getElementById('edit-student-grade').value = grade;
+                document.getElementById('edit-student-status').value = statusValue.toLowerCase();
+                currentEditId = id;
+                toggleEditModal();
+            }
+            function saveStudentChanges() {
+                const grade = document.getElementById('edit-student-grade').value;
+                const status = document.getElementById('edit-student-status').value;
+
+                fetch('/api/students/' + currentEditId, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ grade, status })
+                }).then(() => {
                     toggleEditModal();
-                }
-                function saveStudentChanges() {
-                    const grade = document.getElementById('edit-student-grade').value;
-                    const status = document.getElementById('edit-student-status').value;
+                    showToast("Cambios Guardados", "Se ha actualizado la Información.");
+                    fetchStudents();
+                });
+            }
 
-                    fetch('/api/students/' + currentEditId, {
-                        method: 'PUT',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ grade, status })
-                    }).then(() => {
-                        toggleEditModal();
-                        showToast("Cambios Guardados", "Se ha actualizado la Información.");
-                        fetchStudents();
-                    });
-                }
+            function toggleNotif() {
+                const menu = document.getElementById('notif-menu');
+                menu.classList.toggle('force-hidden');
 
-                function toggleNotif() {
-                    const menu = document.getElementById('notif-menu');
-                    menu.classList.toggle('force-hidden');
-
-                    const closeMenu = (e) => {
-                        if (!e.target.closest('#notif-menu') && !e.target.closest('button[onclick="toggleNotif()"]')) {
-                            menu.classList.add('force-hidden');
-                            document.removeEventListener('click', closeMenu);
-                        }
-                    };
-
-                    if (!menu.classList.contains('force-hidden')) {
-                        setTimeout(() => document.addEventListener('click', closeMenu), 0);
+                const closeMenu = (e) => {
+                    if (!e.target.closest('#notif-menu') && !e.target.closest('button[onclick="toggleNotif()"]')) {
+                        menu.classList.add('force-hidden');
+                        document.removeEventListener('click', closeMenu);
                     }
+                };
+
+                if (!menu.classList.contains('force-hidden')) {
+                    setTimeout(() => document.addEventListener('click', closeMenu), 0);
                 }
+            }
 
-                function toggleModal() { document.getElementById('modal-tarea').classList.toggle('force-hidden'); }
+            function toggleModal() { document.getElementById('modal-tarea').classList.toggle('force-hidden'); }
 
-                // Generic Modal Functions
-                function openModal(id) {
-                    const el = document.getElementById(id);
-                    if (el) el.classList.remove('force-hidden');
-                }
+            // Generic Modal Functions
+            function openModal(id) {
+                const el = document.getElementById(id);
+                if (el) el.classList.remove('force-hidden');
+            }
 
-                function closeModal(id) {
-                    const el = document.getElementById(id);
-                    if (el) el.classList.add('force-hidden');
-                }
+            function closeModal(id) {
+                const el = document.getElementById(id);
+                if (el) el.classList.add('force-hidden');
+            }
 
-                function logout() {
-                    // Logic Fix: Logout with alert and redirect
-                    alert('Sesión cerrada');
-                    localStorage.removeItem('userEmail');
-                    localStorage.removeItem('userName');
-                    window.location.href = 'index.html';
-                }
+            function logout() {
+                // Logic Fix: Logout with alert and redirect
+                alert('Sesión cerrada');
+                localStorage.removeItem('userEmail');
+                localStorage.removeItem('userName');
+                window.location.href = 'index.html';
+            }
 
-                function runAI() {
-                    const input = document.getElementById('prompt').value;
-                    const out = document.getElementById('output');
-                    const userNameElement = document.getElementById('user-display-name');
-                    const userName = userNameElement ? userNameElement.innerText : "Profesor";
+            function runAI() {
+                const input = document.getElementById('prompt').value;
+                const out = document.getElementById('output');
+                const userNameElement = document.getElementById('user-display-name');
+                const userName = userNameElement ? userNameElement.innerText : "Profesor";
 
-                    out.innerHTML = '<div class="flex h-full items-center justify-center text-blue-600"><i class="fa-solid fa-circle-notch fa-spin text-2xl"></i></div>';
+                out.innerHTML = '<div class="flex h-full items-center justify-center text-blue-600"><i class="fa-solid fa-circle-notch fa-spin text-2xl"></i></div>';
 
-                    fetch('/api/ai/generate', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ prompt: input, userName: userName })
+                fetch('/api/ai/generate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ prompt: input, userName: userName })
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                        out.innerHTML = data.result;
                     })
-                        .then(res => res.json())
-                        .then(data => {
-                            out.innerHTML = data.result;
-                        })
-                        .catch(err => {
-                            out.innerHTML = 'Error al generar texto';
-                        });
+                    .catch(err => {
+                        out.innerHTML = 'Error al generar texto';
+                    });
+            }
+
+            function askLogout() { document.getElementById('modal-logout').classList.remove('force-hidden'); }
+            function closeLogoutModal() { document.getElementById('modal-logout').classList.add('force-hidden'); }
+            function confirmLogout() { window.location.href = 'index.html'; }
+
+            function toggleSidebar() {
+                const sidebar = document.getElementById('tour-sidebar');
+                const overlay = document.getElementById('sidebar-overlay');
+                if (sidebar.classList.contains('-translate-x-full')) {
+                    sidebar.classList.remove('-translate-x-full');
+                    overlay.classList.remove('hidden');
+                } else {
+                    sidebar.classList.add('-translate-x-full');
+                    overlay.classList.add('hidden');
                 }
+            }
 
-                function askLogout() { document.getElementById('modal-logout').classList.remove('force-hidden'); }
-                function closeLogoutModal() { document.getElementById('modal-logout').classList.add('force-hidden'); }
-                function confirmLogout() { window.location.href = 'index.html'; }
+            // --- FUNCIONES DE EDICIÓN REAL DE PERFIL ---
+            function editField(field) {
+                const container = document.getElementById(field + '-container');
+                const textSpan = document.getElementById(field + '-text');
+                const currentValue = textSpan.innerText;
+                const inputType = field === 'pass' ? 'text' : 'email';
 
-                function toggleSidebar() {
-                    const sidebar = document.getElementById('tour-sidebar');
-                    const overlay = document.getElementById('sidebar-overlay');
-                    if (sidebar.classList.contains('-translate-x-full')) {
-                        sidebar.classList.remove('-translate-x-full');
-                        overlay.classList.remove('hidden');
-                    } else {
-                        sidebar.classList.add('-translate-x-full');
-                        overlay.classList.add('hidden');
-                    }
-                }
-
-                // --- FUNCIONES DE EDICIÓN REAL DE PERFIL ---
-                function editField(field) {
-                    const container = document.getElementById(field + '-container');
-                    const textSpan = document.getElementById(field + '-text');
-                    const currentValue = textSpan.innerText;
-                    const inputType = field === 'pass' ? 'text' : 'email';
-
-                    container.innerHTML = `
+                container.innerHTML = `
                 <label class="text-xs font-bold text-slate-400 uppercase">${field === 'email' ? 'Correo Institucional' : 'Contraseña'}</label>
                 <div class="flex justify-between items-center border-b border-blue-500 py-2">
                     <input type="${inputType}" id="input-${field}" value="${currentValue}" class="text-sm font-medium text-slate-900 w-full outline-none bg-transparent">
                     <button onclick="saveField('${field}')" class="text-green-600 text-xs font-bold uppercase hover:text-green-800">Guardar</button>
                 </div>
             `;
+            }
+
+            // --- NAVIGATION LOGIC ---
+            function nav(sectionId) {
+                // Hide all views
+                const views = ['resumen', 'redactor', 'estudiantes', 'agenda', 'examenes', 'configuracion'];
+                views.forEach(id => {
+                    const el = document.getElementById('view-' + id);
+                    if (el) el.classList.add('hidden', 'force-hidden');
+                });
+
+                // Show selected
+                const view = document.getElementById('view-' + sectionId);
+                if (view) view.classList.remove('hidden', 'force-hidden');
+
+                // Update Sidebar
+                document.querySelectorAll('nav button').forEach(btn => {
+                    btn.classList.remove('active-nav', 'bg-blue-50', 'text-blue-600');
+                    btn.classList.add('inactive-nav', 'text-slate-600');
+                });
+                const btn = document.getElementById('btn-' + sectionId);
+                if (btn) {
+                    btn.classList.remove('inactive-nav', 'text-slate-600');
+                    btn.classList.add('active-nav', 'bg-blue-50', 'text-blue-600');
                 }
 
-                // --- NAVIGATION LOGIC ---
-                function nav(sectionId) {
-                    // Hide all views
-                    const views = ['resumen', 'redactor', 'estudiantes', 'agenda', 'examenes', 'configuracion'];
-                    views.forEach(id => {
-                        const el = document.getElementById('view-' + id);
-                        if (el) el.classList.add('hidden', 'force-hidden');
+                // Title Update
+                const titles = {
+                    resumen: 'Panel de Control',
+                    redactor: 'Redactor IA',
+                    estudiantes: 'Base de Datos',
+                    agenda: 'Agenda Semanal',
+                    configuracion: 'Ajustes',
+                    examenes: 'Generador de Exámenes'
+                };
+                const titleEl = document.getElementById('page-title');
+                if (titleEl) titleEl.innerText = titles[sectionId] || 'DocenteIA';
+
+                // Data Fetching
+                if (sectionId === 'agenda') renderCalendar();
+                if (sectionId === 'estudiantes') fetchStudents();
+
+                if (window.innerWidth < 768) toggleSidebar();
+            }
+
+            // --- DATE DISPLAY ---
+            function updateHeaderDate() {
+                const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                const dateString = new Date().toLocaleDateString('es-VE', dateOptions);
+                const capitalizedDate = dateString.charAt(0).toUpperCase() + dateString.slice(1);
+                const el = document.getElementById('header-date');
+                if (el) el.innerText = capitalizedDate;
+            }
+
+            // --- CALENDAR LOGIC ---
+            function renderCalendar() {
+                const monthNames = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+                const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+                const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+
+                const calendarMonth = document.getElementById('calendar-month');
+                const calendarYear = document.getElementById('calendar-year');
+                if (calendarMonth) calendarMonth.innerText = monthNames[currentMonth];
+                if (calendarYear) calendarYear.innerText = currentYear;
+
+                const grid = document.getElementById('calendar-grid');
+                if (!grid) return;
+
+                grid.innerHTML = '';
+
+                // Empty slots
+                for (let i = 0; i < firstDay; i++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'bg-slate-50/50';
+                    grid.appendChild(cell);
+                }
+
+                // Days
+                for (let i = 1; i <= daysInMonth; i++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'bg-white p-2 hover:bg-blue-50 transition border-t border-r border-slate-100 relative group cursor-pointer h-24 flex flex-col items-start justify-start';
+
+                    const isToday = i === today.getDate() && currentMonth === today.getMonth() && currentYear === today.getFullYear();
+                    const dayClass = isToday ? 'bg-blue-600 text-white w-6 h-6 rounded-full flex items-center justify-center shadow-md' : 'text-slate-700 font-bold';
+
+                    // Check for tasks
+                    const taskDate = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
+                    const dayTasks = tasks.filter(t => t.date === taskDate);
+
+                    let taskHTML = '';
+                    dayTasks.forEach(t => {
+                        const colorClass = t.type === 'orange' ? 'bg-orange-100 text-orange-700 border-orange-200' : 'bg-blue-100 text-blue-700 border-blue-200';
+                        taskHTML += `<div class="mt-1 w-full text-[10px] px-1.5 py-0.5 rounded ${colorClass} truncate border font-medium">${t.title}</div>`;
                     });
 
-                    // Show selected
-                    const view = document.getElementById('view-' + sectionId);
-                    if (view) view.classList.remove('hidden', 'force-hidden');
-
-                    // Update Sidebar
-                    document.querySelectorAll('nav button').forEach(btn => {
-                        btn.classList.remove('active-nav', 'bg-blue-50', 'text-blue-600');
-                        btn.classList.add('inactive-nav', 'text-slate-600');
-                    });
-                    const btn = document.getElementById('btn-' + sectionId);
-                    if (btn) {
-                        btn.classList.remove('inactive-nav', 'text-slate-600');
-                        btn.classList.add('active-nav', 'bg-blue-50', 'text-blue-600');
-                    }
-
-                    // Title Update
-                    const titles = {
-                        resumen: 'Panel de Control',
-                        redactor: 'Redactor IA',
-                        estudiantes: 'Base de Datos',
-                        agenda: 'Agenda Semanal',
-                        configuracion: 'Ajustes',
-                        examenes: 'Generador de Exámenes'
-                    };
-                    const titleEl = document.getElementById('page-title');
-                    if (titleEl) titleEl.innerText = titles[sectionId] || 'DocenteIA';
-
-                    // Data Fetching
-                    if (sectionId === 'agenda') renderCalendar();
-                    if (sectionId === 'estudiantes') fetchStudents();
-
-                    if (window.innerWidth < 768) toggleSidebar();
+                    cell.innerHTML = `<span class="text-xs ${dayClass} mb-1">${i}</span><div class="w-full flex flex-col gap-0.5 overflow-hidden">${taskHTML}</div>`;
+                    grid.appendChild(cell);
                 }
+            }
 
-                // --- DATE DISPLAY ---
-                function updateHeaderDate() {
-                    const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-                    const dateString = new Date().toLocaleDateString('es-VE', dateOptions);
-                    const capitalizedDate = dateString.charAt(0).toUpperCase() + dateString.slice(1);
-                    const el = document.getElementById('header-date');
-                    if (el) el.innerText = capitalizedDate;
+            function changeMonth(offset) {
+                currentMonth += offset;
+                if (currentMonth < 0) {
+                    currentMonth = 11;
+                    currentYear--;
+                } else if (currentMonth > 11) {
+                    currentMonth = 0;
+                    currentYear++;
                 }
+                renderCalendar();
+            }
 
-                // --- CALENDAR LOGIC ---
-                function renderCalendar() {
-                    const monthNames = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
-                    const firstDay = new Date(currentYear, currentMonth, 1).getDay();
-                    const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+            function goToToday() {
+                currentMonth = today.getMonth();
+                currentYear = today.getFullYear();
+                renderCalendar();
+            }
 
-                    const calendarMonth = document.getElementById('calendar-month');
-                    const calendarYear = document.getElementById('calendar-year');
-                    if (calendarMonth) calendarMonth.innerText = monthNames[currentMonth];
-                    if (calendarYear) calendarYear.innerText = currentYear;
+            function saveField(field) {
+                const newValue = document.getElementById('input-' + field).value;
+                const container = document.getElementById(field + '-container');
 
-                    const grid = document.getElementById('calendar-grid');
-                    if (!grid) return;
-
-                    grid.innerHTML = '';
-
-                    // Empty slots
-                    for (let i = 0; i < firstDay; i++) {
-                        const cell = document.createElement('div');
-                        cell.className = 'bg-slate-50/50';
-                        grid.appendChild(cell);
-                    }
-
-                    // Days
-                    for (let i = 1; i <= daysInMonth; i++) {
-                        const cell = document.createElement('div');
-                        cell.className = 'bg-white p-2 hover:bg-blue-50 transition border-t border-r border-slate-100 relative group cursor-pointer h-24 flex flex-col items-start justify-start';
-
-                        const isToday = i === today.getDate() && currentMonth === today.getMonth() && currentYear === today.getFullYear();
-                        const dayClass = isToday ? 'bg-blue-600 text-white w-6 h-6 rounded-full flex items-center justify-center shadow-md' : 'text-slate-700 font-bold';
-
-                        // Check for tasks
-                        const taskDate = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
-                        const dayTasks = tasks.filter(t => t.date === taskDate);
-
-                        let taskHTML = '';
-                        dayTasks.forEach(t => {
-                            const colorClass = t.type === 'orange' ? 'bg-orange-100 text-orange-700 border-orange-200' : 'bg-blue-100 text-blue-700 border-blue-200';
-                            taskHTML += `<div class="mt-1 w-full text-[10px] px-1.5 py-0.5 rounded ${colorClass} truncate border font-medium">${t.title}</div>`;
-                        });
-
-                        cell.innerHTML = `<span class="text-xs ${dayClass} mb-1">${i}</span><div class="w-full flex flex-col gap-0.5 overflow-hidden">${taskHTML}</div>`;
-                        grid.appendChild(cell);
-                    }
-                }
-
-                function changeMonth(offset) {
-                    currentMonth += offset;
-                    if (currentMonth < 0) {
-                        currentMonth = 11;
-                        currentYear--;
-                    } else if (currentMonth > 11) {
-                        currentMonth = 0;
-                        currentYear++;
-                    }
-                    renderCalendar();
-                }
-
-                function goToToday() {
-                    currentMonth = today.getMonth();
-                    currentYear = today.getFullYear();
-                    renderCalendar();
-                }
-
-                function saveField(field) {
-                    const newValue = document.getElementById('input-' + field).value;
-                    const container = document.getElementById(field + '-container');
-
-                    container.innerHTML = `
+                container.innerHTML = `
                 <label class="text-xs font-bold text-slate-400 uppercase">${field === 'email' ? 'Correo Institucional' : 'Contraseña'}</label>
                 <div class="flex justify-between items-center border-b border-slate-100 py-2">
                     <span id="${field}-text" class="text-sm font-medium text-slate-700 truncate mr-2">${newValue}</span>
                     <button onclick="editField('${field}')" class="text-blue-600 text-xs font-bold hover:text-blue-800">${field === 'pass' ? 'Cambiar' : 'Editar'}</button>
                 </div>
             `;
-                    showToast("Actualizado", "Tus datos han sido guardados.");
+                showToast("Actualizado", "Tus datos han sido guardados.");
+            }
+
+            // --- ACTUALIZACIÓN DE TARJETA EN TIEMPO REAL ---
+            function updateNewCard() {
+                const num = document.getElementById('input-card-num').value;
+                const name = document.getElementById('input-card-name').value;
+                const date = document.getElementById('input-card-date').value;
+
+                document.getElementById('new-card-num').innerText = num || '0000 0000 0000 0000';
+                document.getElementById('new-card-name').innerText = name || 'NOMBRE';
+                document.getElementById('new-card-date').innerText = date || 'MM/YY';
+            }
+
+            function contactSupportWhatsApp() {
+                const userNameElement = document.getElementById('user-display-name');
+                const userName = userNameElement ? userNameElement.innerText : "Docente";
+                // TODO: Configurar nÃºmero real
+                window.open(`https://wa.me/584241677349?text=Hola soy ${userName}, necesito soporte.`, '_blank');
+            }
+
+            function toggleHistoryModal() { document.getElementById('modal-history').classList.toggle('force-hidden'); }
+
+            function sendTicket() {
+                const subject = document.getElementById('ticket-subject').value;
+                const description = document.getElementById('ticket-desc').value;
+                const userNameElement = document.getElementById('user-display-name');
+                const userName = userNameElement ? userNameElement.innerText : "Usuario";
+                const userEmailElement = document.getElementById('email-text');
+                // PRIORITIZE: SessionStorage > LocalStorage > Captured DOM > Default
+                let userEmail = "No especificado";
+                if (sessionStorage.getItem('userEmail')) {
+                    userEmail = sessionStorage.getItem('userEmail');
+                } else if (localStorage.getItem('userEmail')) {
+                    userEmail = localStorage.getItem('userEmail');
+                } else if (userEmailElement && userEmailElement.innerText !== "gustavo.triana@unexpo.edu.ve") {
+                    userEmail = userEmailElement.innerText;
+                } else {
+                    userEmail = "gustavo.triana@unexpo.edu.ve";
+                }
+                const btn = document.getElementById('btn-send-ticket');
+
+                if (!subject || !description) {
+                    showToast('Error', 'Por favor completa todos los campos.');
+                    return;
                 }
 
-                // --- ACTUALIZACIÓN DE TARJETA EN TIEMPO REAL ---
-                function updateNewCard() {
-                    const num = document.getElementById('input-card-num').value;
-                    const name = document.getElementById('input-card-name').value;
-                    const date = document.getElementById('input-card-date').value;
+                const originalText = btn.innerHTML;
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Enviando...';
+                btn.disabled = true;
 
-                    document.getElementById('new-card-num').innerText = num || '0000 0000 0000 0000';
-                    document.getElementById('new-card-name').innerText = name || 'NOMBRE';
-                    document.getElementById('new-card-date').innerText = date || 'MM/YY';
-                }
-
-                function contactSupportWhatsApp() {
-                    const userNameElement = document.getElementById('user-display-name');
-                    const userName = userNameElement ? userNameElement.innerText : "Docente";
-                    // TODO: Configurar nÃºmero real
-                    window.open(`https://wa.me/584241677349?text=Hola soy ${userName}, necesito soporte.`, '_blank');
-                }
-
-                function toggleHistoryModal() { document.getElementById('modal-history').classList.toggle('force-hidden'); }
-
-                function sendTicket() {
-                    const subject = document.getElementById('ticket-subject').value;
-                    const description = document.getElementById('ticket-desc').value;
-                    const userNameElement = document.getElementById('user-display-name');
-                    const userName = userNameElement ? userNameElement.innerText : "Usuario";
-                    const userEmailElement = document.getElementById('email-text');
-                    // PRIORITIZE: SessionStorage > LocalStorage > Captured DOM > Default
-                    let userEmail = "No especificado";
-                    if (sessionStorage.getItem('userEmail')) {
-                        userEmail = sessionStorage.getItem('userEmail');
-                    } else if (localStorage.getItem('userEmail')) {
-                        userEmail = localStorage.getItem('userEmail');
-                    } else if (userEmailElement && userEmailElement.innerText !== "gustavo.triana@unexpo.edu.ve") {
-                        userEmail = userEmailElement.innerText;
-                    } else {
-                        userEmail = "gustavo.triana@unexpo.edu.ve";
-                    }
-                    const btn = document.getElementById('btn-send-ticket');
-
-                    if (!subject || !description) {
-                        showToast('Error', 'Por favor completa todos los campos.');
-                        return;
-                    }
-
-                    const originalText = btn.innerHTML;
-                    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Enviando...';
-                    btn.disabled = true;
-
-                    fetch('/api/support/ticket', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ userName, userEmail, subject, description })
+                fetch('/api/support/ticket', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ userName, userEmail, subject, description })
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success) {
+                            showToast('Registrado', `Ticket ${data.ticketId} guardado en BD y enviado.`);
+                            toggleTicketModal();
+                            document.getElementById('ticket-subject').value = '';
+                            document.getElementById('ticket-desc').value = '';
+                            addMessageToChat(data.ticketId); // Notify in chat if chat exists, optional feature from user request
+                        } else {
+                            showToast('Error', 'No se pudo enviar el ticket.');
+                        }
                     })
-                        .then(res => res.json())
-                        .then(data => {
-                            if (data.success) {
-                                showToast('Registrado', `Ticket ${data.ticketId} guardado en BD y enviado.`);
-                                toggleTicketModal();
-                                document.getElementById('ticket-subject').value = '';
-                                document.getElementById('ticket-desc').value = '';
-                                addMessageToChat(data.ticketId); // Notify in chat if chat exists, optional feature from user request
-                            } else {
-                                showToast('Error', 'No se pudo enviar el ticket.');
-                            }
-                        })
-                        .catch(err => {
-                            console.error(err);
-                            showToast('Error', 'Fallo de Conexión.');
-                        })
-                        .finally(() => {
-                            btn.innerHTML = originalText;
-                            btn.disabled = false;
-                        });
-                }
+                    .catch(err => {
+                        console.error(err);
+                        showToast('Error', 'Fallo de Conexión.');
+                    })
+                    .finally(() => {
+                        btn.innerHTML = originalText;
+                        btn.disabled = false;
+                    });
+            }
 
-                function addMessageToChat(ticketId) {
-                    // Feature requested: "El asistente de la IA debe decir en el chat..."
-                    // Since the chat is hidden behind a modal, we can simulate this if the user opens it, 
-                    // OR we can just adding it to the 'modal-support-chat' structure if it was a real chat.
-                    // Given the current structure is a MENU, this request is slightly ambiguous.
-                    // However, I will show a special toast or alert as a proxy.
-                    // The user asked specifically for: "Al terminar el envÃ­o, el asistente de la IA debe decir en el chat: 'Ticket #XXXX registrado...'"
-                    // Since our chat is now a menu, I will simulate this by updating the "Reportar falla" subtitle temporarily or showing a persistent notification.
-                    // Simple approach: Toast is already doing it.
-                }
+            function addMessageToChat(ticketId) {
+                // Feature requested: "El asistente de la IA debe decir en el chat..."
+                // Since the chat is hidden behind a modal, we can simulate this if the user opens it, 
+                // OR we can just adding it to the 'modal-support-chat' structure if it was a real chat.
+                // Given the current structure is a MENU, this request is slightly ambiguous.
+                // However, I will show a special toast or alert as a proxy.
+                // The user asked specifically for: "Al terminar el envÃ­o, el asistente de la IA debe decir en el chat: 'Ticket #XXXX registrado...'"
+                // Since our chat is now a menu, I will simulate this by updating the "Reportar falla" subtitle temporarily or showing a persistent notification.
+                // Simple approach: Toast is already doing it.
+            }
 
-                function loadSupportHistory() {
-                    const tbody = document.getElementById('history-rows');
-                    const loader = document.getElementById('history-loading');
-                    const empty = document.getElementById('history-empty');
+            function loadSupportHistory() {
+                const tbody = document.getElementById('history-rows');
+                const loader = document.getElementById('history-loading');
+                const empty = document.getElementById('history-empty');
 
-                    tbody.innerHTML = '';
-                    loader.classList.remove('hidden');
-                    empty.classList.add('hidden');
+                tbody.innerHTML = '';
+                loader.classList.remove('hidden');
+                empty.classList.add('hidden');
 
-                    fetch('/api/support/history')
-                        .then(res => res.json())
-                        .then(data => {
-                            loader.classList.add('hidden');
-                            if (!data.tickets || data.tickets.length === 0) {
-                                empty.classList.remove('hidden');
-                                return;
-                            }
+                fetch('/api/support/history')
+                    .then(res => res.json())
+                    .then(data => {
+                        loader.classList.add('hidden');
+                        if (!data.tickets || data.tickets.length === 0) {
+                            empty.classList.remove('hidden');
+                            return;
+                        }
 
-                            data.tickets.forEach(ticket => {
-                                const tr = document.createElement('tr');
-                                tr.className = "hover:bg-slate-50 transition border-b border-slate-50 last:border-0";
-                                const date = new Date(ticket.created_at).toLocaleDateString('es-VE', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
-                                const statusColor = ticket.status === 'Resuelto' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700';
+                        data.tickets.forEach(ticket => {
+                            const tr = document.createElement('tr');
+                            tr.className = "hover:bg-slate-50 transition border-b border-slate-50 last:border-0";
+                            const date = new Date(ticket.created_at).toLocaleDateString('es-VE', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+                            const statusColor = ticket.status === 'Resuelto' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700';
 
-                                tr.innerHTML = `
+                            tr.innerHTML = `
                                 <td class="p-4 font-mono text-xs text-slate-500">${ticket.id_ticket}</td>
                                 <td class="p-4 text-slate-600 text-xs">${date}</td>
                                 <td class="p-4 font-bold text-slate-800 text-sm truncate max-w-[150px]">${ticket.subject}</td>
@@ -1669,89 +1667,89 @@
                                     </button>
                                 </td>
                             `;
-                                tbody.appendChild(tr);
-                            });
-                        })
-                        .catch(err => {
-                            console.error(err);
-                            loader.classList.add('hidden');
-                            empty.innerText = 'Error al cargar historial.';
-                            empty.classList.remove('hidden');
+                            tbody.appendChild(tr);
                         });
-                }
-
-                function toggleTicketStatus(id, currentStatus) {
-                    const newStatus = currentStatus === 'Pendiente' ? 'Resuelto' : 'Pendiente';
-                    fetch(`/api/support/ticket/${id}`, {
-                        method: 'PATCH',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ status: newStatus })
                     })
-                        .then(res => res.json())
-                        .then(data => {
-                            if (data.success) {
-                                showToast('Actualizado', `Ticket marcado como ${newStatus}`);
-                                loadSupportHistory();
-                            }
-                        });
+                    .catch(err => {
+                        console.error(err);
+                        loader.classList.add('hidden');
+                        empty.innerText = 'Error al cargar historial.';
+                        empty.classList.remove('hidden');
+                    });
+            }
+
+            function toggleTicketStatus(id, currentStatus) {
+                const newStatus = currentStatus === 'Pendiente' ? 'Resuelto' : 'Pendiente';
+                fetch(`/api/support/ticket/${id}`, {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ status: newStatus })
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success) {
+                            showToast('Actualizado', `Ticket marcado como ${newStatus}`);
+                            loadSupportHistory();
+                        }
+                    });
+            }
+
+            function generateExam() {
+                const topic = document.getElementById('exam-topic').value;
+                const difficulty = document.getElementById('exam-difficulty').value;
+                const numQuestions = document.getElementById('exam-count').value;
+                const type = document.getElementById('exam-type').value;
+
+                if (!topic) {
+                    showToast('Info', 'Por favor ingresa un tema.', 'error');
+                    return;
                 }
 
-                function generateExam() {
-                    const topic = document.getElementById('exam-topic').value;
-                    const difficulty = document.getElementById('exam-difficulty').value;
-                    const numQuestions = document.getElementById('exam-count').value;
-                    const type = document.getElementById('exam-type').value;
+                // UI State: Loading
+                const btn = document.getElementById('btn-generate-exam');
+                const loading = document.getElementById('exam-loading');
+                const empty = document.getElementById('exam-empty');
+                const results = document.getElementById('exam-results');
 
-                    if (!topic) {
-                        showToast('Info', 'Por favor ingresa un tema.', 'error');
-                        return;
-                    }
+                const originalText = btn.innerHTML;
+                btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Generando...';
+                btn.disabled = true;
 
-                    // UI State: Loading
-                    const btn = document.getElementById('btn-generate-exam');
-                    const loading = document.getElementById('exam-loading');
-                    const empty = document.getElementById('exam-empty');
-                    const results = document.getElementById('exam-results');
+                loading.classList.remove('hidden');
+                empty.classList.add('hidden');
+                results.classList.add('hidden');
 
-                    const originalText = btn.innerHTML;
-                    btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Generando...';
-                    btn.disabled = true;
-
-                    loading.classList.remove('hidden');
-                    empty.classList.add('hidden');
-                    results.classList.add('hidden');
-
-                    fetch('/api/generate-exam', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ topic, difficulty, numQuestions, type })
-                    })
-                        .then(res => res.json())
-                        .then(data => {
-                            if (data.success) {
-                                // showToast('Éxito', 'Examen generado correctamente con IA.', 'success');
-                                loading.classList.add('hidden');
-                                renderExam(data.data, topic);
-                            } else {
-                                showToast('Error', 'No se pudo generar el examen.', 'error');
-                                empty.classList.remove('hidden');
-                            }
-                        })
-                        .catch(err => {
-                            console.error(err);
-                            showToast('Error', 'Fallo de Conexión.');
+                fetch('/api/generate-exam', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ topic, difficulty, numQuestions, type })
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success) {
+                            // showToast('Éxito', 'Examen generado correctamente con IA.', 'success');
+                            loading.classList.add('hidden');
+                            renderExam(data.data, topic);
+                        } else {
+                            showToast('Error', 'No se pudo generar el examen.', 'error');
                             empty.classList.remove('hidden');
-                        })
-                        .finally(() => {
-                            btn.innerHTML = originalText;
-                            btn.disabled = false;
-                        });
-                }
+                        }
+                    })
+                    .catch(err => {
+                        console.error(err);
+                        showToast('Error', 'Fallo de Conexión.');
+                        empty.classList.remove('hidden');
+                    })
+                    .finally(() => {
+                        btn.innerHTML = originalText;
+                        btn.disabled = false;
+                    });
+            }
 
-                function renderExam(questions, topic) {
-                    currentExamData = questions; // Store data for export
-                    const results = document.getElementById('exam-results');
-                    results.innerHTML = `
+            function renderExam(questions, topic) {
+                currentExamData = questions; // Store data for export
+                const results = document.getElementById('exam-results');
+                results.innerHTML = `
                     <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-3">
                         <h3 class="font-bold text-slate-800 text-lg flex items-center gap-2"><i class="fa-solid fa-file-contract text-purple-600"></i> Examen: ${topic}</h3>
                         <div class="flex gap-2 w-full md:w-auto">
@@ -1765,40 +1763,40 @@
                     </div>
                 `;
 
-                    questions.forEach((q, index) => {
-                        let optionsHTML = '';
-                        if (q.options && Array.isArray(q.options)) {
-                            optionsHTML = '<div class="grid grid-cols-1 md:grid-cols-2 gap-3 mt-3">';
-                            q.options.forEach(opt => {
-                                // In web view we show valid check ONLY if it's correct? No, usually initial view is clean or with answer? 
-                                // Request doesn't specify web view, but usually solvable. 
-                                // However, let's keep it "clean" but highlight correct one only if requested or simple clean view. 
-                                // The user said "Descargar Solucionario ... Generates PDF with correct answers". 
-                                // Web view can be just list. Let's keep it simple as in logic.
+                questions.forEach((q, index) => {
+                    let optionsHTML = '';
+                    if (q.options && Array.isArray(q.options)) {
+                        optionsHTML = '<div class="grid grid-cols-1 md:grid-cols-2 gap-3 mt-3">';
+                        q.options.forEach(opt => {
+                            // In web view we show valid check ONLY if it's correct? No, usually initial view is clean or with answer? 
+                            // Request doesn't specify web view, but usually solvable. 
+                            // However, let's keep it "clean" but highlight correct one only if requested or simple clean view. 
+                            // The user said "Descargar Solucionario ... Generates PDF with correct answers". 
+                            // Web view can be just list. Let's keep it simple as in logic.
 
-                                // Original logic highlighted correct answer. Let's keep that but maybe subtle or hidden?
-                                // Actually, let's keep it clean for web view mostly, or minimal. 
-                                // Wait, the previous code ALREADY showed the answer:
-                                // const isCorrect = opt === q.correctAnswer;
-                                // const borderClass = isCorrect ? 'border-green-200 bg-green-50' : ...
+                            // Original logic highlighted correct answer. Let's keep that but maybe subtle or hidden?
+                            // Actually, let's keep it clean for web view mostly, or minimal. 
+                            // Wait, the previous code ALREADY showed the answer:
+                            // const isCorrect = opt === q.correctAnswer;
+                            // const borderClass = isCorrect ? 'border-green-200 bg-green-50' : ...
 
-                                // Let's keep the web view as is (showing answers to teacher) or maybe hide it? 
-                                // Usually the generator shows the result to the teacher immediately.
-                                const isCorrect = opt === q.correctAnswer;
-                                const borderClass = isCorrect ? 'border-green-200 bg-green-50' : 'border-slate-200 hover:bg-slate-50';
-                                const textClass = isCorrect ? 'text-green-800 font-bold' : 'text-slate-600';
-                                const icon = isCorrect ? '<i class="fa-solid fa-check text-green-600 float-right mt-1"></i>' : '';
+                            // Let's keep the web view as is (showing answers to teacher) or maybe hide it? 
+                            // Usually the generator shows the result to the teacher immediately.
+                            const isCorrect = opt === q.correctAnswer;
+                            const borderClass = isCorrect ? 'border-green-200 bg-green-50' : 'border-slate-200 hover:bg-slate-50';
+                            const textClass = isCorrect ? 'text-green-800 font-bold' : 'text-slate-600';
+                            const icon = isCorrect ? '<i class="fa-solid fa-check text-green-600 float-right mt-1"></i>' : '';
 
-                                optionsHTML += `
+                            optionsHTML += `
                                 <div class="p-3 border ${borderClass} rounded-lg text-sm ${textClass} transition">
                                     ${opt} ${icon}
                                 </div>
                             `;
-                            });
-                            optionsHTML += '</div>';
-                        }
+                        });
+                        optionsHTML += '</div>';
+                    }
 
-                        results.innerHTML += `
+                    results.innerHTML += `
                         <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm transition hover:shadow-md">
                             <div class="flex gap-4">
                                 <div class="w-8 h-8 flex-shrink-0 bg-slate-900 text-white rounded-lg flex items-center justify-center font-bold text-sm">
@@ -1811,138 +1809,138 @@
                             </div>
                         </div>
                     `;
-                    });
-
-                    results.classList.remove('hidden');
-                }
-
-                function downloadExamPDF(mode) {
-                    if (!currentExamData || currentExamData.length === 0) {
-                        showToast('Error', 'No hay examen generado.');
-                        return;
-                    }
-
-                    const { jsPDF } = window.jspdf;
-                    const doc = new jsPDF();
-                    const topic = document.getElementById('exam-topic').value || 'Examen';
-                    let yPos = 20;
-
-                    // Header
-                    doc.setFontSize(18);
-                    doc.setFont('helvetica', 'bold');
-                    doc.text(topic.toUpperCase(), 105, yPos, { align: 'center' });
-                    yPos += 10;
-
-                    doc.setFontSize(12);
-                    doc.setFont('helvetica', 'normal');
-                    const title = mode === 'teacher' ? 'SOLUCIONARIO (PROFESOR)' : 'EVALUACIÓN (ALUMNO)';
-                    doc.text(title, 105, yPos, { align: 'center' });
-                    yPos += 15;
-
-                    doc.setLineWidth(0.5);
-                    doc.line(20, yPos, 190, yPos);
-                    yPos += 15;
-
-                    // Questions
-                    doc.setFontSize(11);
-
-                    currentExamData.forEach((q, index) => {
-                        if (yPos > 270) {
-                            doc.addPage();
-                            yPos = 20;
-                        }
-
-                        // Question Text
-                        doc.setFont('helvetica', 'bold');
-                        const questionText = `${index + 1}. ${q.question}`;
-                        const splitQuestion = doc.splitTextToSize(questionText, 170);
-                        doc.text(splitQuestion, 20, yPos);
-                        yPos += (splitQuestion.length * 5) + 5;
-
-                        // Options
-                        doc.setFont('helvetica', 'normal');
-                        if (q.options && Array.isArray(q.options)) {
-                            q.options.forEach(opt => {
-                                if (yPos > 275) {
-                                    doc.addPage();
-                                    yPos = 20;
-                                }
-
-                                const isCorrect = mode === 'teacher' && opt === q.correctAnswer;
-                                // const marker = isCorrect ? '[ X ]' : '[   ]'; 
-                                // Fix PDF Character Encoding (Standard ASCII)
-
-                                const prefix = mode === 'teacher' && opt === q.correctAnswer ? '(X)' : '( )';
-
-                                doc.text(`   ${prefix} ${opt}`, 25, yPos);
-                                yPos += 6;
-                            });
-                        }
-                        yPos += 8;
-                    });
-
-                    doc.save(`Examen_${topic.replace(/\s+/g, '_')}_${mode}.pdf`);
-                    showToast('Descarga Iniciada', 'El PDF se ha generado correctamente.');
-                }
-
-                renderCalendar();
-                updateHeaderDate();
-            </script>
-            <script src="https://cdn.jsdelivr.net/npm/driver.js@1.0.1/dist/driver.js.iife.js"></script>
-            <script>
-                function iniciarTutorial() {
-                    // Close support chat if open
-                    const chat = document.getElementById('modal-support-chat');
-                    if (chat) chat.classList.add('force-hidden');
-
-                    const driver = window.driver.js.driver;
-                    const driverObj = driver({
-                        showProgress: true,
-                        steps: [
-                            { popover: { title: '¡Hola Docente!', description: 'Bienvenido a tu nueva experiencia de gestión. Hagamos un recorrido rápido.', side: "left", align: 'center' } },
-                            { element: '#tour-sidebar', popover: { title: 'Navegación', description: 'Aquí tienes acceso rápido a tu calendario, clases y herramientas.', side: "right", align: 'start' } },
-                            { element: '#tour-assistant', popover: { title: 'Tu Copiloto IA', description: 'Haz clic aquí para pedir ayuda, crear exámenes o resolver dudas.', side: "left", align: 'start' } },
-                            // Only show profile card step if visible, otherwise target the sidebar text
-                            { element: document.getElementById('tour-profile-card') && document.getElementById('tour-profile-card').offsetParent !== null ? '#tour-profile-card' : '#tour-sidebar', popover: { title: 'Configuración', description: 'En la sección de configuración podrás ver tu suscripción.', side: "top", align: 'start' } }
-                        ]
-                    });
-
-                    driverObj.drive();
-                }
-            </script>
-            <script>
-                document.addEventListener('DOMContentLoaded', () => {
-                    const userEmail = localStorage.getItem('userEmail');
-                    const userName = localStorage.getItem('userName');
-                    const cardLast4 = localStorage.getItem('cardLast4');
-
-                    if (userEmail) {
-                        // Update Config Card (Sidebar email removed)
-                        const emailCard = document.getElementById('email-text');
-                        if (emailCard) emailCard.innerText = userEmail;
-                    }
-
-                    if (userName) {
-                        // Update Sidebar (Short Name: First + Last)
-                        const sidebarName = document.getElementById('user-display-name');
-                        if (sidebarName) {
-                            // Split by space, take first distinct word + last distinct word if available
-                            const parts = userName.trim().split(/\s+/);
-                            const shortName = parts.length > 1 ? `${parts[0]} ${parts[parts.length - 1]}` : parts[0];
-                            sidebarName.innerText = shortName;
-                        }
-
-                        // Update Config Card (Full Name)
-                        const nameCard = document.getElementById('profile-name-card');
-                        if (nameCard) nameCard.innerText = userName;
-                    }
-
-                    if (cardLast4) {
-                        const cardDisplay = document.getElementById('current-card-digits');
-                        if (cardDisplay) cardDisplay.innerText = cardLast4;
-                    }
                 });
-            </script>
+
+                results.classList.remove('hidden');
+            }
+
+            function downloadExamPDF(mode) {
+                if (!currentExamData || currentExamData.length === 0) {
+                    showToast('Error', 'No hay examen generado.');
+                    return;
+                }
+
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF();
+                const topic = document.getElementById('exam-topic').value || 'Examen';
+                let yPos = 20;
+
+                // Header
+                doc.setFontSize(18);
+                doc.setFont('helvetica', 'bold');
+                doc.text(topic.toUpperCase(), 105, yPos, { align: 'center' });
+                yPos += 10;
+
+                doc.setFontSize(12);
+                doc.setFont('helvetica', 'normal');
+                const title = mode === 'teacher' ? 'SOLUCIONARIO (PROFESOR)' : 'EVALUACIÓN (ALUMNO)';
+                doc.text(title, 105, yPos, { align: 'center' });
+                yPos += 15;
+
+                doc.setLineWidth(0.5);
+                doc.line(20, yPos, 190, yPos);
+                yPos += 15;
+
+                // Questions
+                doc.setFontSize(11);
+
+                currentExamData.forEach((q, index) => {
+                    if (yPos > 270) {
+                        doc.addPage();
+                        yPos = 20;
+                    }
+
+                    // Question Text
+                    doc.setFont('helvetica', 'bold');
+                    const questionText = `${index + 1}. ${q.question}`;
+                    const splitQuestion = doc.splitTextToSize(questionText, 170);
+                    doc.text(splitQuestion, 20, yPos);
+                    yPos += (splitQuestion.length * 5) + 5;
+
+                    // Options
+                    doc.setFont('helvetica', 'normal');
+                    if (q.options && Array.isArray(q.options)) {
+                        q.options.forEach(opt => {
+                            if (yPos > 275) {
+                                doc.addPage();
+                                yPos = 20;
+                            }
+
+                            const isCorrect = mode === 'teacher' && opt === q.correctAnswer;
+                            // const marker = isCorrect ? '[ X ]' : '[   ]'; 
+                            // Fix PDF Character Encoding (Standard ASCII)
+
+                            const prefix = mode === 'teacher' && opt === q.correctAnswer ? '(X)' : '( )';
+
+                            doc.text(`   ${prefix} ${opt}`, 25, yPos);
+                            yPos += 6;
+                        });
+                    }
+                    yPos += 8;
+                });
+
+                doc.save(`Examen_${topic.replace(/\s+/g, '_')}_${mode}.pdf`);
+                showToast('Descarga Iniciada', 'El PDF se ha generado correctamente.');
+            }
+
+            renderCalendar();
+            updateHeaderDate();
+        </script>
+        <script src="https://cdn.jsdelivr.net/npm/driver.js@1.0.1/dist/driver.js.iife.js"></script>
+        <script>
+            function iniciarTutorial() {
+                // Close support chat if open
+                const chat = document.getElementById('modal-support-chat');
+                if (chat) chat.classList.add('force-hidden');
+
+                const driver = window.driver.js.driver;
+                const driverObj = driver({
+                    showProgress: true,
+                    steps: [
+                        { popover: { title: '¡Hola Docente!', description: 'Bienvenido a tu nueva experiencia de gestión. Hagamos un recorrido rápido.', side: "left", align: 'center' } },
+                        { element: '#tour-sidebar', popover: { title: 'Navegación', description: 'Aquí tienes acceso rápido a tu calendario, clases y herramientas.', side: "right", align: 'start' } },
+                        { element: '#tour-assistant', popover: { title: 'Tu Copiloto IA', description: 'Haz clic aquí para pedir ayuda, crear exámenes o resolver dudas.', side: "left", align: 'start' } },
+                        // Only show profile card step if visible, otherwise target the sidebar text
+                        { element: document.getElementById('tour-profile-card') && document.getElementById('tour-profile-card').offsetParent !== null ? '#tour-profile-card' : '#tour-sidebar', popover: { title: 'Configuración', description: 'En la sección de configuración podrás ver tu suscripción.', side: "top", align: 'start' } }
+                    ]
+                });
+
+                driverObj.drive();
+            }
+        </script>
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const userEmail = localStorage.getItem('userEmail');
+                const userName = localStorage.getItem('userName');
+                const cardLast4 = localStorage.getItem('cardLast4');
+
+                if (userEmail) {
+                    // Update Config Card (Sidebar email removed)
+                    const emailCard = document.getElementById('email-text');
+                    if (emailCard) emailCard.innerText = userEmail;
+                }
+
+                if (userName) {
+                    // Update Sidebar (Short Name: First + Last)
+                    const sidebarName = document.getElementById('user-display-name');
+                    if (sidebarName) {
+                        // Split by space, take first distinct word + last distinct word if available
+                        const parts = userName.trim().split(/\s+/);
+                        const shortName = parts.length > 1 ? `${parts[0]} ${parts[parts.length - 1]}` : parts[0];
+                        sidebarName.innerText = shortName;
+                    }
+
+                    // Update Config Card (Full Name)
+                    const nameCard = document.getElementById('profile-name-card');
+                    if (nameCard) nameCard.innerText = userName;
+                }
+
+                if (cardLast4) {
+                    const cardDisplay = document.getElementById('current-card-digits');
+                    if (cardDisplay) cardDisplay.innerText = cardLast4;
+                }
+            });
+        </script>
 </body>
 
 </html>
