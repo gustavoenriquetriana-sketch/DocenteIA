@@ -1511,6 +1511,13 @@
                         body: formData
                     });
 
+                    // Check if response is ok before parsing JSON
+                    if (!response.ok) {
+                        const errorText = await response.text();
+                        console.error('Server error:', errorText);
+                        throw new Error(`Error del servidor (${response.status}): ${errorText.substring(0, 200)}`);
+                    }
+
                     const data = await response.json();
 
                     if (!response.ok) {

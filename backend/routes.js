@@ -745,8 +745,8 @@ REGLAS CRÍTICAS:
             temperature: 0.3
         });
 
-        const responseText = completion.choices[0]?.message?.content || "{}";
-        console.log('Respuesta de Groq:', responseText.substring(0, 200));
+        const htmlResult = completion.choices[0]?.message?.content || "<p>No se pudo generar contenido</p>";
+        console.log('Respuesta de Groq (primeros 300 caracteres):', htmlResult.substring(0, 300));
 
         const planningData = JSON.parse(responseText);
 
