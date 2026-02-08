@@ -6,7 +6,6 @@ const { sendEmail, sendGmail } = require('./mailer');
 const Groq = require("groq-sdk");
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 const multer = require('multer');
-const pdf = require('pdf-parse');
 
 // Configure multer for PDF uploads (memory storage)
 const upload = multer({ storage: multer.memoryStorage() });
@@ -714,16 +713,9 @@ router.post('/generate-planning', upload.single('syllabus'), async (req, res) =>
         console.log('Instrucción del usuario:', instruction);
 
         // Parse PDF buffer to extract text
-        let extractedText;
-        try {
-            const pdfModule = require('pdf-parse');
-            const pdfParser = pdfModule.default || pdfModule;
-            const data = await pdfParser(req.file.buffer);
-            extractedText = data.text.substring(0, 20000);
-        } catch (parseError) {
-            console.error('Error parsing PDF:', parseError);
-            throw new Error(`Error al procesar el PDF: ${parseError.message}`);
-        }
+        const pdfParse = require('pdf-parse');
+        const data = await pdfParse(req.file.buffer);
+        const extractedText = data.text.substring(0, 20000);
 
         console.log('Texto extraído del PDF (primeros 500 caracteres):', extractedText.substring(0, 500));
 
