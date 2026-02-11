@@ -714,26 +714,160 @@ router.post('/generate-planning', upload.single('syllabus'), async (req, res) =>
 
         // Parse PDF buffer to extract text
         const pdfParse = require('pdf-parse');
-        const data = await pdfParse(req.file.buffer);
-        const extractedText = data.text.substring(0, 20000);
 
-        console.log('Texto extraído del PDF (primeros 500 caracteres):', extractedText.substring(0, 500));
+        console.log('📄 Buffer size:', req.file.buffer.length, 'bytes');
+
+        const data = await pdfParse(req.file.buffer);
+
+        console.log('📊 PDF Info:');
+        console.log('  - Total pages:', data.numpages);
+        console.log('  - Total text length:', data.text.length, 'characters');
+
+        // Extract up to 100k characters (increased from 20k)
+        const extractedText = data.text.substring(0, 100000);
+
+        console.log('✂️ Extracted text length:', extractedText.length);
+        console.log('🔤 First 1000 characters:', extractedText.substring(0, 1000));
+
+        // Smart extraction: detect pages OR chapters
+        let finalText = extractedText;
+        let extractionNote = '';
+
+        // OPTION 1: Check if user requests specific PAGES
+        const pageMatch = instruction.match(/p[áa]ginas?\s+(\d+)(?:\s+(?:al?|hasta|-|y)\s+(\d+))?/i);
+
+        if (pageMatch) {
+            const startPage = parseInt(pageMatch[1]);
+            const endPage = pageMatch[2] ? parseInt(pageMatch[2]) : startPage;
+
+            console.log(`📄 User requested page(s) ${startPage} to ${endPage}`);
+
+            // Calculate approximate character positions
+            const totalPages = data.numpages;
+            const totalChars = data.text.length;
+            const charsPerPage = totalChars / totalPages;
+
+            const startChar = Math.floor((startPage - 1) * charsPerPage);
+            const endChar = Math.floor(endPage * charsPerPage);
+
+            let extractedPages = data.text.substring(startChar, Math.min(endChar, data.text.length));
+
+            // Limit to 50k characters
+            const MAX_CHARS = 50000;
+            if (extractedPages.length > MAX_CHARS) {
+                console.warn(`⚠️ Pages too long (${extractedPages.length} chars), truncating to ${MAX_CHARS}`);
+                finalText = extractedPages.substring(0, MAX_CHARS);
+                extractionNote = `\n\n[NOTA: Las páginas ${startPage}-${endPage} son extensas. Se analizaron ${MAX_CHARS.toLocaleString()} caracteres.]`;
+            } else {
+                finalText = extractedPages;
+                extractionNote = startPage === endPage
+                    ? `\n\n[NOTA: Se extrajo la página ${startPage}]`
+                    : `\n\n[NOTA: Se extrajeron las páginas ${startPage} al ${endPage}]`;
+            }
+            console.log(`✅ Extracted ${finalText.length} characters from pages ${startPage}-${endPage}`);
+
+        } else {
+            // OPTION 2: Check if user requests specific CHAPTERS
+            const chapterMatch = instruction.match(/cap[íi]tulos?\s+(\d+)(?:\s+(?:y|al|hasta|-)\s+(\d+))?/i);
+
+            if (chapterMatch) {
+                const firstChapter = parseInt(chapterMatch[1]);
+                const lastChapter = chapterMatch[2] ? parseInt(chapterMatch[2]) : firstChapter;
+
+                console.log(`🔍 User requested chapter(s) ${firstChapter} to ${lastChapter}`);
+
+                // Skip TOC (first 10% of document)
+                const skipBytes = Math.floor(extractedText.length * 0.1);
+                const searchText = extractedText.substring(skipBytes);
+
+                // Find chapter start
+                const startPatterns = [
+                    new RegExp(`(?:^|\\n)\\s*(?:CAPÍTULO|CAPITULO|CHAPTER)\\s+${firstChapter}(?:\\s|\\n)`, 'i'),
+                    new RegExp(`(?:^|\\n)${firstChapter}[\\-\\.]+\\d`, 'm'), // 3-1, 3.1
+                    new RegExp(`(?:^|\\n)\\s*${firstChapter}\\s*[\\n\\r]+\\s*[A-ZÁÉÍÓÚÑ]`, 'm')
+                ];
+
+                let chapterStart = -1;
+                for (const pattern of startPatterns) {
+                    const match = searchText.match(pattern);
+                    if (match) {
+                        chapterStart = skipBytes + match.index;
+                        console.log(`✅ Found chapter ${firstChapter} at position ${chapterStart}`);
+                        break;
+                    }
+                }
+
+                if (chapterStart !== -1) {
+                    // Find chapter end
+                    const nextChapter = lastChapter + 1;
+                    const endPatterns = [
+                        new RegExp(`(?:^|\\n)\\s*(?:CAPÍTULO|CAPITULO|CHAPTER)\\s+${nextChapter}`, 'i'),
+                        new RegExp(`(?:^|\\n)${nextChapter}[\\-\\.]+\\d`, 'm')
+                    ];
+
+                    let chapterEnd = extractedText.length;
+                    for (const pattern of endPatterns) {
+                        const match = extractedText.substring(chapterStart + 100).match(pattern);
+                        if (match) {
+                            chapterEnd = chapterStart + 100 + match.index;
+                            break;
+                        }
+                    }
+
+                    let extractedChapters = extractedText.substring(Math.max(0, chapterStart - 500), chapterEnd);
+
+                    // Limit to 50k characters
+                    const MAX_CHARS = 50000;
+                    if (extractedChapters.length > MAX_CHARS) {
+                        console.warn(`⚠️ Chapters too long (${extractedChapters.length} chars), truncating`);
+                        finalText = extractedChapters.substring(0, MAX_CHARS);
+                        extractionNote = `\n\n[NOTA: Capítulos ${firstChapter}-${lastChapter} extensos. Se analizaron ${MAX_CHARS.toLocaleString()} caracteres.]`;
+                    } else {
+                        finalText = extractedChapters;
+                        extractionNote = firstChapter === lastChapter
+                            ? `\n\n[NOTA: Se extrajo el capítulo ${firstChapter}]`
+                            : `\n\n[NOTA: Se extrajeron los capítulos ${firstChapter} al ${lastChapter}]`;
+                    }
+                    console.log(`✅ Extracted ${finalText.length} characters from chapters`);
+                } else {
+                    console.warn(`⚠️ Chapter ${firstChapter} not found, using first 30k chars`);
+                    finalText = extractedText.substring(0, 30000);
+                    extractionNote = `\n\n[ADVERTENCIA: No se encontró el capítulo ${firstChapter}. Se usó el inicio del documento.]`;
+                }
+            } else {
+                // No specific pages/chapters requested - use first 30k
+                console.log('ℹ️ No pages/chapters specified, using first 30k characters');
+                finalText = extractedText.substring(0, 30000);
+                if (extractedText.length > 30000) {
+                    extractionNote = '\n\n[NOTA: Documento extenso. Se analizaron los primeros 30,000 caracteres. Especifica "página X" o "capítulo Y" para secciones específicas.]';
+                }
+            }
+        }
+
+        console.log(`📤 Sending to Groq: ${finalText.length} characters`);
 
         // Prepare Groq prompt with user instruction
-        const systemPrompt = `Contexto: Eres un asistente académico experto. El usuario te ha enviado un documento PDF y necesita que realices una tarea específica con él.
+        const systemPrompt = `Contexto: Eres un asistente académico experto en análisis de documentos técnicos y académicos.
 
 REGLAS CRÍTICAS:
-1. Lee cuidadosamente la instrucción del usuario.
-2. Analiza el texto del PDF y CUMPLE EXACTAMENTE lo que el usuario solicita.
-3. Devuelve la respuesta en formato HTML limpio y bien estructurado.
-4. Usa elementos HTML apropiados: <table>, <ul>, <ol>, <p>, <h3>, <h4>, <b>, <i>, etc.
-5. NO uses Markdown. SOLO HTML directo.
-6. Asegúrate de que el HTML sea legible y bien formateado.
-7. Si el usuario pide una tabla, usa <table class="w-full border-collapse"><thead><tr><th class="border p-2 bg-slate-100">...</th></tr></thead><tbody>...</tbody></table>
-8. Si el usuario pide una lista, usa <ul class="list-disc ml-6"> o <ol class="list-decimal ml-6">
-9. Usa clases de Tailwind CSS cuando sea apropiado para mejor presentación.`;
+1. Lee CUIDADOSAMENTE la instrucción del usuario.
+2. Analiza SOLAMENTE el texto del PDF proporcionado.
+3. NO INVENTES ni IMAGINES contenido que no esté en el texto.
+4. CITA o PARAFRASEA el contenido REAL del documento.
+5. Devuelve la respuesta en formato HTML limpio y bien estructurado.
+6. Usa elementos HTML apropiados: <table>, <ul>, <ol>, <p>, <h3>, <h4>, <b>, <i>, etc.
+7. NO uses Markdown. SOLO HTML directo.
+8. Si el usuario pide una tabla, usa <table class="w-full border-collapse"><thead><tr><th class="border p-2 bg-slate-100">...</th></tr></thead><tbody>...</tbody></table>
+9. Si el usuario pide una lista, usa <ul class="list-disc ml-6"> o <ol class="list-decimal ml-6">
+10. Usa clases de Tailwind CSS cuando sea apropiado.
+11. Si NO encuentras el contenido solicitado, DI EXPLÍCITAMENTE que no se encontró.`;
 
-        const userPrompt = `Instrucción del Usuario: "${instruction}"\n\nTexto extraído del PDF:\n${extractedText}\n\nPor favor, ejecuta la instrucción del usuario y devuelve el resultado en formato HTML limpio.`;
+        const userPrompt = `Instrucción del Usuario: "${instruction}"
+
+Texto extraído del PDF (${finalText.length} caracteres):
+${finalText}${extractionNote}
+
+Por favor, ejecuta la instrucción del usuario BASÁNDOTE ÚNICAMENTE EN EL TEXTO PROPORCIONADO. Devuelve el resultado en formato HTML limpio.`;
 
         // Call Groq API (without JSON mode, we want HTML text)
         const completion = await groq.chat.completions.create({

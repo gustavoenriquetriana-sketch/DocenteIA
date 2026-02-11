@@ -83,6 +83,207 @@
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
             transition: all 0.2s;
         }
+
+        /* Professional Typography for AI-Generated Content */
+        #planning-content {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            line-height: 1.8;
+            color: #1e293b;
+        }
+
+        #planning-content h1,
+        #planning-content h2,
+        #planning-content h3,
+        #planning-content h4 {
+            font-weight: 700;
+            color: #0f172a;
+            margin-top: 1.5em;
+            margin-bottom: 0.75em;
+            line-height: 1.3;
+            letter-spacing: -0.025em;
+        }
+
+        #planning-content h1 {
+            font-size: 1.875rem;
+            background: linear-gradient(135deg, #1e40af 0%, #2563eb 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            border-bottom: 3px solid #2563eb;
+            padding-bottom: 0.5rem;
+            text-shadow: 0 2px 4px rgba(37, 99, 235, 0.1);
+        }
+
+        #planning-content h2 {
+            font-size: 1.5rem;
+            color: #1e40af;
+            padding-left: 1rem;
+            border-left: 4px solid #3b82f6;
+            background: linear-gradient(to right, #eff6ff 0%, transparent 100%);
+            padding: 0.5rem 0 0.5rem 1rem;
+            border-radius: 0.25rem;
+        }
+
+        #planning-content h3 {
+            font-size: 1.25rem;
+            color: #475569;
+            position: relative;
+            padding-left: 0.75rem;
+        }
+
+        #planning-content h3::before {
+            content: "▸";
+            position: absolute;
+            left: 0;
+            color: #3b82f6;
+            font-weight: bold;
+        }
+
+        #planning-content h4 {
+            font-size: 1.0625rem;
+            color: #64748b;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.875rem;
+            letter-spacing: 0.05em;
+        }
+
+        #planning-content p {
+            margin-bottom: 1.25em;
+            text-align: justify;
+            text-indent: 2em;
+            transition: all 0.2s;
+        }
+
+        #planning-content p:hover {
+            background-color: #fefce8;
+            padding: 0.25rem 0.5rem;
+            margin-left: -0.5rem;
+            margin-right: -0.5rem;
+            border-radius: 0.25rem;
+        }
+
+        #planning-content ul,
+        #planning-content ol {
+            margin: 1.25em 0;
+            padding-left: 2.5em;
+            background-color: #f8fafc;
+            padding: 1.25em 2.5em;
+            border-radius: 0.5rem;
+            border-left: 3px solid #cbd5e1;
+        }
+
+        #planning-content li {
+            margin-bottom: 0.75em;
+            line-height: 1.7;
+            position: relative;
+        }
+
+        #planning-content ul li {
+            list-style-type: none;
+        }
+
+        #planning-content ul li::before {
+            content: "●";
+            color: #3b82f6;
+            font-weight: bold;
+            position: absolute;
+            left: -1.5em;
+        }
+
+        #planning-content strong,
+        #planning-content b {
+            font-weight: 600;
+            color: #0f172a;
+            background: linear-gradient(120deg, #fef3c7 0%, #fef3c7 100%);
+            background-repeat: no-repeat;
+            background-size: 100% 40%;
+            background-position: 0 85%;
+            padding: 0 0.2em;
+        }
+
+        #planning-content em,
+        #planning-content i {
+            font-style: italic;
+            color: #475569;
+        }
+
+        #planning-content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5em 0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            border-radius: 0.5rem;
+            overflow: hidden;
+        }
+
+        #planning-content th {
+            background: linear-gradient(135deg, #1e40af 0%, #2563eb 100%);
+            color: white;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            border: none;
+            text-transform: uppercase;
+            font-size: 0.875rem;
+            letter-spacing: 0.05em;
+        }
+
+        #planning-content td {
+            padding: 0.875rem;
+            border: 1px solid #e2e8f0;
+            color: #475569;
+            background-color: white;
+        }
+
+        #planning-content tr:nth-child(even) td {
+            background-color: #f8fafc;
+        }
+
+        #planning-content tr:hover td {
+            background-color: #eff6ff;
+            transition: background-color 0.2s;
+        }
+
+        #planning-content blockquote {
+            border-left: 4px solid #3b82f6;
+            padding-left: 1.5em;
+            margin: 1.5em 0;
+            font-style: italic;
+            color: #475569;
+            background: linear-gradient(to right, #eff6ff 0%, #f8fafc 100%);
+            padding: 1em 1.5em;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        #planning-content code {
+            background-color: #1e293b;
+            color: #fbbf24;
+            padding: 0.2em 0.5em;
+            border-radius: 0.25rem;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.9em;
+            border: 1px solid #334155;
+        }
+
+        /* Scrollbar styling */
+        #planning-content::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        #planning-content::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+
+        #planning-content::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+
+        #planning-content::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
     </style>
 </head>
 
@@ -644,80 +845,78 @@
                 </div>
 
                 <!-- Planificación Académica desde PDF -->
-                <div id="view-planificacion" class="hidden">
-                    <div class="max-w-5xl mx-auto">
-                        <div class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm">
-                            <div class="flex items-center gap-3 mb-6">
-                                <div class="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center">
-                                    <i class="fa-solid fa-file-pdf text-blue-600 text-xl"></i>
-                                </div>
-                                <div>
-                                    <h2 class="text-xl font-bold text-slate-800">Generador de Planificación Académica
-                                    </h2>
-                                    <p class="text-sm text-slate-500">Sube el PDF del programa de materia (syllabus) y
-                                        genera automáticamente una planificación semestral de 16 semanas</p>
-                                </div>
+                <div id="view-planificacion" class="max-w-5xl mx-auto force-hidden fade-in">
+                    <div class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm">
+                        <div class="flex items-center gap-3 mb-6">
+                            <div class="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center">
+                                <i class="fa-solid fa-file-pdf text-blue-600 text-xl"></i>
                             </div>
-
-                            <!-- File Upload Area -->
-                            <div
-                                class="mb-6 p-6 border-2 border-dashed border-slate-300 rounded-xl hover:border-blue-400 transition bg-slate-50">
-                                <div class="text-center">
-                                    <i class="fa-solid fa-cloud-arrow-up text-4xl text-slate-400 mb-3"></i>
-                                    <label for="syllabus-file" class="block">
-                                        <span
-                                            class="text-sm font-bold text-slate-700 cursor-pointer hover:text-blue-600">Selecciona
-                                            el archivo PDF del programa</span>
-                                        <input type="file" id="syllabus-file" accept=".pdf" class="hidden"
-                                            onchange="handleFileSelect(event)">
-                                    </label>
-                                    <p id="file-name" class="text-xs text-slate-500 mt-2"></p>
-                                </div>
+                            <div>
+                                <h2 class="text-xl font-bold text-slate-800">Generador de Planificación Académica
+                                </h2>
+                                <p class="text-sm text-slate-500">Sube el PDF del programa de materia (syllabus) y
+                                    genera automáticamente una planificación semestral de 16 semanas</p>
                             </div>
+                        </div>
 
-                            <!-- Custom Instruction Textarea -->
-                            <div class="mb-6">
-                                <label for="planning-prompt" class="block text-sm font-bold text-slate-700 mb-2">
-                                    <i class="fa-solid fa-pen-to-square text-blue-600"></i> ¿Qué quieres hacer con este
-                                    PDF?
+                        <!-- File Upload Area -->
+                        <div
+                            class="mb-6 p-6 border-2 border-dashed border-slate-300 rounded-xl hover:border-blue-400 transition bg-slate-50">
+                            <div class="text-center">
+                                <i class="fa-solid fa-cloud-arrow-up text-4xl text-slate-400 mb-3"></i>
+                                <label for="syllabus-file" class="block">
+                                    <span
+                                        class="text-sm font-bold text-slate-700 cursor-pointer hover:text-blue-600">Selecciona
+                                        el archivo PDF del programa</span>
+                                    <input type="file" id="syllabus-file" accept=".pdf" class="hidden"
+                                        onchange="handleFileSelect(event)">
                                 </label>
-                                <textarea id="planning-prompt" rows="4"
-                                    class="w-full p-4 border-2 border-slate-300 rounded-xl text-sm focus:outline-none focus:border-blue-500 transition resize-none"
-                                    placeholder="Escribe tu instrucción aquí. Ejemplos:&#10;• 'Genera un plan de 8 semanas basado en este programa'&#10;• 'Extrae 5 preguntas clave del Capítulo 2'&#10;• 'Resume los objetivos de aprendizaje'&#10;• 'Crea una tabla con los temas principales'"></textarea>
-                                <p class="text-xs text-slate-500 mt-2">
-                                    💡 <strong>Tip:</strong> Sé específico con tu solicitud. La IA analizará el PDF y
-                                    seguirá exactamente tus instrucciones.
-                                </p>
+                                <p id="file-name" class="text-xs text-slate-500 mt-2"></p>
                             </div>
+                        </div>
 
-                            <!-- Generate Button -->
-                            <button id="btn-generate-planning" onclick="uploadSyllabus()" disabled
-                                class="w-full py-4 bg-blue-600 text-white rounded-xl font-bold text-sm hover:bg-blue-700 shadow-md transition disabled:bg-slate-300 disabled:cursor-not-allowed flex items-center justify-center gap-2">
-                                <i class="fa-solid fa-wand-magic-sparkles"></i>
-                                <span id="btn-text">Generar Planificación con IA</span>
-                            </button>
+                        <!-- Custom Instruction Textarea -->
+                        <div class="mb-6">
+                            <label for="planning-prompt" class="block text-sm font-bold text-slate-700 mb-2">
+                                <i class="fa-solid fa-pen-to-square text-blue-600"></i> ¿Qué quieres hacer con este
+                                PDF?
+                            </label>
+                            <textarea id="planning-prompt" rows="4"
+                                class="w-full p-4 border-2 border-slate-300 rounded-xl text-sm focus:outline-none focus:border-blue-500 transition resize-none"
+                                placeholder="Escribe tu instrucción aquí. Ejemplos:&#10;• 'Genera un plan de 8 semanas basado en este programa'&#10;• 'Extrae 5 preguntas clave del Capítulo 2'&#10;• 'Resume los objetivos de aprendizaje'&#10;• 'Crea una tabla con los temas principales'"></textarea>
+                            <p class="text-xs text-slate-500 mt-2">
+                                💡 <strong>Tip:</strong> Sé específico con tu solicitud. La IA analizará el PDF y
+                                seguirá exactamente tus instrucciones.
+                            </p>
+                        </div>
 
-                            <!-- Loading State -->
-                            <div id="planning-loading" class="hidden mt-6 text-center py-8">
-                                <i class="fa-solid fa-spinner fa-spin text-4xl text-blue-600 mb-3"></i>
-                                <p class="text-sm font-bold text-slate-700">Analizando el programa y generando
-                                    planificación...</p>
-                                <p class="text-xs text-slate-500 mt-1">Esto puede tomar hasta 30 segundos</p>
+                        <!-- Generate Button -->
+                        <button id="btn-generate-planning" onclick="uploadSyllabus()" disabled
+                            class="w-full py-4 bg-blue-600 text-white rounded-xl font-bold text-sm hover:bg-blue-700 shadow-md transition disabled:bg-slate-300 disabled:cursor-not-allowed flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i>
+                            <span id="btn-text">Generar Planificación con IA</span>
+                        </button>
+
+                        <!-- Loading State -->
+                        <div id="planning-loading" class="hidden mt-6 text-center py-8">
+                            <i class="fa-solid fa-spinner fa-spin text-4xl text-blue-600 mb-3"></i>
+                            <p class="text-sm font-bold text-slate-700">Analizando el programa y generando
+                                planificación...</p>
+                            <p class="text-xs text-slate-500 mt-1">Esto puede tomar hasta 30 segundos</p>
+                        </div>
+
+                        <!-- Results Container -->
+                        <div id="planning-results" class="hidden mt-6">
+                            <div class="flex justify-between items-center mb-4">
+                                <h3 class="font-bold text-lg text-slate-800">Resultados del Análisis</h3>
+                                <button onclick="downloadPlanningPDF()"
+                                    class="px-4 py-2 bg-red-500 text-white rounded-lg text-sm font-bold hover:bg-red-600 shadow-sm transition flex items-center gap-2">
+                                    <i class="fa-solid fa-file-pdf"></i> Descargar PDF
+                                </button>
                             </div>
-
-                            <!-- Results Container -->
-                            <div id="planning-results" class="hidden mt-6">
-                                <div class="flex justify-between items-center mb-4">
-                                    <h3 class="font-bold text-lg text-slate-800">Resultados del Análisis</h3>
-                                    <button onclick="downloadPlanningPDF()"
-                                        class="px-4 py-2 bg-red-500 text-white rounded-lg text-sm font-bold hover:bg-red-600 shadow-sm transition flex items-center gap-2">
-                                        <i class="fa-solid fa-file-pdf"></i> Descargar PDF
-                                    </button>
-                                </div>
-                                <div id="planning-content"
-                                    class="overflow-x-auto rounded-xl border border-slate-200 bg-white p-6">
-                                    <!-- HTML content will be injected here -->
-                                </div>
+                            <div id="planning-content"
+                                class="overflow-x-auto rounded-xl border border-slate-200 bg-white p-6">
+                                <!-- HTML content will be injected here -->
                             </div>
                         </div>
                     </div>
@@ -1095,6 +1294,59 @@
         </div>
 
         <script>
+            // --- NAVIGATION FUNCTION ---
+            // Controls visibility of all main views
+            function nav(viewName) {
+                // List of all views
+                const views = ['resumen', 'redactor', 'estudiantes', 'agenda', 'examenes', 'planificacion', 'configuracion'];
+
+                // Hide all views
+                views.forEach(view => {
+                    const element = document.getElementById('view-' + view);
+                    if (element) {
+                        element.classList.add('force-hidden');
+                        element.classList.remove('block', 'fade-in');
+                    }
+                });
+
+                // Show requested view
+                const targetView = document.getElementById('view-' + viewName);
+                if (targetView) {
+                    targetView.classList.remove('force-hidden');
+                    targetView.classList.add('block', 'fade-in');
+                }
+
+                // Update sidebar button states
+                views.forEach(view => {
+                    const btn = document.getElementById('btn-' + view);
+                    if (btn) {
+                        btn.classList.remove('active-nav');
+                        btn.classList.add('inactive-nav');
+                    }
+                });
+
+                const activeBtn = document.getElementById('btn-' + viewName);
+                if (activeBtn) {
+                    activeBtn.classList.remove('inactive-nav');
+                    activeBtn.classList.add('active-nav');
+                }
+
+                // Update page title
+                const titles = {
+                    'resumen': 'Panel de Control',
+                    'redactor': 'Redactor IA',
+                    'estudiantes': 'Estudiantes',
+                    'agenda': 'Agenda',
+                    'examenes': 'Generador de Exámenes',
+                    'planificacion': 'Planificación Académica',
+                    'configuracion': 'Configuración y Soporte'
+                };
+                const pageTitle = document.getElementById('page-title');
+                if (pageTitle && titles[viewName]) {
+                    pageTitle.innerText = titles[viewName];
+                }
+            }
+
             const today = new Date();
             let currentMonth = today.getMonth();
             let currentYear = 2026;
@@ -2114,6 +2366,273 @@
 
                 doc.save(`Examen_${topic.replace(/\s+/g, '_')}_${mode}.pdf`);
                 showToast('Descarga Iniciada', 'El PDF se ha generado correctamente.');
+            }
+
+            // Function to download Planning Analysis as PDF with Professional Design
+            function downloadPlanningPDF() {
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF();
+                const content = document.getElementById('planning-content');
+
+                if (!content) {
+                    showToast('Error', 'No hay contenido para exportar', 'error');
+                    return;
+                }
+
+                // Get user name from localStorage
+                const userName = localStorage.getItem('userName') || 'Profesor';
+
+                // PDF Configuration
+                const pageWidth = 210;
+                const pageHeight = 297;
+                const margin = 20;
+                const contentWidth = pageWidth - (margin * 2);
+                let pageNumber = 1;
+
+                // Function to add header on each page
+                function addHeader() {
+                    // Deep blue background with gradient effect
+                    doc.setFillColor(30, 58, 138);
+                    doc.rect(0, 0, pageWidth, 40, 'F');
+
+                    // Gold/Yellow accent line
+                    doc.setFillColor(218, 165, 32);
+                    doc.rect(0, 40, pageWidth, 2, 'F');
+
+                    // UNEXPO Logo Circle (decorative)
+                    doc.setFillColor(255, 255, 255);
+                    doc.circle(25, 20, 8, 'F');
+                    doc.setTextColor(30, 58, 138);
+                    doc.setFont('helvetica', 'bold');
+                    doc.setFontSize(10);
+                    doc.text('U', 25, 22, { align: 'center' });
+
+                    // Main Title
+                    doc.setTextColor(255, 255, 255);
+                    doc.setFont('helvetica', 'bold');
+                    doc.setFontSize(20);
+                    doc.text('ANÁLISIS ACADÉMICO', pageWidth / 2, 18, { align: 'center' });
+
+                    // Subtitle
+                    doc.setFont('helvetica', 'normal');
+                    doc.setFontSize(11);
+                    doc.setTextColor(218, 165, 32); // Gold color
+                    doc.text('Planificación y Evaluación', pageWidth / 2, 27, { align: 'center' });
+
+                    // University name (small, right side)
+                    doc.setFont('helvetica', 'normal');
+                    doc.setFontSize(8);
+                    doc.setTextColor(200, 200, 200);
+                    doc.text('UNEXPO', pageWidth - 25, 22, { align: 'right' });
+                    doc.setFontSize(7);
+                    doc.text('Ingeniería Mecatrónica', pageWidth - 25, 27, { align: 'right' });
+                }
+
+                // Function to add footer on each page with signature
+                function addFooter() {
+                    doc.setDrawColor(200, 200, 200);
+                    doc.line(margin, pageHeight - 25, pageWidth - margin, pageHeight - 25);
+                    doc.setTextColor(100, 100, 100);
+                    doc.setFont('helvetica', 'italic');
+                    doc.setFontSize(9);
+                    doc.text('Elaborado por:', margin, pageHeight - 18);
+                    doc.setFont('times', 'bolditalic');
+                    doc.setFontSize(12);
+                    doc.setTextColor(30, 58, 138);
+                    doc.text(`Prof. ${userName}`, margin, pageHeight - 12);
+                    doc.setDrawColor(30, 58, 138);
+                    doc.line(margin, pageHeight - 10, margin + 60, pageHeight - 10);
+                    doc.setFont('helvetica', 'normal');
+                    doc.setFontSize(8);
+                    doc.setTextColor(120, 120, 120);
+                    doc.text('UNEXPO - Ingeniería Mecatrónica', margin, pageHeight - 5);
+                    doc.setTextColor(100, 100, 100);
+                    doc.setFont('helvetica', 'normal');
+                    doc.setFontSize(9);
+                    doc.text(`Página ${pageNumber}`, pageWidth - margin, pageHeight - 10, { align: 'right' });
+                }
+
+                // Add first page header
+                addHeader();
+
+                let yPos = 50;
+                const maxY = pageHeight - 35;
+
+                // Function to check if new page is needed
+                function checkNewPage(spaceNeeded = 10) {
+                    if (yPos + spaceNeeded > maxY) {
+                        addFooter();
+                        doc.addPage();
+                        pageNumber++;
+                        addHeader();
+                        yPos = 45;
+                        return true;
+                    }
+                    return false;
+                }
+
+                // Process HTML elements recursively
+                function processElement(element, indent = 0) {
+                    const tagName = element.tagName?.toLowerCase();
+
+                    if (!tagName) {
+                        // Text node
+                        if (element.textContent && element.textContent.trim()) {
+                            const text = element.textContent.trim();
+                            doc.setFont('helvetica', 'normal');
+                            doc.setFontSize(11);
+                            doc.setTextColor(50, 50, 50);
+                            const lines = doc.splitTextToSize(text, contentWidth - indent);
+                            lines.forEach(line => {
+                                checkNewPage();
+                                doc.text(line, margin + indent, yPos);
+                                yPos += 6;
+                            });
+                        }
+                        return;
+                    }
+
+                    switch (tagName) {
+                        case 'h1':
+                        case 'h2':
+                        case 'h3':
+                        case 'h4':
+                            checkNewPage(15);
+                            yPos += 5;
+                            const text = element.textContent.trim();
+                            doc.setFont('helvetica', 'bold');
+                            const fontSize = tagName === 'h1' ? 14 : tagName === 'h2' ? 13 : tagName === 'h3' ? 12 : 11;
+                            doc.setFontSize(fontSize);
+                            doc.setTextColor(30, 58, 138);
+                            const lines = doc.splitTextToSize(text, contentWidth);
+                            lines.forEach(line => {
+                                doc.text(line, margin, yPos);
+                                yPos += fontSize * 0.5;
+                            });
+                            // Underline for h1 and h2
+                            if (tagName === 'h1' || tagName === 'h2') {
+                                doc.setDrawColor(37, 99, 235);
+                                doc.line(margin, yPos, margin + 50, yPos);
+                            }
+                            yPos += 8;
+                            break;
+
+                        case 'p':
+                            checkNewPage();
+                            const pText = element.textContent.trim();
+                            if (pText) {
+                                doc.setFont('helvetica', 'normal');
+                                doc.setFontSize(11);
+                                doc.setTextColor(50, 50, 50);
+                                const pLines = doc.splitTextToSize(pText, contentWidth - indent);
+                                pLines.forEach(line => {
+                                    checkNewPage();
+                                    doc.text(line, margin + indent, yPos);
+                                    yPos += 6;
+                                });
+                                yPos += 3;
+                            }
+                            break;
+
+                        case 'ul':
+                        case 'ol':
+                            yPos += 2;
+                            let itemNumber = 1;
+                            Array.from(element.children).forEach(child => {
+                                if (child.tagName?.toLowerCase() === 'li') {
+                                    checkNewPage();
+                                    const bullet = tagName === 'ul' ? '•' : `${itemNumber}.`;
+                                    const liText = child.textContent.trim();
+                                    doc.setFont('helvetica', 'normal');
+                                    doc.setFontSize(11);
+                                    doc.setTextColor(50, 50, 50);
+                                    doc.text(bullet, margin + indent + 2, yPos);
+                                    const liLines = doc.splitTextToSize(liText, contentWidth - indent - 10);
+                                    liLines.forEach((line, idx) => {
+                                        if (idx > 0) checkNewPage();
+                                        doc.text(line, margin + indent + 8, yPos);
+                                        yPos += 6;
+                                    });
+                                    itemNumber++;
+                                }
+                            });
+                            yPos += 3;
+                            break;
+
+                        case 'table':
+                            checkNewPage(20);
+                            const rows = Array.from(element.querySelectorAll('tr'));
+
+                            rows.forEach((row, rowIdx) => {
+                                const cells = Array.from(row.querySelectorAll('th, td'));
+                                const cellWidth = contentWidth / Math.max(cells.length, 1);
+
+                                // Calculate max height needed for this row
+                                let maxLines = 1;
+                                const cellsData = cells.map(cell => {
+                                    const cellText = cell.textContent.trim();
+                                    const isHeader = cell.tagName.toLowerCase() === 'th';
+                                    doc.setFontSize(9); // Smaller font for tables
+                                    const lines = doc.splitTextToSize(cellText, cellWidth - 4);
+                                    maxLines = Math.max(maxLines, lines.length);
+                                    return { text: cellText, lines, isHeader };
+                                });
+
+                                const rowHeight = maxLines * 5 + 4; // 5 per line + padding
+                                checkNewPage(rowHeight);
+
+                                let xPos = margin;
+
+                                cellsData.forEach((cellData, cellIdx) => {
+                                    if (cellData.isHeader) {
+                                        doc.setFillColor(30, 58, 138);
+                                        doc.rect(xPos, yPos - 3, cellWidth, rowHeight, 'F');
+                                        doc.setTextColor(255, 255, 255);
+                                        doc.setFont('helvetica', 'bold');
+                                        doc.setFontSize(9);
+                                    } else {
+                                        doc.setDrawColor(200, 200, 200);
+                                        doc.rect(xPos, yPos - 3, cellWidth, rowHeight);
+                                        doc.setTextColor(50, 50, 50);
+                                        doc.setFont('helvetica', 'normal');
+                                        doc.setFontSize(9);
+                                    }
+
+                                    // Draw all lines of text
+                                    let lineY = yPos;
+                                    cellData.lines.forEach((line, lineIdx) => {
+                                        doc.text(line, xPos + 2, lineY);
+                                        lineY += 5;
+                                    });
+
+                                    xPos += cellWidth;
+                                });
+
+                                yPos += rowHeight;
+                            });
+                            yPos += 5;
+                            break;
+
+                        default:
+                            // Process children
+                            Array.from(element.childNodes).forEach(child => {
+                                processElement(child, indent);
+                            });
+                            break;
+                    }
+                }
+
+                // Process all children of the content
+                Array.from(content.children).forEach(child => {
+                    processElement(child);
+                });
+
+                // Add footer to last page
+                addFooter();
+
+                // Save PDF
+                doc.save(`Planificacion_Academica_${Date.now()}.pdf`);
+                showToast('Descarga Iniciada', 'El PDF profesional se ha generado correctamente.');
             }
 
             renderCalendar();
