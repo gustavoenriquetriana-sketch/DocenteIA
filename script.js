@@ -306,7 +306,7 @@ function procesarPago() {
     // Simulate Payment Delay then Register
     setTimeout(() => {
         // Cambiamos la ruta para que coincida con tu servidor de Supabase
-        fetch('http://localhost:5000/api/log-actividad', {
+        fetch('/api/log-actividad', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             // Enviamos los datos que quieres "espiar" en Supabase
@@ -375,7 +375,7 @@ function login() {
     btn.innerText = "Verificando...";
     btn.classList.add('opacity-75', 'cursor-not-allowed');
 
-    fetch('http://localhost:5000/api/auth/login', {
+    fetch('/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
