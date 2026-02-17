@@ -8,7 +8,7 @@ const multer = require('multer');
 const db = require('./backend/database');
 
 const app = express();
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 
 // Configuración básica
 app.use(cors());
@@ -732,6 +732,6 @@ app.post('/api/tasks', (req, res) => {
     );
 });
 
-app.listen(PORT, () => {
-    console.log(`🚀 Servidor DocenteAI vivo en http://localhost:${PORT}`);
+app.listen(PORT, '0.0.0.0', () => {
+    console.log(`Servidor corriendo en puerto ${PORT}`);
 });
