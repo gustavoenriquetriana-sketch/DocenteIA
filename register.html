@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro Profesional | DocenteAI</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Custom Scrollbar for Form Side */
+        .custom-scroll::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .custom-scroll::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background-color: #cbd5e1;
+            border-radius: 20px;
+        }
+    </style>
+</head>
+
+<body class="h-screen flex overflow-hidden">
+
+    <!-- Left Side: Branding (Desktop) -->
+    <div class="hidden lg:flex w-1/2 bg-slate-900 relative items-center justify-center p-12 overflow-hidden">
+
+        <!-- Abstract Background -->
+        <div class="absolute inset-0 z-0">
+            <div
+                class="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-600 rounded-full mix-blend-multiply filter blur-[128px] opacity-20 animate-pulse">
+            </div>
+            <div class="absolute bottom-0 left-0 w-[500px] h-[500px] bg-purple-600 rounded-full mix-blend-multiply filter blur-[128px] opacity-20 animate-pulse"
+                style="animation-delay: 2s"></div>
+        </div>
+
+        <div class="relative z-10 text-center text-white max-w-lg">
+            <div
+                class="w-20 h-20 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-8 shadow-2xl shadow-blue-900/50">
+                <i class="fa-solid fa-graduation-cap text-4xl"></i>
+            </div>
+
+            <h1 class="text-4xl font-bold mb-6">Bienvenido a la Nueva Era Académica</h1>
+            <p class="text-blue-200 text-lg leading-relaxed mb-10">Gestiona tus clases con Inteligencia Artificial.
+                <br>Diseñado exclusivamente para docentes universitarios e investigadores.
+            </p>
+
+            <div class="flex justify-center gap-4 text-sm font-medium text-slate-400">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-check text-green-400"></i> Planificación
+                </div>
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-check text-green-400"></i> Notas
+                </div>
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-check text-green-400"></i> Asistencia IA
+                </div>
+            </div>
+
+            <div class="mt-12 opacity-50 text-xs">
+                © 2026 UNEXPO Guarenas - Departamento de Desarrollo
+            </div>
+        </div>
+    </div>
+
+    <!-- Right Side: Form -->
+    <div class="w-full lg:w-1/2 bg-white flex flex-col h-full relative">
+        <!-- Top Mobile Header -->
+        <div class="lg:hidden p-6 pb-0 flex items-center gap-3">
+            <div class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center text-white">
+                <i class="fa-solid fa-graduation-cap"></i>
+            </div>
+            <span class="font-bold text-lg text-slate-800">DocenteAI</span>
+        </div>
+
+        <div class="flex-1 flex items-center justify-center p-6 sm:p-12 overflow-y-auto custom-scroll">
+            <div class="w-full max-w-md space-y-8 fade-in">
+
+                <div class="text-center lg:text-left">
+                    <h2 class="text-3xl font-bold text-slate-900">Crear Cuenta Profesional</h2>
+                    <p class="text-slate-500 mt-2">Únete a la red académica más avanzada.</p>
+                </div>
+
+                <form id="registerForm" onsubmit="handleStep1(event)" class="space-y-5">
+
+                    <!-- STEP 1: DATOS PERSONALES -->
+                    <div id="step1" class="space-y-5 fade-in">
+                        <!-- Nombre / Razón Social -->
+                        <div>
+                            <label class="block text-xs font-bold text-slate-600 uppercase mb-2">Nombre Completo / Razón
+                                Social</label>
+                            <div class="relative">
+                                <i class="fa-solid fa-user absolute left-4 top-3.5 text-slate-400 text-sm"></i>
+                                <input type="text" id="nombre" required
+                                    class="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:border-blue-600 focus:bg-white focus:ring-4 focus:ring-blue-50 transition"
+                                    placeholder="Ej: Dr. Gustavo Triana">
+                            </div>
+                        </div>
+
+                        <!-- Email -->
+                        <div>
+                            <label class="block text-xs font-bold text-slate-600 uppercase mb-2">Correo
+                                Institucional</label>
+                            <div class="relative">
+                                <i class="fa-solid fa-envelope absolute left-4 top-3.5 text-slate-400 text-sm"></i>
+                                <input type="email" id="email" required
+                                    class="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:border-blue-600 focus:bg-white focus:ring-4 focus:ring-blue-50 transition"
+                                    placeholder="profesor@unexpo.edu.ve">
+                            </div>
+                        </div>
+
+                        <!-- Institución -->
+                        <div>
+                            <label class="block text-xs font-bold text-slate-600 uppercase mb-2">Institución de
+                                Procedencia</label>
+                            <div class="relative">
+                                <i
+                                    class="fa-solid fa-building-columns absolute left-4 top-3.5 text-slate-400 text-sm"></i>
+                                <input type="text" id="institucion" required
+                                    class="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:border-blue-600 focus:bg-white focus:ring-4 focus:ring-blue-50 transition"
+                                    placeholder="Ej: UNEXPO, UCV, LUZ">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                            <!-- Departamento -->
+                            <div>
+                                <label class="block text-xs font-bold text-slate-600 uppercase mb-2">Departamento /
+                                    Facultad</label>
+                                <input type="text" id="departamento" required
+                                    class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:border-blue-600 focus:bg-white focus:ring-4 focus:ring-blue-50 transition"
+                                    placeholder="Ej: Mecatrónica">
+                            </div>
+
+                            <!-- Cargo -->
+                            <div>
+                                <label class="block text-xs font-bold text-slate-600 uppercase mb-2">Cargo
+                                    Académico</label>
+                                <select id="cargo" required
+                                    class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:border-blue-600 focus:bg-white focus:ring-4 focus:ring-blue-50 transition appearance-none">
+                                    <option value="" disabled selected>Seleccionar...</option>
+                                    <option value="Docente Titular">Docente Titular</option>
+                                    <option value="Jefe de Departamento">Jefe de Departamento</option>
+                                    <option value="Investigador">Investigador</option>
+                                    <option value="Administrativo">Administrativo</option>
+                                    <option value="Otro">Otro</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Password -->
+                        <div>
+                            <label class="block text-xs font-bold text-slate-600 uppercase mb-2">Contraseña</label>
+                            <div class="relative">
+                                <i class="fa-solid fa-lock absolute left-4 top-3.5 text-slate-400 text-sm"></i>
+                                <input type="password" id="password" required
+                                    class="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:border-blue-600 focus:bg-white focus:ring-4 focus:ring-blue-50 transition"
+                                    placeholder="••••••••">
+                            </div>
+                            <p class="text-[10px] text-slate-400 mt-1 ml-1 text-right">Mínimo 8 caracteres</p>
+                        </div>
+
+                        <!-- Continue Button -->
+                        <button type="submit" id="btnContinue"
+                            class="w-full bg-slate-900 hover:bg-black text-white font-bold py-4 rounded-xl shadow-xl hover:shadow-2xl transition transform hover:-translate-y-0.5 active:scale-[0.98] mt-4 flex items-center justify-center gap-3">
+                            <span>Continuar al Pago</span>
+                            <i class="fa-solid fa-arrow-right text-sm"></i>
+                        </button>
+                    </div>
+
+                    <!-- STEP 2: PAGO (Oculto inicialmente) -->
+                    <div id="step2" class="hidden space-y-6 fade-in">
+
+                        <div class="flex justify-between items-center mb-4">
+                            <button type="button" onclick="prevStep()"
+                                class="text-sm text-slate-500 hover:text-slate-800 flex items-center gap-2">
+                                <i class="fa-solid fa-arrow-left"></i> Volver
+                            </button>
+                            <div class="text-right">
+                                <p class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Total a pagar
+                                </p>
+                                <p class="text-3xl font-black text-slate-900 tracking-tight">$3.99</p>
+                            </div>
+                        </div>
+
+                        <!-- Tarjeta Visual -->
+                        <div
+                            class="bg-slate-900 rounded-2xl p-6 text-white shadow-2xl relative overflow-hidden group border border-slate-800">
+                            <div
+                                class="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full blur-3xl -mr-32 -mt-32">
+                            </div>
+                            <div class="flex justify-between items-start mb-8">
+                                <i class="fa-solid fa-chip text-yellow-500/80 text-2xl"></i>
+                                <i class="fa-brands fa-cc-visa text-3xl opacity-80"></i>
+                            </div>
+                            <p id="card-num-display"
+                                class="text-xl font-mono tracking-widest mb-2 text-white/90 drop-shadow-md">0000 0000
+                                0000 0000</p>
+                            <div class="flex justify-between items-end mt-6">
+                                <div>
+                                    <p class="text-[9px] text-slate-400 uppercase tracking-widest mb-1">Titular</p>
+                                    <p id="card-name-display"
+                                        class="text-[10px] font-bold uppercase tracking-wider text-slate-200">NOMBRE
+                                        APELLIDO</p>
+                                </div>
+                                <div>
+                                    <p class="text-[9px] text-slate-400 uppercase tracking-widest mb-1">Expira</p>
+                                    <p id="card-date-display" class="text-[10px] font-bold font-mono text-slate-200">
+                                        MM/YY</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Formulario Pago -->
+                        <div class="space-y-4">
+                            <div>
+                                <input id="pay-card" type="text" maxlength="19" placeholder="Número de Tarjeta"
+                                    oninput="updateCard()"
+                                    class="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:border-indigo-600 focus:bg-white focus:ring-4 focus:ring-indigo-50 transition">
+                            </div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <input id="pay-date" type="text" maxlength="5" placeholder="MM/YY"
+                                    oninput="updateCard()"
+                                    class="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:border-indigo-600 focus:bg-white focus:ring-4 focus:ring-indigo-50 transition text-center">
+                                <input id="pay-cvc" type="text" maxlength="3" placeholder="CVC"
+                                    class="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:border-indigo-600 focus:bg-white focus:ring-4 focus:ring-indigo-50 transition text-center">
+                            </div>
+                        </div>
+
+                        <button type="button" onclick="completeRegistration()" id="submitBtn"
+                            class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 rounded-xl shadow-xl hover:shadow-2xl transition transform hover:-translate-y-0.5 active:scale-[0.98] mt-4 flex items-center justify-center gap-3">
+                            <span>Pagar y Crear Cuenta</span>
+                            <i class="fa-solid fa-check text-sm"></i>
+                        </button>
+                    </div>
+
+                </form>
+
+                <!-- Script de Lógica -->
+                <script>
+                    function handleStep1(e) {
+                        e.preventDefault();
+                        // Simple validation passed (HTML5 required)
+                        document.getElementById('step1').classList.add('hidden');
+                        document.getElementById('step2').classList.remove('hidden');
+
+                        // Auto-fill card name with user name
+                        const nombre = document.getElementById('nombre').value;
+                        const cardNameDisplay = document.getElementById('card-name-display');
+                        if (nombre && cardNameDisplay) cardNameDisplay.innerText = nombre.toUpperCase();
+                    }
+
+                    function prevStep() {
+                        document.getElementById('step2').classList.add('hidden');
+                        document.getElementById('step1').classList.remove('hidden');
+                    }
+
+                    let rafIdCard = null;
+                    function updateCard() {
+                        if (rafIdCard) cancelAnimationFrame(rafIdCard);
+
+                        rafIdCard = requestAnimationFrame(() => {
+                            const numInput = document.getElementById('pay-card');
+                            const dateInput = document.getElementById('pay-date');
+
+                            const num = numInput ? numInput.value : '';
+                            const date = dateInput ? dateInput.value : '';
+
+                            const numDisplay = document.getElementById('card-num-display');
+                            const dateDisplay = document.getElementById('card-date-display');
+
+                            if (numDisplay) numDisplay.innerText = num || '0000 0000 0000 0000';
+                            if (dateDisplay) dateDisplay.innerText = date || 'MM/YY';
+                        });
+                    }
+
+                    async function completeRegistration() {
+                        const btn = document.getElementById('submitBtn');
+                        const originalContent = btn.innerHTML;
+
+                        // Validate Payment
+                        const card = document.getElementById('pay-card').value;
+                        const date = document.getElementById('pay-date').value;
+                        const cvc = document.getElementById('pay-cvc').value;
+
+                        if (!card || !date || !cvc) {
+                            alert('Por favor completa los datos de pago.');
+                            return;
+                        }
+
+                        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Procesando...';
+                        btn.disabled = true;
+
+                        const data = {
+                            nombre: document.getElementById('nombre').value,
+                            email: document.getElementById('email').value,
+                            password: document.getElementById('password').value,
+                            institucion: document.getElementById('institucion').value,
+                            departamento: document.getElementById('departamento').value,
+                            cargo: document.getElementById('cargo').value
+                        };
+
+                        try {
+                            const response = await fetch('/api/auth/register', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify(data)
+                            });
+
+                            const result = await response.json();
+
+                            if (result.success) {
+                                // Guardar datos en LocalStorage para el Dashboard
+                                localStorage.setItem('user_name', result.user.nombre);
+                                localStorage.setItem('user_cargo', result.user.cargo);
+                                localStorage.setItem('user_department', result.user.departamento);
+                                localStorage.setItem('user_institution', result.user.institucion);
+                                localStorage.setItem('user_email', result.user.email);
+
+                                // Simular token
+                                localStorage.setItem('auth_token', 'demo-token-123');
+
+                                // Redirigir
+                                window.location.href = 'dashboard.html';
+                            } else {
+                                alert('Error: ' + (result.error || 'No se pudo completar el registro'));
+                                btn.innerHTML = originalContent;
+                                btn.disabled = false;
+                            }
+
+                        } catch (error) {
+                            console.error("Error:", error);
+                            alert('Error de conexión con el servidor');
+                            btn.innerHTML = originalContent;
+                            btn.disabled = false;
+                        }
+                    }
+                </script>
+</body>
+
+</html>

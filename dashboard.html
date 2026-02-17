@@ -40,6 +40,16 @@
             }
         }
 
+        @keyframes growBar {
+            from {
+                height: 0;
+            }
+
+            to {
+                height: var(--final-height);
+            }
+        }
+
         #toast-container {
             position: fixed;
             bottom: 30px;
@@ -82,6 +92,24 @@
             transform: translateY(-2px);
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
             transition: all 0.2s;
+        }
+
+        /* Force circular logo in AI content - robust override */
+        .not-prose img[src*="logo_unexpo"] {
+            border-radius: 50% !important;
+            object-fit: contain !important;
+        }
+
+        .not-prose>div>div {
+            border-radius: 50% !important;
+            overflow: hidden !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+        }
+
+        .not-prose {
+            margin-bottom: 2rem !important;
         }
 
         /* Professional Typography for AI-Generated Content */
@@ -306,8 +334,11 @@
                         class="fa-solid fa-xmark text-xl"></i></button>
             </div>
 
+            <!-- Sidebar Logo Removed -->
+
             <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto no-scrollbar">
-                <p class="px-4 text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2">Menú Principal</p>
+                <p class="px-4 text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2">Menú Principal
+                </p>
                 <button onclick="nav('resumen'); toggleSidebar()" id="btn-resumen"
                     class="w-full flex items-center gap-3 px-4 py-3 rounded-xl active-nav transition-all duration-200">
                     <i class="fa-solid fa-chart-pie w-5"></i> <span class="font-medium text-sm">Resumen</span>
@@ -331,8 +362,7 @@
                 </button>
                 <button onclick="nav('planificacion'); toggleSidebar()" id="btn-planificacion"
                     class="w-full flex items-center gap-3 px-4 py-3 rounded-xl inactive-nav transition-all duration-200">
-                    <i class="fa-solid fa-calendar-days w-5"></i> <span class="font-medium text-sm">📅
-                        Planificación</span>
+                    <i class="fa-solid fa-calendar-days w-5"></i> <span class="font-medium text-sm">Asistente IA</span>
                 </button>
                 <button onclick="nav('configuracion'); toggleSidebar()" id="btn-configuracion"
                     class="w-full flex items-center gap-3 px-4 py-3 rounded-xl inactive-nav transition-all duration-200 mt-2">
@@ -471,7 +501,7 @@
                     <div class="bg-white p-6 md:p-8 rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
                         <div
                             class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 md:mb-10 gap-4">
-                            <h3 class="font-bold text-lg text-slate-800">Rendimiento Académico - 2025-2</h3>
+                            <h3 class="font-bold text-lg text-slate-800">Rendimiento Académico</h3>
                             <select onchange="updateChart(this.value)"
                                 class="bg-slate-50 border border-slate-200 text-sm rounded-lg px-4 py-2 font-semibold text-slate-700 cursor-pointer outline-none focus:ring-2 focus:ring-blue-500 transition w-full md:w-auto">
                                 <option value="notas">Promedio General</option>
@@ -485,28 +515,32 @@
                                 <span id="val-1"
                                     class="text-xs font-bold mb-3 opacity-0 group-hover:opacity-100 transition-all transform translate-y-2 group-hover:translate-y-0 bg-slate-800 text-white px-2 py-1 rounded shadow-lg">14.5</span>
                                 <div id="bar-1" class="w-full rounded-t-lg bar-transition hover:opacity-80"
-                                    style="height: 70%; background-color: #1e3a8a;"></div>
+                                    style="--final-height: 70%; animation: growBar 1s ease-out forwards; background-color: #1e3a8a;">
+                                </div>
                             </div>
                             <div
                                 class="w-full h-full flex flex-col justify-end items-center group relative cursor-pointer">
                                 <span id="val-2"
                                     class="text-xs font-bold mb-3 opacity-0 group-hover:opacity-100 transition-all transform translate-y-2 group-hover:translate-y-0 bg-slate-800 text-white px-2 py-1 rounded shadow-lg">12.0</span>
                                 <div id="bar-2" class="w-full rounded-t-lg bar-transition hover:opacity-80"
-                                    style="height: 55%; background-color: #1e3a8a;"></div>
+                                    style="--final-height: 55%; animation: growBar 1s ease-out forwards; background-color: #1e3a8a;">
+                                </div>
                             </div>
                             <div
                                 class="w-full h-full flex flex-col justify-end items-center group relative cursor-pointer">
                                 <span id="val-3"
                                     class="text-xs font-bold mb-3 opacity-0 group-hover:opacity-100 transition-all transform translate-y-2 group-hover:translate-y-0 bg-slate-800 text-white px-2 py-1 rounded shadow-lg">16.5</span>
                                 <div id="bar-3" class="w-full rounded-t-lg bar-transition hover:opacity-80"
-                                    style="height: 85%; background-color: #1e3a8a;"></div>
+                                    style="--final-height: 85%; animation: growBar 1s ease-out forwards; background-color: #1e3a8a;">
+                                </div>
                             </div>
                             <div
                                 class="w-full h-full flex flex-col justify-end items-center group relative cursor-pointer">
                                 <span id="val-4"
                                     class="text-xs font-bold mb-3 opacity-0 group-hover:opacity-100 transition-all transform translate-y-2 group-hover:translate-y-0 bg-slate-800 text-white px-2 py-1 rounded shadow-lg">13.5</span>
                                 <div id="bar-4" class="w-full rounded-t-lg bar-transition hover:opacity-80"
-                                    style="height: 65%; background-color: #1e3a8a;"></div>
+                                    style="--final-height: 65%; animation: growBar 1s ease-out forwards; background-color: #1e3a8a;">
+                                </div>
                             </div>
                         </div>
                         <div
@@ -519,7 +553,7 @@
                 <div id="view-redactor" class="max-w-5xl mx-auto force-hidden fade-in">
                     <div class="mb-6">
                         <h1 class="text-2xl font-bold text-slate-800 flex items-center gap-2">Redactor IA <span
-                                class="text-2xl">âœï¸</span></h1>
+                                class="text-2xl">✨</span></h1>
                         <p class="text-slate-500 mt-1">Genera correos y comunicados formales en segundos.</p>
                     </div>
                     <div
@@ -598,10 +632,8 @@
                                         <th class="p-5">Acción</th>
                                     </tr>
                                 </thead>
-                                <tbody class="text-sm divide-y divide-slate-100">
                                 <tbody id="students-table-body" class="text-sm divide-y divide-slate-100">
                                     <!-- Students will be loaded here via API -->
-                                </tbody>
                                 </tbody>
                             </table>
                         </div>
@@ -684,8 +716,9 @@
                                                 class="block text-xs font-bold text-slate-500 uppercase mb-2">Tipo</label>
                                             <select id="exam-type"
                                                 class="w-full p-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-purple-500 bg-white">
-                                                <option value="Selección Simple">Selección Simple</option>
-                                                <option value="Verdadero/Falso">Verdadero/Falso</option>
+                                                <option value="desarrollo">📝 Desarrollo y Análisis</option>
+                                                <option value="casos">💼 Casos Prácticos</option>
+                                                <option value="problemas">🔢 Resolución de Problemas</option>
                                             </select>
                                         </div>
                                     </div>
@@ -728,6 +761,94 @@
 
 
 
+                <div id="section-planning">
+                    <!-- STRICT ISOLATION WRAPPER -->
+                    <div id="planning-content-container" class="hidden w-full">
+                        <!-- Planificación Académica desde PDF -->
+                        <div id="view-planificacion" class="max-w-5xl mx-auto fade-in">
+                            <div class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm">
+
+                                <div class="flex items-center gap-3 mb-6">
+                                    <div class="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center">
+                                        <i class="fa-solid fa-file-pdf text-blue-600 text-xl"></i>
+                                    </div>
+                                    <div>
+                                        <h2 class="text-xl font-bold text-slate-800">Asistente de Análisis Documental
+                                        </h2>
+                                        <p class="text-sm text-slate-500">Sube el PDF del programa de materia (syllabus)
+                                            y
+                                            genera automáticamente una planificación o cualquier análisis que necesites
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <!-- File Upload Area -->
+                                <div
+                                    class="mb-6 p-6 border-2 border-dashed border-slate-300 rounded-xl hover:border-blue-400 transition bg-slate-50">
+                                    <div class="text-center">
+                                        <i class="fa-solid fa-cloud-arrow-up text-4xl text-slate-400 mb-3"></i>
+                                        <label for="syllabus-file" class="block">
+                                            <span
+                                                class="text-sm font-bold text-slate-700 cursor-pointer hover:text-blue-600">Selecciona
+                                                el archivo PDF del programa</span>
+                                            <input type="file" id="syllabus-file" accept=".pdf" class="hidden"
+                                                onchange="handleFileSelect(event)">
+                                        </label>
+                                        <p id="file-name" class="text-xs text-slate-500 mt-2"></p>
+                                    </div>
+                                </div>
+
+                                <!-- Custom Instruction Textarea -->
+                                <div class="mb-6">
+                                    <label for="planning-prompt" class="block text-sm font-bold text-slate-700 mb-2">
+                                        <i class="fa-solid fa-pen-to-square text-blue-600"></i> ¿Qué quieres hacer con
+                                        este
+                                        PDF?
+                                    </label>
+                                    <textarea id="planning-prompt" rows="4"
+                                        class="w-full p-4 border-2 border-slate-300 rounded-xl text-sm focus:outline-none focus:border-blue-500 transition resize-none"
+                                        placeholder="Escribe tu instrucción aquí. Ejemplos:&#10;• 'Genera un plan de 8 semanas basado en este programa'&#10;• 'Extrae 5 preguntas clave del Capítulo 2'&#10;• 'Resume los objetivos de aprendizaje'&#10;• 'Crea una tabla con los temas principales'"></textarea>
+                                    <p class="text-xs text-slate-500 mt-2">
+                                        💡 <strong>Tip:</strong> Sé específico con tu solicitud. La IA analizará el PDF
+                                        y
+                                        seguirá exactamente tus instrucciones.
+                                    </p>
+                                </div>
+
+                                <!-- Generate Button -->
+                                <button id="btn-generate-planning" onclick="uploadSyllabus()" disabled
+                                    class="w-full py-4 bg-blue-600 text-white rounded-xl font-bold text-sm hover:bg-blue-700 shadow-md transition disabled:bg-slate-300 disabled:cursor-not-allowed flex items-center justify-center gap-2">
+                                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                                    <span id="btn-text">Generar Planificación con IA</span>
+                                </button>
+
+                                <!-- Loading State -->
+                                <div id="planning-loading" class="hidden mt-6 text-center py-8">
+                                    <i class="fa-solid fa-spinner fa-spin text-4xl text-blue-600 mb-3"></i>
+                                    <p class="text-sm font-bold text-slate-700">Analizando el programa y generando
+                                        planificación...</p>
+                                    <p class="text-xs text-slate-500 mt-1">Esto puede tomar hasta 30 segundos</p>
+                                </div>
+
+                                <!-- Results Container -->
+                                <div id="planning-results" class="hidden mt-6">
+                                    <div class="flex justify-between items-center mb-4">
+                                        <h3 class="font-bold text-lg text-slate-800">Resultados del Análisis</h3>
+                                        <button onclick="downloadPlanningPDF()"
+                                            class="px-4 py-2 bg-red-500 text-white rounded-lg text-sm font-bold hover:bg-red-600 shadow-sm transition flex items-center gap-2">
+                                            <i class="fa-solid fa-file-pdf"></i> Descargar PDF
+                                        </button>
+                                    </div>
+                                    <div id="planning-content"
+                                        class="overflow-x-auto rounded-xl border border-slate-200 bg-white p-6">
+                                        <!-- HTML content will be injected here -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div id="view-configuracion" class="max-w-5xl mx-auto force-hidden fade-in">
                     <h1 class="text-2xl font-bold text-slate-800 mb-6">Configuración y Soporte</h1>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -737,10 +858,10 @@
                                     class="w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold text-2xl shadow-md">
                                     GT</div>
                                 <div>
-                                    <h3 id="profile-name-card" class="font-bold text-lg text-slate-800">Gustavo Triana
+                                    <h3 id="profile-name-card" class="font-bold text-lg text-slate-800">Gustavo
+                                        Triana
                                     </h3>
                                     <p class="text-slate-500 text-sm">Profesor Ingeniería Mecatrónica</p>
-                                    <p class="text-slate-400 text-xs mt-1">ID: 20211000127</p>
                                 </div>
                             </div>
                             <div class="space-y-3">
@@ -802,8 +923,8 @@
                                         class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
                                         <input type="checkbox" name="toggle" id="toggle1"
                                             onchange="saveSettings('reminders', this.checked)"
-                                            class="toggle-checkbox absolute block w-5 h-5 rounded-full bg-white border-4 appearance-none cursor-pointer border-slate-300 checked:right-0 checked:border-blue-600 transition-all duration-300" /><label
-                                            for="toggle1"
+                                            class="toggle-checkbox absolute block w-5 h-5 rounded-full bg-white border-4 appearance-none cursor-pointer border-slate-300 checked:right-0 checked:border-blue-600 transition-all duration-300">
+                                        <label for="toggle1"
                                             class="toggle-label block overflow-hidden h-5 rounded-full bg-slate-300 cursor-pointer transition-colors duration-300"></label>
                                     </div>
                                 </div>
@@ -816,8 +937,8 @@
                                         class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
                                         <input type="checkbox" name="toggle" id="toggle2"
                                             onchange="saveSettings('summary', this.checked)"
-                                            class="toggle-checkbox absolute block w-5 h-5 rounded-full bg-white border-4 appearance-none cursor-pointer border-slate-300 checked:right-0 checked:border-blue-600 transition-all duration-300" /><label
-                                            for="toggle2"
+                                            class="toggle-checkbox absolute block w-5 h-5 rounded-full bg-white border-4 appearance-none cursor-pointer border-slate-300 checked:right-0 checked:border-blue-600 transition-all duration-300">
+                                        <label for="toggle2"
                                             class="toggle-label block overflow-hidden h-5 rounded-full bg-slate-300 cursor-pointer transition-colors duration-300"></label>
                                     </div>
                                 </div>
@@ -827,7 +948,8 @@
                         <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
                             <h3 class="font-bold text-md text-slate-800 mb-4 flex items-center gap-2"><i
                                     class="fa-solid fa-headset text-purple-500"></i> Soporte Técnico</h3>
-                            <p class="text-xs text-slate-500 mb-4">¿Tienes problemas? Nuestro equipo responde en menos
+                            <p class="text-xs text-slate-500 mb-4">¿Tienes problemas? Nuestro equipo responde en
+                                menos
                                 de 2 horas.</p>
                             <div class="flex gap-3">
                                 <button onclick="toggleSupportChat()"
@@ -844,83 +966,7 @@
                     </div>
                 </div>
 
-                <!-- Planificación Académica desde PDF -->
-                <div id="view-planificacion" class="max-w-5xl mx-auto force-hidden fade-in">
-                    <div class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm">
-                        <div class="flex items-center gap-3 mb-6">
-                            <div class="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center">
-                                <i class="fa-solid fa-file-pdf text-blue-600 text-xl"></i>
-                            </div>
-                            <div>
-                                <h2 class="text-xl font-bold text-slate-800">Generador de Planificación Académica
-                                </h2>
-                                <p class="text-sm text-slate-500">Sube el PDF del programa de materia (syllabus) y
-                                    genera automáticamente una planificación semestral de 16 semanas</p>
-                            </div>
-                        </div>
 
-                        <!-- File Upload Area -->
-                        <div
-                            class="mb-6 p-6 border-2 border-dashed border-slate-300 rounded-xl hover:border-blue-400 transition bg-slate-50">
-                            <div class="text-center">
-                                <i class="fa-solid fa-cloud-arrow-up text-4xl text-slate-400 mb-3"></i>
-                                <label for="syllabus-file" class="block">
-                                    <span
-                                        class="text-sm font-bold text-slate-700 cursor-pointer hover:text-blue-600">Selecciona
-                                        el archivo PDF del programa</span>
-                                    <input type="file" id="syllabus-file" accept=".pdf" class="hidden"
-                                        onchange="handleFileSelect(event)">
-                                </label>
-                                <p id="file-name" class="text-xs text-slate-500 mt-2"></p>
-                            </div>
-                        </div>
-
-                        <!-- Custom Instruction Textarea -->
-                        <div class="mb-6">
-                            <label for="planning-prompt" class="block text-sm font-bold text-slate-700 mb-2">
-                                <i class="fa-solid fa-pen-to-square text-blue-600"></i> ¿Qué quieres hacer con este
-                                PDF?
-                            </label>
-                            <textarea id="planning-prompt" rows="4"
-                                class="w-full p-4 border-2 border-slate-300 rounded-xl text-sm focus:outline-none focus:border-blue-500 transition resize-none"
-                                placeholder="Escribe tu instrucción aquí. Ejemplos:&#10;• 'Genera un plan de 8 semanas basado en este programa'&#10;• 'Extrae 5 preguntas clave del Capítulo 2'&#10;• 'Resume los objetivos de aprendizaje'&#10;• 'Crea una tabla con los temas principales'"></textarea>
-                            <p class="text-xs text-slate-500 mt-2">
-                                💡 <strong>Tip:</strong> Sé específico con tu solicitud. La IA analizará el PDF y
-                                seguirá exactamente tus instrucciones.
-                            </p>
-                        </div>
-
-                        <!-- Generate Button -->
-                        <button id="btn-generate-planning" onclick="uploadSyllabus()" disabled
-                            class="w-full py-4 bg-blue-600 text-white rounded-xl font-bold text-sm hover:bg-blue-700 shadow-md transition disabled:bg-slate-300 disabled:cursor-not-allowed flex items-center justify-center gap-2">
-                            <i class="fa-solid fa-wand-magic-sparkles"></i>
-                            <span id="btn-text">Generar Planificación con IA</span>
-                        </button>
-
-                        <!-- Loading State -->
-                        <div id="planning-loading" class="hidden mt-6 text-center py-8">
-                            <i class="fa-solid fa-spinner fa-spin text-4xl text-blue-600 mb-3"></i>
-                            <p class="text-sm font-bold text-slate-700">Analizando el programa y generando
-                                planificación...</p>
-                            <p class="text-xs text-slate-500 mt-1">Esto puede tomar hasta 30 segundos</p>
-                        </div>
-
-                        <!-- Results Container -->
-                        <div id="planning-results" class="hidden mt-6">
-                            <div class="flex justify-between items-center mb-4">
-                                <h3 class="font-bold text-lg text-slate-800">Resultados del Análisis</h3>
-                                <button onclick="downloadPlanningPDF()"
-                                    class="px-4 py-2 bg-red-500 text-white rounded-lg text-sm font-bold hover:bg-red-600 shadow-sm transition flex items-center gap-2">
-                                    <i class="fa-solid fa-file-pdf"></i> Descargar PDF
-                                </button>
-                            </div>
-                            <div id="planning-content"
-                                class="overflow-x-auto rounded-xl border border-slate-200 bg-white p-6">
-                                <!-- HTML content will be injected here -->
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
             </div>
         </main>
@@ -1039,7 +1085,7 @@
                             type="text" id="ticket-subject" placeholder="Ej: Error al exportar PDF"
                             class="w-full p-3 border border-slate-300 rounded-xl text-sm focus:outline-none focus:border-blue-500">
                     </div>
-                    <div><label class="block text-xs font-bold text-slate-500 uppercase mb-1.5">DescripciÃ³n del
+                    <div><label class="block text-xs font-bold text-slate-500 uppercase mb-1.5">Descripción del
                             Problema</label><textarea id="ticket-desc" rows="4"
                             placeholder="Describe detalladamente lo que sucede..."
                             class="w-full p-3 border border-slate-300 rounded-xl text-sm focus:outline-none focus:border-blue-500 resize-none"></textarea>
@@ -1068,7 +1114,7 @@
                         <p class="text-xs text-slate-400 uppercase tracking-widest mb-3 font-bold">Método Principal</p>
                         <p
                             class="text-3xl font-mono-card tracking-widest mb-8 text-slate-100 shadow-black drop-shadow-md">
-                            â€¢â€¢â€¢â€¢ â€¢â€¢â€¢â€¢ â€¢â€¢â€¢â€¢ <span id="current-card-digits">4242</span></p>
+                            •••• •••• •••• <span id="current-card-digits">4242</span></p>
                         <div class="flex justify-between text-sm text-slate-300 font-bold uppercase"><span>Gustavo
                                 Triana</span><span>EXP 12/28</span></div>
                     </div>
@@ -1149,7 +1195,7 @@
                         </div>
                         <div class="grid grid-cols-2 gap-5">
                             <div><label
-                                    class="block text-xs font-bold text-slate-500 uppercase mb-2 ml-1">ExpiraciÃ³n</label><input
+                                    class="block text-xs font-bold text-slate-500 uppercase mb-2 ml-1">Expiración</label><input
                                     id="input-card-date" type="text" oninput="updateNewCard()" maxlength="5"
                                     placeholder="MM / YY"
                                     class="w-full p-4 border border-slate-200 rounded-xl text-base focus:outline-none focus:border-blue-500 transition text-center placeholder-slate-300">
@@ -1170,19 +1216,21 @@
 
         <div id="modal-logout"
             class="force-hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-            <div class="bg-white rounded-2xl shadow-2xl p-6 max-w-xs w-full text-center animate-[fadeIn_0.2s_ease-out]">
-                <div class="w-14 h-14 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-4"><i
-                        class="fa-solid fa-right-from-bracket text-2xl text-red-500"></i></div>
-                <div class="grid grid-cols-2 gap-5">
-                    <div class="mb-6">
-                        <p class="text-sm font-bold text-slate-800">¿Estás seguro de que deseas salir?</p>
-                    </div>
-                    <div class="flex gap-4 justify-center">
-                        <button onclick="closeModal('modal-logout')"
-                            class="flex-1 py-2.5 rounded-xl border border-slate-200 text-slate-600 font-bold hover:bg-slate-50 text-sm">Cancelar</button>
-                        <button onclick="logout()"
-                            class="flex-1 py-2.5 rounded-xl bg-red-500 text-white font-bold hover:bg-red-600 shadow-lg text-sm">Salir</button>
-                    </div>
+            <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-sm w-full text-center animate-[fadeIn_0.2s_ease-out]">
+                <div
+                    class="w-16 h-16 bg-rose-50 rounded-full flex items-center justify-center mx-auto mb-6 transform transition hover:scale-110 duration-300">
+                    <i class="fa-solid fa-right-from-bracket text-3xl text-rose-500"></i>
+                </div>
+
+                <h3 class="text-xl font-bold text-slate-800 mb-2">Cerrar Sesión</h3>
+                <p class="text-slate-500 mb-8 text-sm">¿Estás seguro de que deseas salir de tu cuenta?</p>
+
+                <div class="flex gap-3 justify-center">
+                    <button onclick="closeModal('modal-logout')"
+                        class="flex-1 py-3 rounded-xl bg-slate-100 text-slate-600 font-bold hover:bg-slate-200 transition text-sm">Cancelar</button>
+                    <button onclick="logout()"
+                        class="flex-1 py-3 rounded-xl bg-rose-500 text-white font-bold hover:bg-rose-600 shadow-lg shadow-rose-200 hover:shadow-rose-300 transition text-sm">Sí,
+                        Salir</button>
                 </div>
             </div>
         </div>
@@ -1293,31 +1341,62 @@
             </div>
         </div>
 
+        <div id="modal-change-password"
+            class="force-hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+            <div
+                class="bg-white rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden transform transition-all scale-100 animate-[fadeIn_0.2s_ease-out]">
+                <div class="bg-slate-50 px-6 py-4 border-b border-slate-200 flex justify-between items-center">
+                    <h3 class="font-bold text-slate-800">Cambiar Contraseña</h3>
+                    <button onclick="closeModal('modal-change-password')"
+                        class="text-slate-400 hover:text-red-500 transition">
+                        <i class="fa-solid fa-xmark text-lg"></i>
+                    </button>
+                </div>
+                <div class="p-6 space-y-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 uppercase mb-1.5">Contraseña Actual</label>
+                        <input type="password" id="current-password" placeholder="••••••••"
+                            class="w-full p-3 border border-slate-300 rounded-xl text-sm focus:outline-none focus:border-blue-500 transition">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 uppercase mb-1.5">Nueva Contraseña</label>
+                        <input type="password" id="new-password-change" placeholder="••••••••"
+                            class="w-full p-3 border border-slate-300 rounded-xl text-sm focus:outline-none focus:border-blue-500 transition">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 uppercase mb-1.5">Confirmar Nueva</label>
+                        <input type="password" id="confirm-password-change" placeholder="••••••••"
+                            class="w-full p-3 border border-slate-300 rounded-xl text-sm focus:outline-none focus:border-blue-500 transition">
+                    </div>
+                    <div class="pt-2">
+                        <button onclick="submitChangePassword()" id="btn-change-pass-submit"
+                            class="w-full py-3 text-sm font-bold bg-blue-600 text-white rounded-xl hover:bg-blue-700 shadow-md transition active:scale-[0.98]">
+                            Actualizar Contraseña
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <script>
             // --- NAVIGATION FUNCTION ---
             // Controls visibility of all main views
+            const titleEl = document.getElementById('header-title');
+
             function nav(viewName) {
-                // List of all views
-                const views = ['resumen', 'redactor', 'estudiantes', 'agenda', 'examenes', 'planificacion', 'configuracion'];
+                console.log("Navigation triggered for:", viewName);
 
-                // Hide all views
-                views.forEach(view => {
-                    const element = document.getElementById('view-' + view);
-                    if (element) {
-                        element.classList.add('force-hidden');
-                        element.classList.remove('block', 'fade-in');
+                // 1. Define Other Views (Excluding planificacion to avoid conflicts)
+                const otherViews = ['resumen', 'redactor', 'estudiantes', 'agenda', 'examenes', 'configuracion'];
+
+                // 2. Hide Other Views
+                otherViews.forEach(view => {
+                    const el = document.getElementById('view-' + view);
+                    if (el) {
+                        el.classList.add('force-hidden');
+                        el.classList.remove('block', 'fade-in');
+                        el.style.display = 'none'; // Force hide
                     }
-                });
-
-                // Show requested view
-                const targetView = document.getElementById('view-' + viewName);
-                if (targetView) {
-                    targetView.classList.remove('force-hidden');
-                    targetView.classList.add('block', 'fade-in');
-                }
-
-                // Update sidebar button states
-                views.forEach(view => {
                     const btn = document.getElementById('btn-' + view);
                     if (btn) {
                         btn.classList.remove('active-nav');
@@ -1325,10 +1404,52 @@
                     }
                 });
 
-                const activeBtn = document.getElementById('btn-' + viewName);
-                if (activeBtn) {
-                    activeBtn.classList.remove('inactive-nav');
-                    activeBtn.classList.add('active-nav');
+                // 3. Handle Planning Container (Strict Isolation)
+                const planningContainer = document.getElementById('planning-content-container');
+                const btnPlanning = document.getElementById('btn-planificacion');
+
+                if (viewName === 'planificacion') {
+                    // Show Planning
+                    if (planningContainer) {
+                        planningContainer.classList.remove('hidden');
+                        planningContainer.style.display = 'block'; // Force show container
+                        console.log("Showing Planning Container");
+                    }
+                    // Update Button
+                    if (btnPlanning) {
+                        btnPlanning.classList.remove('inactive-nav');
+                        btnPlanning.classList.add('active-nav');
+                    }
+                } else {
+                    // Hide Planning
+                    if (planningContainer) {
+                        planningContainer.classList.add('hidden');
+                        planningContainer.style.display = 'none'; // Force hide container
+                    }
+                    // Update Button
+                    if (btnPlanning) {
+                        btnPlanning.classList.remove('active-nav');
+                        btnPlanning.classList.add('inactive-nav');
+                    }
+                }
+
+                // 4. Show Requested View (Generic logic for non-planning views)
+                // Note: For 'planificacion', targetEl is 'view-planificacion' which is INSIDE the container.
+                // We ensure it is visible too.
+                const targetEl = document.getElementById('view-' + viewName);
+                if (targetEl) {
+                    targetEl.classList.remove('force-hidden');
+                    targetEl.classList.add('block', 'fade-in');
+                    targetEl.style.display = 'block'; // Force show content
+                }
+
+                // 5. Update Active Button (for non-planning views)
+                if (viewName !== 'planificacion') {
+                    const activeBtn = document.getElementById('btn-' + viewName);
+                    if (activeBtn) {
+                        activeBtn.classList.remove('inactive-nav');
+                        activeBtn.classList.add('active-nav');
+                    }
                 }
 
                 // Update page title
@@ -1338,14 +1459,18 @@
                     'estudiantes': 'Estudiantes',
                     'agenda': 'Agenda',
                     'examenes': 'Generador de Exámenes',
-                    'planificacion': 'Planificación Académica',
+                    'planificacion': 'Asistente de Análisis Documental',
                     'configuracion': 'Configuración y Soporte'
                 };
-                const pageTitle = document.getElementById('page-title');
-                if (pageTitle && titles[viewName]) {
-                    pageTitle.innerText = titles[viewName];
+                if (titleEl && titles[viewName]) {
+                    titleEl.innerText = titles[viewName];
                 }
+
+                // 6. Data Fetching (Consolidated from second definition)
+                if (viewName === 'agenda') renderCalendar();
+                if (viewName === 'estudiantes') fetchStudents();
             }
+
 
             const today = new Date();
             let currentMonth = today.getMonth();
@@ -1449,7 +1574,7 @@
                     })
                     .then(data => {
                         if (data.success) {
-                            showToast('Configuración Guardada', 'Preferencia de automatizaciÃ³n guardada correctamente', 'success');
+                            showToast('Configuración Guardada', 'Preferencia de automatización guardada correctamente', 'success');
                         } else {
                             showToast('Error', 'No se pudo guardar la configuraciÃ³n', 'error');
                             // Revert switch if failed? For now, just show error.
@@ -1483,7 +1608,7 @@
                 const numInput = document.getElementById('input-card-num').value;
 
                 if (!numInput || numInput.length < 12) {
-                    showToast('Error', 'Número de tarjeta invÃ¡lido');
+                    showToast('Error', 'Número de tarjeta inválido');
                     return;
                 }
 
@@ -1517,7 +1642,7 @@
 
             function copyToClipboard() {
                 const outputDiv = document.getElementById('output');
-                if (outputDiv.innerText.includes("El texto aparecerÃ¡ aquÃ­") || outputDiv.innerText.trim() === "") {
+                if (outputDiv.innerText.includes("El texto aparecerá aquí") || outputDiv.innerText.trim() === "") {
                     showToast("Vacío", "Primero genera un texto.");
                     return;
                 }
@@ -1540,7 +1665,16 @@
                     const bar = document.getElementById(`bar-${i}`);
                     const val = document.getElementById(`val-${i}`);
                     if (bar && val) {
-                        bar.style.height = data[type][i - 1] + '%';
+                        // 1. Reset Animation
+                        bar.style.animation = 'none';
+
+                        // 2. Trigger Reflow
+                        void bar.offsetWidth;
+
+                        // 3. Update Data & Re-apply Animation
+                        bar.style.setProperty('--final-height', data[type][i - 1] + '%');
+                        bar.style.animation = 'growBar 1s ease-out forwards';
+
                         bar.style.backgroundColor = colors[type];
                         val.innerText = labels[type][i - 1];
                     }
@@ -1692,11 +1826,18 @@
             }
 
             function logout() {
-                // Logic Fix: Logout with alert and redirect
-                alert('Sesión cerrada');
+                // Logic Fix: Logout with Toast and delayed redirect
+                closeModal('modal-logout');
+                showToast('Cerrando Sesión', 'Hasta pronto, esperamos verte de nuevo.', 'success');
+
+                // Clear Data
                 localStorage.removeItem('userEmail');
                 localStorage.removeItem('userName');
-                window.location.href = 'index.html';
+
+                // Redirect after delay
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 1500);
             }
 
             function runAI() {
@@ -1746,7 +1887,7 @@
 
                 // Capture user instruction with fallback
                 const promptText = document.getElementById('planning-prompt').value.trim();
-                const instruction = promptText || "Analiza este documento y resume los puntos clave en formato de tabla organizada";
+                const instruction = promptText || "Analiza este documento y genera una planificación detallada";
 
                 // Show loading state
                 document.getElementById('planning-loading').classList.remove('hidden');
@@ -1763,16 +1904,25 @@
                         body: formData
                     });
 
-                    // Check if response is ok before parsing JSON
+                    // Read response as text first
+                    const responseText = await response.text();
+
+                    // Check if response is ok
                     if (!response.ok) {
-                        const errorText = await response.text();
-                        console.error('Server error:', errorText);
-                        throw new Error(`Error del servidor (${response.status}): ${errorText.substring(0, 200)}`);
+                        console.error('Server error:', responseText);
+                        throw new Error(`Error del servidor (${response.status}): ${responseText.substring(0, 200)}`);
                     }
 
-                    const data = await response.json();
+                    // Try to parse as JSON
+                    let data;
+                    try {
+                        data = JSON.parse(responseText);
+                    } catch (jsonError) {
+                        console.error('Error parsing JSON:', jsonError, 'Response:', responseText.substring(0, 300));
+                        throw new Error('El servidor respondió con un formato inválido. Intenta recargar la página.');
+                    }
 
-                    if (!response.ok) {
+                    if (!data.success) {
                         throw new Error(data.error || 'Error al generar el análisis');
                     }
 
@@ -1794,14 +1944,92 @@
                 }
             }
 
-            function renderPlanningResults(htmlContent) {
+
+            function renderPlanningResults(content) {
                 const contentContainer = document.getElementById('planning-content');
+                let data = {};
 
-                // Inject HTML content directly
-                contentContainer.innerHTML = htmlContent;
+                // Check if content is JSON or HTML
+                const trimmedContent = typeof content === 'string' ? content.trim() : '';
+                const isJSON = trimmedContent.startsWith('{') || trimmedContent.startsWith('[');
 
-                // Store for potential PDF export
-                currentPlanningData = htmlContent;
+                // If it's HTML (not JSON), display directly
+                if (!isJSON && typeof content === 'string') {
+                    contentContainer.innerHTML = `
+                        <div class="prose prose-slate max-w-none mt-6 px-2">
+                            ${content}
+                        </div>
+                    `;
+                    return;
+                }
+
+                // Try to parse as JSON
+                try {
+                    data = typeof content === 'string' ? JSON.parse(content) : content;
+                } catch (e) {
+                    console.error("Error parsing JSON:", e);
+                    contentContainer.innerHTML = "<p class='text-red-500'>Error al procesar la respuesta de la IA. Ver consola.</p>";
+                    return;
+                }
+
+                // Store for PDF export
+                currentPlanningData = data;
+
+                // CASE A: Syllabus (Structured Table)
+                if (data.type === 'syllabus' || data.planning) {
+                    const weeks = data.planning || [];
+
+                    // Clean Report Header: Circular Logo + Title Only
+                    let html = `
+                        <div class="flex items-center justify-between border-b-2 border-slate-100 pb-4 mb-8">
+                            <div class="flex items-center gap-6 w-full">
+                                <div style="width: 100px; height: 100px; border-radius: 50%; overflow: hidden; border: 4px solid white; background-color: white; box-shadow: 0 4px 6px rgba(0,0,0,0.1); display: flex; align-items: center; justify-content: center;">
+                                    <img src="logo_unexpo.png" alt="UNEXPO" style="width: 90%; height: 90%; object-fit: contain;">
+                                </div>
+                                <div class="flex-1 text-center pr-24">
+                                    <h2 class="text-2xl font-bold text-slate-800 uppercase tracking-wide">ANÁLISIS ACADÉMICO</h2>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+
+                    // Render Syllabus Table (Existing Logic)
+                    html += `
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr>
+                                    <th class="p-3 border-b-2 border-slate-200 bg-slate-50 text-xs font-bold text-slate-500 uppercase">Semana</th>
+                                    <th class="p-3 border-b-2 border-slate-200 bg-slate-50 text-xs font-bold text-slate-500 uppercase">Tema</th>
+                                    <th class="p-3 border-b-2 border-slate-200 bg-slate-50 text-xs font-bold text-slate-500 uppercase">Objetivos</th>
+                                    <th class="p-3 border-b-2 border-slate-200 bg-slate-50 text-xs font-bold text-slate-500 uppercase">Bibliografía</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-sm text-slate-600 divide-y divide-slate-100">
+                    `;
+
+
+                    weeks.forEach(week => {
+                        html += `
+                        < tr class="hover:bg-slate-50 transition" >
+                                <td class="p-3 font-bold text-blue-600 whitespace-nowrap">Semana ${week.week}</td>
+                                <td class="p-3 font-bold text-slate-800">${week.topic}</td>
+                                <td class="p-3">${week.objectives}</td>
+                                <td class="p-3 italic text-slate-500">${week.bibliography}</td>
+                            </tr >
+                        `;
+                    });
+
+                    html += `</tbody ></table > `;
+                    contentContainer.innerHTML = html;
+                }
+                // CASE B: Generic Content (HTML)
+                else if (data.type === 'content' || data.html) {
+                    contentContainer.innerHTML = `
+                        <div class="prose prose-slate max-w-none mt-6 px-2">
+                            ${data.html}
+                        </div>
+                        `;
+                }
             }
 
             function downloadPlanningPDF() {
@@ -1813,60 +2041,127 @@
                 const { jsPDF } = window.jspdf;
                 const doc = new jsPDF();
 
-                // Title
-                doc.setFontSize(16);
-                doc.setFont(undefined, 'bold');
-                doc.text('Planificación Académica Semestral', 105, 20, { align: 'center' });
+                // Load Image
+                const logoImg = new Image();
+                logoImg.src = 'logo_unexpo.png';
 
-                doc.setFontSize(10);
-                doc.setFont(undefined, 'normal');
-                doc.text('16 Semanas - Generado con DocenteAI', 105, 28, { align: 'center' });
+                // Helper to generate content
+                function generatePDFContent(doc) {
+                    const pageHeight = doc.internal.pageSize.height;
+                    const margin = 20;
+                    let y = 50;
 
-                let y = 40;
-                const pageHeight = doc.internal.pageSize.height;
-                const margin = 20;
+                    // CASE A: Syllabus (Structured)
+                    if (currentPlanningData.type === 'syllabus' || currentPlanningData.planning) {
 
-                currentPlanningData.forEach((week, index) => {
-                    // Check if need new page
-                    if (y > pageHeight - 60) {
-                        doc.addPage();
-                        y = 20;
+                        doc.setFontSize(10);
+                        doc.setFont(undefined, 'normal');
+                        doc.text('16 Semanas - Generado con DocenteAI', 105, 32, { align: 'center' });
+
+                        // Weeks Loop
+                        const weeks = currentPlanningData.planning || [];
+                        weeks.forEach(week => {
+                            if (y > pageHeight - 60) {
+                                doc.addPage();
+                                y = 20;
+                            }
+                            // Week header
+                            doc.setFontSize(12);
+                            doc.setFont(undefined, 'bold');
+                            doc.setTextColor(37, 99, 235);
+                            doc.text(`Semana ${week.week} `, margin, y);
+                            y += 8;
+                            // Topic
+                            doc.setFontSize(10);
+                            doc.setFont(undefined, 'bold');
+                            doc.setTextColor(0, 0, 0);
+                            doc.text(`Tema: ${week.topic} `, margin, y);
+                            y += 6;
+                            // Objectives
+                            doc.setFont(undefined, 'normal');
+                            doc.setFontSize(9);
+                            const objectivesLines = doc.splitTextToSize(`Objetivos: ${week.objectives} `, 170);
+                            doc.text(objectivesLines, margin, y);
+                            y += (objectivesLines.length * 5);
+                            // Bibliography
+                            const biblioLines = doc.splitTextToSize(`Bibliografía: ${week.bibliography} `, 170);
+                            doc.text(biblioLines, margin, y);
+                            y += (biblioLines.length * 5) + 6;
+                        });
+
+                    }
+                    // CASE B: Generic Content
+                    else if (currentPlanningData.type === 'content' || currentPlanningData.html) {
+                        doc.setFontSize(10);
+                        doc.setFont(undefined, 'normal');
+                        doc.text('Reporte Personalizado - Generado con DocenteAI', 105, 32, { align: 'center' });
+
+                        // Strip HTML tags for basic text dump
+                        const tmp = document.createElement("DIV");
+                        tmp.innerHTML = currentPlanningData.html;
+                        const textContent = tmp.innerText || tmp.textContent || "";
+
+                        doc.setFontSize(10);
+                        doc.setTextColor(0, 0, 0);
+                        const splitText = doc.splitTextToSize(textContent, 170);
+                        doc.text(splitText, margin, y);
                     }
 
-                    // Week header
-                    doc.setFontSize(12);
-                    doc.setFont(undefined, 'bold');
-                    doc.setTextColor(37, 99, 235); // Blue
-                    doc.text(`Semana ${week.week}`, margin, y);
-                    y += 8;
+                    // Footer
+                    doc.setFontSize(8);
+                    doc.setTextColor(150, 150, 150);
+                    doc.text(`Generado el ${new Date().toLocaleDateString('es-VE')} con DocenteAI`, 105, pageHeight - 10, { align: 'center' });
 
-                    // Topic
+                    doc.save('DocenteAI_Reporte_UNEXPO.pdf');
+                    showToast("PDF Descargado", "El reporte ha sido exportado exitosamente");
+                }
+
+
+                logoImg.onload = function () {
+                    // Create circular logo using canvas
+                    const canvas = document.createElement('canvas');
+                    const size = 100; // Size in pixels
+                    canvas.width = size;
+                    canvas.height = size;
+                    const ctx = canvas.getContext('2d');
+
+                    // Draw circular clip path
+                    ctx.beginPath();
+                    ctx.arc(size / 2, size / 2, size / 2, 0, Math.PI * 2);
+                    ctx.closePath();
+                    ctx.clip();
+
+                    // Fill with white background
+                    ctx.fillStyle = 'white';
+                    ctx.fill();
+
+                    // Draw logo inside circle
+                    ctx.drawImage(logoImg, 0, 0, size, size);
+
+                    // Convert canvas to data URL
+                    const circularLogoData = canvas.toDataURL('image/png');
+
+                    // Add circular logo to PDF
+                    doc.addImage(circularLogoData, 'PNG', 15, 15, 20, 20);
+
+                    // Title
+                    doc.setFontSize(16);
+                    doc.setFont(undefined, 'bold');
+                    doc.text('Planificación Académica', 105, 25, { align: 'center' });
                     doc.setFontSize(10);
-                    doc.setFont(undefined, 'bold');
-                    doc.setTextColor(0, 0, 0);
-                    doc.text(`Tema: ${week.topic}`, margin, y);
-                    y += 6;
-
-                    // Objectives
                     doc.setFont(undefined, 'normal');
-                    doc.setFontSize(9);
-                    const objectivesLines = doc.splitTextToSize(`Objetivos: ${week.objectives}`, 170);
-                    doc.text(objectivesLines, margin, y);
-                    y += (objectivesLines.length * 5);
+                    doc.text('Generado con DocenteAI - UNEXPO', 105, 32, { align: 'center' });
 
-                    // Bibliography
-                    const biblioLines = doc.splitTextToSize(`Bibliografía: ${week.bibliography}`, 170);
-                    doc.text(biblioLines, margin, y);
-                    y += (biblioLines.length * 5) + 6;
-                });
+                    generatePDFContent(doc);
+                };
 
-                // Footer
-                doc.setFontSize(8);
-                doc.setTextColor(150, 150, 150);
-                doc.text(`Generado el ${new Date().toLocaleDateString('es-VE')} con DocenteAI`, 105, pageHeight - 10, { align: 'center' });
-
-                doc.save('Planificacion_Academica_16_Semanas.pdf');
-                showToast("PDF Descargado", "La planificación ha sido exportada exitosamente");
+                logoImg.onerror = function () {
+                    // Fallback
+                    doc.setFontSize(16);
+                    doc.setFont(undefined, 'bold');
+                    doc.text('Planificación Académica', 105, 20, { align: 'center' });
+                    generatePDFContent(doc);
+                };
             }
 
             function askLogout() { document.getElementById('modal-logout').classList.remove('force-hidden'); }
@@ -1887,62 +2182,85 @@
 
             // --- FUNCIONES DE EDICIÓN REAL DE PERFIL ---
             function editField(field) {
+                if (field === 'pass') {
+                    // Open Modal for Password
+                    openModal('modal-change-password');
+                    return;
+                }
+
                 const container = document.getElementById(field + '-container');
                 const textSpan = document.getElementById(field + '-text');
                 const currentValue = textSpan.innerText;
                 const inputType = field === 'pass' ? 'text' : 'email';
 
                 container.innerHTML = `
-                <label class="text-xs font-bold text-slate-400 uppercase">${field === 'email' ? 'Correo Institucional' : 'Contraseña'}</label>
-                <div class="flex justify-between items-center border-b border-blue-500 py-2">
-                    <input type="${inputType}" id="input-${field}" value="${currentValue}" class="text-sm font-medium text-slate-900 w-full outline-none bg-transparent">
-                    <button onclick="saveField('${field}')" class="text-green-600 text-xs font-bold uppercase hover:text-green-800">Guardar</button>
-                </div>
-            `;
+                    <label class="text-xs font-bold text-slate-400 uppercase">${field === 'email' ? 'Correo Institucional' : 'Contraseña'}</label>
+                    <div class="flex justify-between items-center border-b border-blue-500 py-2">
+                        <input type="${inputType}" id="input-${field}" value="${currentValue}" 
+                            class="text-sm font-medium text-slate-900 w-full outline-none bg-transparent">
+                        <button onclick="saveField('${field}')" class="text-green-600 text-xs font-bold uppercase hover:text-green-800">Guardar</button>
+                    </div>
+                `;
             }
 
-            // --- NAVIGATION LOGIC ---
-            function nav(sectionId) {
-                // Hide all views
-                const views = ['resumen', 'redactor', 'estudiantes', 'agenda', 'examenes', 'configuracion'];
-                views.forEach(id => {
-                    const el = document.getElementById('view-' + id);
-                    if (el) el.classList.add('hidden', 'force-hidden');
-                });
+            function submitChangePassword() {
+                const currentPassword = document.getElementById('current-password').value;
+                const newPassword = document.getElementById('new-password-change').value;
+                const confirmPassword = document.getElementById('confirm-password-change').value;
 
-                // Show selected
-                const view = document.getElementById('view-' + sectionId);
-                if (view) view.classList.remove('hidden', 'force-hidden');
-
-                // Update Sidebar
-                document.querySelectorAll('nav button').forEach(btn => {
-                    btn.classList.remove('active-nav', 'bg-blue-50', 'text-blue-600');
-                    btn.classList.add('inactive-nav', 'text-slate-600');
-                });
-                const btn = document.getElementById('btn-' + sectionId);
-                if (btn) {
-                    btn.classList.remove('inactive-nav', 'text-slate-600');
-                    btn.classList.add('active-nav', 'bg-blue-50', 'text-blue-600');
+                // Get email from DOM or localStorage
+                const userEmailElement = document.getElementById('email-text');
+                let email = "gustavo.triana@unexpo.edu.ve"; // Default fallback
+                if (localStorage.getItem('userEmail')) {
+                    email = localStorage.getItem('userEmail');
+                } else if (userEmailElement) {
+                    email = userEmailElement.innerText;
                 }
 
-                // Title Update
-                const titles = {
-                    resumen: 'Panel de Control',
-                    redactor: 'Redactor IA',
-                    estudiantes: 'Base de Datos',
-                    agenda: 'Agenda Semanal',
-                    configuracion: 'Ajustes',
-                    examenes: 'Generador de Exámenes'
-                };
-                const titleEl = document.getElementById('page-title');
-                if (titleEl) titleEl.innerText = titles[sectionId] || 'DocenteIA';
+                if (!currentPassword || !newPassword || !confirmPassword) {
+                    showToast('Error', 'Todos los campos son obligatorios', 'error');
+                    return;
+                }
 
-                // Data Fetching
-                if (sectionId === 'agenda') renderCalendar();
-                if (sectionId === 'estudiantes') fetchStudents();
+                if (newPassword !== confirmPassword) {
+                    showToast('Error', 'Las contraseñas nuevas no coinciden', 'error');
+                    return;
+                }
 
-                if (window.innerWidth < 768) toggleSidebar();
+                const btn = document.getElementById('btn-change-pass-submit');
+                const originalText = btn.innerText;
+                btn.innerText = 'Actualizando...';
+                btn.disabled = true;
+
+                fetch('/api/auth/change-password', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, currentPassword, newPassword })
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success) {
+                            showToast('Éxito', 'Contraseña actualizada correctamente');
+                            closeModal('modal-change-password');
+                            // Clear fields
+                            document.getElementById('current-password').value = '';
+                            document.getElementById('new-password-change').value = '';
+                            document.getElementById('confirm-password-change').value = '';
+                        } else {
+                            showToast('Error', data.error || 'No se pudo cambiar la contraseña', 'error');
+                        }
+                    })
+                    .catch(err => {
+                        console.error(err);
+                        showToast('Error', 'Error de conexión', 'error');
+                    })
+                    .finally(() => {
+                        btn.innerText = originalText;
+                        btn.disabled = false;
+                    });
             }
+
+            // --- END NAVIGATION LOGIC ---
 
             // --- DATE DISPLAY ---
             function updateHeaderDate() {
@@ -2022,12 +2340,12 @@
                 const container = document.getElementById(field + '-container');
 
                 container.innerHTML = `
-                <label class="text-xs font-bold text-slate-400 uppercase">${field === 'email' ? 'Correo Institucional' : 'Contraseña'}</label>
-                <div class="flex justify-between items-center border-b border-slate-100 py-2">
-                    <span id="${field}-text" class="text-sm font-medium text-slate-700 truncate mr-2">${newValue}</span>
-                    <button onclick="editField('${field}')" class="text-blue-600 text-xs font-bold hover:text-blue-800">${field === 'pass' ? 'Cambiar' : 'Editar'}</button>
-                </div>
-            `;
+                    <label class="text-xs font-bold text-slate-400 uppercase">${field === 'email' ? 'Correo Institucional' : 'Contraseña'}</label>
+                    <div class="flex justify-between items-center border-b border-slate-100 py-2">
+                        <span id="${field}-text" class="text-sm font-medium text-slate-700 truncate mr-2">${newValue}</span>
+                        <button onclick="editField('${field}')" class="text-blue-600 text-xs font-bold hover:text-blue-800">${field === 'pass' ? 'Cambiar' : 'Editar'}</button>
+                    </div>
+                `;
                 showToast("Actualizado", "Tus datos han sido guardados.");
             }
 
@@ -2388,252 +2706,344 @@
                 const margin = 20;
                 const contentWidth = pageWidth - (margin * 2);
                 let pageNumber = 1;
+                let logoDataURL = null;
 
-                // Function to add header on each page
-                function addHeader() {
-                    // Deep blue background with gradient effect
-                    doc.setFillColor(30, 58, 138);
-                    doc.rect(0, 0, pageWidth, 40, 'F');
+                // Load image first
+                const img = new Image();
+                img.src = 'logo_unexpo.png';
+                img.onload = function () {
+                    const canvas = document.createElement('canvas');
+                    // Use a fixed size for better control or keeping original aspect ratio?
+                    // Let's use a square based on the smaller dimension to ensure perfect circle
+                    const size = Math.min(img.width, img.height);
+                    canvas.width = size;
+                    canvas.height = size;
+                    const ctx = canvas.getContext('2d');
 
-                    // Gold/Yellow accent line
-                    doc.setFillColor(218, 165, 32);
-                    doc.rect(0, 40, pageWidth, 2, 'F');
+                    // Circular Clip
+                    ctx.beginPath();
+                    ctx.arc(size / 2, size / 2, size / 2, 0, Math.PI * 2);
+                    ctx.closePath();
+                    ctx.clip();
 
-                    // UNEXPO Logo Circle (decorative)
-                    doc.setFillColor(255, 255, 255);
-                    doc.circle(25, 20, 8, 'F');
-                    doc.setTextColor(30, 58, 138);
-                    doc.setFont('helvetica', 'bold');
-                    doc.setFontSize(10);
-                    doc.text('U', 25, 22, { align: 'center' });
+                    // Draw image centered
+                    ctx.drawImage(img, (size - img.width) / 2, (size - img.height) / 2);
 
-                    // Main Title
-                    doc.setTextColor(255, 255, 255);
-                    doc.setFont('helvetica', 'bold');
-                    doc.setFontSize(20);
-                    doc.text('ANÁLISIS ACADÉMICO', pageWidth / 2, 18, { align: 'center' });
+                    logoDataURL = canvas.toDataURL('image/png');
+                    generatePDF();
+                };
+                img.onerror = function () {
+                    console.warn('Logo could not be loaded');
+                    generatePDF();
+                };
 
-                    // Subtitle
-                    doc.setFont('helvetica', 'normal');
-                    doc.setFontSize(11);
-                    doc.setTextColor(218, 165, 32); // Gold color
-                    doc.text('Planificación y Evaluación', pageWidth / 2, 27, { align: 'center' });
+                // Helper Wrapping the generation to wait for image
+                function generatePDF() {
 
-                    // University name (small, right side)
-                    doc.setFont('helvetica', 'normal');
-                    doc.setFontSize(8);
-                    doc.setTextColor(200, 200, 200);
-                    doc.text('UNEXPO', pageWidth - 25, 22, { align: 'right' });
-                    doc.setFontSize(7);
-                    doc.text('Ingeniería Mecatrónica', pageWidth - 25, 27, { align: 'right' });
-                }
+                    // Function to add header on each page
+                    function addHeader() {
+                        // Deep blue background with gradient effect
+                        doc.setFillColor(30, 58, 138);
+                        doc.rect(0, 0, pageWidth, 40, 'F');
 
-                // Function to add footer on each page with signature
-                function addFooter() {
-                    doc.setDrawColor(200, 200, 200);
-                    doc.line(margin, pageHeight - 25, pageWidth - margin, pageHeight - 25);
-                    doc.setTextColor(100, 100, 100);
-                    doc.setFont('helvetica', 'italic');
-                    doc.setFontSize(9);
-                    doc.text('Elaborado por:', margin, pageHeight - 18);
-                    doc.setFont('times', 'bolditalic');
-                    doc.setFontSize(12);
-                    doc.setTextColor(30, 58, 138);
-                    doc.text(`Prof. ${userName}`, margin, pageHeight - 12);
-                    doc.setDrawColor(30, 58, 138);
-                    doc.line(margin, pageHeight - 10, margin + 60, pageHeight - 10);
-                    doc.setFont('helvetica', 'normal');
-                    doc.setFontSize(8);
-                    doc.setTextColor(120, 120, 120);
-                    doc.text('UNEXPO - Ingeniería Mecatrónica', margin, pageHeight - 5);
-                    doc.setTextColor(100, 100, 100);
-                    doc.setFont('helvetica', 'normal');
-                    doc.setFontSize(9);
-                    doc.text(`Página ${pageNumber}`, pageWidth - margin, pageHeight - 10, { align: 'right' });
-                }
+                        // Gold/Yellow accent line
+                        doc.setFillColor(218, 165, 32);
+                        doc.rect(0, 40, pageWidth, 2, 'F');
 
-                // Add first page header
-                addHeader();
-
-                let yPos = 50;
-                const maxY = pageHeight - 35;
-
-                // Function to check if new page is needed
-                function checkNewPage(spaceNeeded = 10) {
-                    if (yPos + spaceNeeded > maxY) {
-                        addFooter();
-                        doc.addPage();
-                        pageNumber++;
-                        addHeader();
-                        yPos = 45;
-                        return true;
-                    }
-                    return false;
-                }
-
-                // Process HTML elements recursively
-                function processElement(element, indent = 0) {
-                    const tagName = element.tagName?.toLowerCase();
-
-                    if (!tagName) {
-                        // Text node
-                        if (element.textContent && element.textContent.trim()) {
-                            const text = element.textContent.trim();
-                            doc.setFont('helvetica', 'normal');
-                            doc.setFontSize(11);
-                            doc.setTextColor(50, 50, 50);
-                            const lines = doc.splitTextToSize(text, contentWidth - indent);
-                            lines.forEach(line => {
-                                checkNewPage();
-                                doc.text(line, margin + indent, yPos);
-                                yPos += 6;
-                            });
-                        }
-                        return;
-                    }
-
-                    switch (tagName) {
-                        case 'h1':
-                        case 'h2':
-                        case 'h3':
-                        case 'h4':
-                            checkNewPage(15);
-                            yPos += 5;
-                            const text = element.textContent.trim();
-                            doc.setFont('helvetica', 'bold');
-                            const fontSize = tagName === 'h1' ? 14 : tagName === 'h2' ? 13 : tagName === 'h3' ? 12 : 11;
-                            doc.setFontSize(fontSize);
+                        // UNEXPO Logo
+                        if (logoDataURL) {
+                            doc.addImage(logoDataURL, 'PNG', 20, 10, 20, 20);
+                        } else {
+                            // Fallback 'U'
+                            doc.setFillColor(255, 255, 255);
+                            doc.circle(25, 20, 8, 'F');
                             doc.setTextColor(30, 58, 138);
-                            const lines = doc.splitTextToSize(text, contentWidth);
-                            lines.forEach(line => {
-                                doc.text(line, margin, yPos);
-                                yPos += fontSize * 0.5;
-                            });
-                            // Underline for h1 and h2
-                            if (tagName === 'h1' || tagName === 'h2') {
-                                doc.setDrawColor(37, 99, 235);
-                                doc.line(margin, yPos, margin + 50, yPos);
-                            }
-                            yPos += 8;
-                            break;
+                            doc.setFont('helvetica', 'bold');
+                            doc.setFontSize(10);
+                            doc.text('U', 25, 22, { align: 'center' });
+                        }
 
-                        case 'p':
-                            checkNewPage();
-                            const pText = element.textContent.trim();
-                            if (pText) {
+                        // Main Title
+                        doc.setTextColor(255, 255, 255);
+                        doc.setFont('helvetica', 'bold');
+                        doc.setFontSize(22);
+                        doc.text('ANÁLISIS ACADÉMICO', pageWidth / 2, 25, { align: 'center' });
+
+                        // Subtitle REMOVED per user request
+
+                        // University name removed per user request
+                    }
+
+                    // Function to add footer on each page with signature
+                    function addFooter() {
+                        doc.setDrawColor(200, 200, 200);
+                        doc.line(margin, pageHeight - 25, pageWidth - margin, pageHeight - 25);
+                        doc.setTextColor(100, 100, 100);
+                        doc.setFont('helvetica', 'italic');
+                        doc.setFontSize(9);
+                        doc.text('Elaborado por:', margin, pageHeight - 18);
+                        doc.setFont('times', 'bolditalic');
+                        doc.setFontSize(12);
+                        doc.setTextColor(30, 58, 138);
+                        doc.text(`Prof. ${userName}`, margin, pageHeight - 12);
+                        doc.setDrawColor(30, 58, 138);
+                        doc.line(margin, pageHeight - 10, margin + 60, pageHeight - 10);
+                        doc.setFont('helvetica', 'normal');
+                        doc.setFontSize(8);
+                        doc.setTextColor(120, 120, 120);
+                        // Footer text removed per user request
+                        doc.setTextColor(100, 100, 100);
+                        doc.setFont('helvetica', 'normal');
+                        doc.setFontSize(9);
+                        doc.text(`Página ${pageNumber}`, pageWidth - margin, pageHeight - 10, { align: 'right' });
+                    }
+
+                    // Add first page header
+                    addHeader();
+
+                    let yPos = 50;
+                    const maxY = pageHeight - 35;
+
+                    // Function to check if new page is needed
+                    function checkNewPage(spaceNeeded = 10) {
+                        if (yPos + spaceNeeded > maxY) {
+                            addFooter();
+                            doc.addPage();
+                            pageNumber++;
+                            addHeader();
+                            yPos = 45;
+                            return true;
+                        }
+                        return false;
+                    }
+
+                    // Process HTML elements recursively
+                    function processElement(element, indent = 0) {
+                        // Skip header or unwanted elements
+                        if (element.classList && element.classList.contains('not-prose')) {
+                            return;
+                        }
+
+                        const tagName = element.tagName?.toLowerCase();
+
+                        if (!tagName) {
+                            // Text node
+                            if (element.textContent && element.textContent.trim()) {
+                                const text = element.textContent.trim();
                                 doc.setFont('helvetica', 'normal');
                                 doc.setFontSize(11);
                                 doc.setTextColor(50, 50, 50);
-                                const pLines = doc.splitTextToSize(pText, contentWidth - indent);
-                                pLines.forEach(line => {
+                                const lines = doc.splitTextToSize(text, contentWidth - indent);
+                                lines.forEach(line => {
                                     checkNewPage();
                                     doc.text(line, margin + indent, yPos);
                                     yPos += 6;
                                 });
-                                yPos += 3;
                             }
-                            break;
+                            return;
+                        }
 
-                        case 'ul':
-                        case 'ol':
-                            yPos += 2;
-                            let itemNumber = 1;
-                            Array.from(element.children).forEach(child => {
-                                if (child.tagName?.toLowerCase() === 'li') {
-                                    checkNewPage();
-                                    const bullet = tagName === 'ul' ? '•' : `${itemNumber}.`;
-                                    const liText = child.textContent.trim();
-                                    doc.setFont('helvetica', 'normal');
-                                    doc.setFontSize(11);
-                                    doc.setTextColor(50, 50, 50);
-                                    doc.text(bullet, margin + indent + 2, yPos);
-                                    const liLines = doc.splitTextToSize(liText, contentWidth - indent - 10);
-                                    liLines.forEach((line, idx) => {
-                                        if (idx > 0) checkNewPage();
-                                        doc.text(line, margin + indent + 8, yPos);
-                                        yPos += 6;
-                                    });
-                                    itemNumber++;
+                        switch (tagName) {
+                            case 'h1':
+                            case 'h2':
+                            case 'h3':
+                            case 'h4':
+                                checkNewPage(15);
+                                yPos += 5;
+                                const text = element.textContent.trim();
+                                doc.setFont('helvetica', 'bold');
+                                const fontSize = tagName === 'h1' ? 14 : tagName === 'h2' ? 13 : tagName === 'h3' ? 12 : 11;
+                                doc.setFontSize(fontSize);
+                                doc.setTextColor(30, 58, 138);
+                                const lines = doc.splitTextToSize(text, contentWidth);
+                                lines.forEach(line => {
+                                    doc.text(line, margin, yPos);
+                                    yPos += fontSize * 0.5;
+                                });
+                                // Underline for h1 and h2
+                                if (tagName === 'h1' || tagName === 'h2') {
+                                    doc.setDrawColor(37, 99, 235);
+                                    doc.line(margin, yPos, margin + 50, yPos);
                                 }
-                            });
-                            yPos += 3;
-                            break;
+                                yPos += 8;
+                                break;
 
-                        case 'table':
-                            checkNewPage(20);
-                            const rows = Array.from(element.querySelectorAll('tr'));
+                            case 'p':
+                                checkNewPage();
+                                let pText = element.textContent.trim();
+                                if (pText) {
+                                    // Indentation (First line)
+                                    pText = "        " + pText;
 
-                            rows.forEach((row, rowIdx) => {
-                                const cells = Array.from(row.querySelectorAll('th, td'));
-                                const cellWidth = contentWidth / Math.max(cells.length, 1);
+                                    doc.setFont('times', 'normal');
+                                    doc.setFontSize(12);
+                                    doc.setTextColor(0, 0, 0); // Black for technical report
 
-                                // Calculate max height needed for this row
-                                let maxLines = 1;
-                                const cellsData = cells.map(cell => {
-                                    const cellText = cell.textContent.trim();
-                                    const isHeader = cell.tagName.toLowerCase() === 'th';
-                                    doc.setFontSize(9); // Smaller font for tables
-                                    const lines = doc.splitTextToSize(cellText, cellWidth - 4);
-                                    maxLines = Math.max(maxLines, lines.length);
-                                    return { text: cellText, lines, isHeader };
-                                });
+                                    const pLines = doc.splitTextToSize(pText, contentWidth - indent);
 
-                                const rowHeight = maxLines * 5 + 4; // 5 per line + padding
-                                checkNewPage(rowHeight);
+                                    pLines.forEach((line, index) => {
+                                        checkNewPage();
 
-                                let xPos = margin;
+                                        // Justify all lines except the last one
+                                        const isLastLine = index === pLines.length - 1;
+                                        const alignMode = isLastLine ? 'left' : 'justify';
 
-                                cellsData.forEach((cellData, cellIdx) => {
-                                    if (cellData.isHeader) {
-                                        doc.setFillColor(30, 58, 138);
-                                        doc.rect(xPos, yPos - 3, cellWidth, rowHeight, 'F');
-                                        doc.setTextColor(255, 255, 255);
-                                        doc.setFont('helvetica', 'bold');
-                                        doc.setFontSize(9);
-                                    } else {
-                                        doc.setDrawColor(200, 200, 200);
-                                        doc.rect(xPos, yPos - 3, cellWidth, rowHeight);
-                                        doc.setTextColor(50, 50, 50);
-                                        doc.setFont('helvetica', 'normal');
-                                        doc.setFontSize(9);
+                                        doc.text(line, margin + indent, yPos, {
+                                            maxWidth: contentWidth - indent,
+                                            align: alignMode
+                                        });
+
+                                        // Line spacing 1.5 (approx 8mm for 12pt)
+                                        yPos += 8;
+                                    });
+                                    yPos += 4; // Paragraph spacing
+                                }
+                                break;
+
+                            case 'ul':
+                            case 'ol':
+                                yPos += 2;
+                                let itemNumber = 1;
+                                Array.from(element.children).forEach(child => {
+                                    if (child.tagName?.toLowerCase() === 'li') {
+                                        checkNewPage();
+                                        const bullet = tagName === 'ul' ? '•' : `${itemNumber}.`;
+                                        const liText = child.textContent.trim();
+
+                                        doc.setFont('times', 'normal');
+                                        doc.setFontSize(12);
+                                        doc.setTextColor(0, 0, 0);
+
+                                        doc.text(bullet, margin + indent + 2, yPos);
+
+                                        const liLines = doc.splitTextToSize(liText, contentWidth - indent - 10);
+                                        liLines.forEach((line, idx) => {
+                                            if (idx > 0) checkNewPage();
+                                            doc.text(line, margin + indent + 10, yPos); // Fixed indentation alignment
+                                            yPos += 8; // 1.5 spacing
+                                        });
+                                        itemNumber++;
                                     }
+                                });
+                                yPos += 3;
+                                break;
 
-                                    // Draw all lines of text
-                                    let lineY = yPos;
-                                    cellData.lines.forEach((line, lineIdx) => {
-                                        doc.text(line, xPos + 2, lineY);
-                                        lineY += 5;
+                            case 'table':
+                                checkNewPage(20);
+                                const rows = Array.from(element.querySelectorAll('tr'));
+
+                                rows.forEach((row, rowIdx) => {
+                                    const cells = Array.from(row.querySelectorAll('th, td'));
+                                    const cellWidth = contentWidth / Math.max(cells.length, 1);
+
+                                    // Calculate max height needed for this row
+                                    let maxLines = 1;
+                                    const cellsData = cells.map(cell => {
+                                        const cellText = cell.textContent.trim();
+                                        const isHeader = cell.tagName.toLowerCase() === 'th';
+                                        doc.setFontSize(9); // Smaller font for tables
+                                        const lines = doc.splitTextToSize(cellText, cellWidth - 4);
+                                        maxLines = Math.max(maxLines, lines.length);
+                                        return { text: cellText, lines, isHeader };
                                     });
 
-                                    xPos += cellWidth;
+                                    const rowHeight = maxLines * 5 + 4; // 5 per line + padding
+                                    checkNewPage(rowHeight);
+
+                                    let xPos = margin;
+
+                                    cellsData.forEach((cellData, cellIdx) => {
+                                        if (cellData.isHeader) {
+                                            doc.setFillColor(30, 58, 138);
+                                            doc.rect(xPos, yPos - 3, cellWidth, rowHeight, 'F');
+                                            doc.setTextColor(255, 255, 255);
+                                            doc.setFont('helvetica', 'bold');
+                                            doc.setFontSize(9);
+                                        } else {
+                                            doc.setDrawColor(200, 200, 200);
+                                            doc.rect(xPos, yPos - 3, cellWidth, rowHeight);
+                                            doc.setTextColor(50, 50, 50);
+                                            doc.setFont('helvetica', 'normal');
+                                            doc.setFontSize(9);
+                                        }
+
+                                        // Draw all lines of text
+                                        let lineY = yPos;
+                                        cellData.lines.forEach((line, lineIdx) => {
+                                            doc.text(line, xPos + 2, lineY);
+                                            lineY += 5;
+                                        });
+
+                                        xPos += cellWidth;
+                                    });
+
+                                    yPos += rowHeight;
                                 });
+                                yPos += 5;
+                                break;
 
-                                yPos += rowHeight;
-                            });
-                            yPos += 5;
-                            break;
-
-                        default:
-                            // Process children
-                            Array.from(element.childNodes).forEach(child => {
-                                processElement(child, indent);
-                            });
-                            break;
+                            default:
+                                // Process children
+                                Array.from(element.childNodes).forEach(child => {
+                                    processElement(child, indent);
+                                });
+                                break;
+                        }
                     }
-                }
 
-                // Process all children of the content
-                Array.from(content.children).forEach(child => {
-                    processElement(child);
-                });
+                    // Start Processing
+                    if (currentPlanningData && currentPlanningData.type === 'syllabus' && currentPlanningData.planning) {
+                        // Special handling for Syllabus Object
+                        let weeks = currentPlanningData.planning;
+                        weeks.forEach(week => {
+                            checkNewPage(40);
 
-                // Add footer to last page
-                addFooter();
+                            // Week Header
+                            doc.setFillColor(240, 248, 255);
+                            doc.rect(margin, yPos, contentWidth, 8, 'F');
+                            doc.setFont('helvetica', 'bold');
+                            doc.setFontSize(11);
+                            doc.setTextColor(30, 58, 138);
+                            doc.text(`Semana ${week.week}: ${week.topic}`, margin + 2, yPos + 5);
+                            yPos += 12;
 
-                // Save PDF
-                doc.save(`Planificacion_Academica_${Date.now()}.pdf`);
-                showToast('Descarga Iniciada', 'El PDF profesional se ha generado correctamente.');
-            }
+                            // Objectives
+                            doc.setFont('helvetica', 'bold');
+                            doc.setFontSize(10);
+                            doc.setTextColor(50, 50, 50);
+                            doc.text('Objetivos:', margin, yPos);
+                            yPos += 5;
+                            doc.setFont('helvetica', 'normal');
+                            const objLines = doc.splitTextToSize(week.objectives, contentWidth);
+                            doc.text(objLines, margin, yPos);
+                            yPos += (objLines.length * 5) + 5;
+
+                            // Bibliography
+                            doc.setFont('helvetica', 'italic');
+                            doc.setFontSize(9);
+                            doc.setTextColor(100, 100, 100);
+                            const bibLines = doc.splitTextToSize(`Bibliografía: ${week.bibliography}`, contentWidth);
+                            doc.text(bibLines, margin, yPos);
+                            yPos += (bibLines.length * 5) + 8;
+
+                            doc.setDrawColor(230, 230, 230);
+                            doc.line(margin, yPos, pageWidth - margin, yPos);
+                            yPos += 5;
+                        });
+
+                    } else {
+                        // Generic HTML Content
+                        Array.from(content.childNodes).forEach(child => processElement(child));
+                    }
+
+                    // Add footer to last page
+                    addFooter();
+
+                    // Save PDF
+                    doc.save('DocenteAI_Reporte_UNEXPO.pdf');
+                    showToast('Descarga Iniciada', 'El PDF profesional se ha generado correctamente.');
+                } // End generatePDF
+            } // End downloadPlanningPDF
 
             renderCalendar();
             updateHeaderDate();
@@ -2662,8 +3072,14 @@
         </script>
         <script>
             document.addEventListener('DOMContentLoaded', () => {
-                const userEmail = localStorage.getItem('userEmail');
-                const userName = localStorage.getItem('userName');
+                const userEmail = localStorage.getItem('user_email') || localStorage.getItem('userEmail');
+                const userName = localStorage.getItem('user_name') || localStorage.getItem('usuarioNombre') || 'Usuario';
+
+                // Professional Fields
+                const userCargo = localStorage.getItem('user_cargo');
+                const userDept = localStorage.getItem('user_department');
+                const userInst = localStorage.getItem('user_institution');
+
                 const cardLast4 = localStorage.getItem('cardLast4');
 
                 if (userEmail) {
@@ -2672,19 +3088,50 @@
                     if (emailCard) emailCard.innerText = userEmail;
                 }
 
-                if (userName) {
+                if (userName && userName !== 'Usuario') {
                     // Update Sidebar (Short Name: First + Last)
                     const sidebarName = document.getElementById('user-display-name');
                     if (sidebarName) {
                         // Split by space, take first distinct word + last distinct word if available
                         const parts = userName.trim().split(/\s+/);
-                        const shortName = parts.length > 1 ? `${parts[0]} ${parts[parts.length - 1]}` : parts[0];
+                        let shortName = parts[0];
+                        if (parts.length > 1) shortName += ` ${parts[parts.length - 1]}`;
                         sidebarName.innerText = shortName;
                     }
 
                     // Update Config Card (Full Name)
                     const nameCard = document.getElementById('profile-name-card');
                     if (nameCard) nameCard.innerText = userName;
+
+                    // Update Initials in profile circle
+                    const profileInitials = document.querySelector('#tour-profile-card .rounded-full');
+                    if (profileInitials) {
+                        const parts = userName.trim().split(/\s+/);
+                        const initials = (parts[0][0] + (parts.length > 1 ? parts[parts.length - 1][0] : '')).toUpperCase();
+                        profileInitials.innerText = initials;
+                    }
+                }
+
+                // Update Professional Info in Profile Card
+                if (userCargo && userDept) {
+                    // Find the subtitle paragraph (usually the one after name)
+                    const nameCard = document.getElementById('profile-name-card');
+                    if (nameCard) {
+                        const subtitle = nameCard.nextElementSibling;
+                        if (subtitle) {
+                            subtitle.innerText = `${userCargo} - ${userDept}`;
+                            if (userInst) {
+                                // Optional: Tooltip or extra info
+                                subtitle.title = userInst;
+                            }
+                        }
+
+                        // Update ID line (next sibling)
+                        const idLine = subtitle.nextElementSibling;
+                        if (idLine && userInst) {
+                            idLine.innerText = userInst; // Mostrar Institución en vez de ID numérico
+                        }
+                    }
                 }
 
                 if (cardLast4) {

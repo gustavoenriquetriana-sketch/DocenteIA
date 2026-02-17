@@ -1,29 +1,46 @@
 // script.js
 
-// 1. CALCULADORA
+// 1. CALCULADORA DE AHORRO
 const hoursInput = document.getElementById('input-hours');
 const rateInput = document.getElementById('input-rate');
-const displayHours = document.getElementById('display-hours');
-const resultSavings = document.getElementById('result-savings');
-const resultTime = document.getElementById('result-time');
 
-function calculateImpact() {
-    const hours = parseFloat(hoursInput.value);
+function calcularAhorro() {
+    if (!hoursInput || !rateInput) return;
+
+    const hours = parseFloat(hoursInput.value) || 0;
     const rate = parseFloat(rateInput.value) || 0;
+    const subsPrice = 3.99;
 
-    displayHours.innerText = hours + 'h';
+    // Update display
+    const displayHours = document.getElementById('display-hours');
+    if (displayHours) displayHours.innerText = hours + 'h';
 
     // Fórmulas
-    const monthlySavings = (hours * rate * 4) * 0.7;
-    const semesterTime = (hours * 4 * 4.5) * 0.7;
+    const monthlySavings = (hours * rate) * 4;
+    const semesterSavings = monthlySavings * 6;
+    const semesterTime = hours * 24;
 
-    resultSavings.innerText = '$' + monthlySavings.toFixed(2);
-    resultTime.innerText = Math.round(semesterTime) + 'h';
+    // ROI Calculation
+    const hoursToPay = rate > 0 ? (subsPrice / rate).toFixed(1) : 0;
+    let roiMessage = "Se paga sola en " + hoursToPay + "h";
+    if (hoursToPay < 1 && hoursToPay > 0) roiMessage = "Se paga sola en minutos";
+
+    // Update UI
+    const elSavings = document.getElementById('result-savings');
+    const elSemester = document.getElementById('result-semester');
+    const elTime = document.getElementById('result-time');
+    const elRoi = document.getElementById('roi-text');
+
+    if (elSavings) elSavings.innerText = '$' + monthlySavings.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+    if (elSemester) elSemester.innerText = '$' + semesterSavings.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+    if (elTime) elTime.innerText = semesterTime + 'h';
+    if (elRoi) elRoi.innerText = roiMessage;
 }
 
+// Event Listeners (Backup if oninput fails)
 if (hoursInput && rateInput) {
-    hoursInput.addEventListener('input', calculateImpact);
-    rateInput.addEventListener('input', calculateImpact);
+    hoursInput.addEventListener('input', calcularAhorro);
+    rateInput.addEventListener('input', calcularAhorro);
 }
 
 // 2. TABS DASHBOARD
@@ -41,92 +58,40 @@ function switchTab(tabName) {
 }
 
 // 3. SISTEMA DE VENTANAS MODALES
-const modal = document.getElementById('custom-modal');
-const modalTitle = document.getElementById('modal-title');
-const modalMessage = document.getElementById('modal-message');
-const modalIcon = document.getElementById('modal-icon');
+// Funciones globales para manejar modales (Restauradas)
 
-function showModal(title, contentHTML, iconClass = 'fa-bell') {
-    modalTitle.innerText = title;
-    modalMessage.innerHTML = contentHTML;
-    modalIcon.className = `fa-solid ${iconClass} text-2xl text-blue-600`;
-    modal.classList.remove('hidden');
+function openModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if (modal) {
+        modal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden'; // Bloquear scroll
+    }
 }
 
-function closeModal() {
-    modal.classList.add('hidden');
+function closeModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if (modal) {
+        modal.classList.add('hidden');
+        document.body.style.overflow = ''; // Restaurar scroll
+    }
 }
 
 // 4. ACCIONES DE BOTONES
-function loginDocente() {
-    // Simulamos el HTML de un formulario de Login real
-    const loginFormHTML = `
-        <div class="text-left">
-            <div class="mb-4">
-                <label class="block text-xs font-bold text-slate-700 mb-1">Correo Institucional</label>
-                <input id="login-email" type="email" placeholder="profesor@unexpo.edu.ve" class="w-full p-2 rounded border border-slate-300 text-sm focus:outline-none focus:border-blue-500">
-            </div>
-            <div class="mb-6">
-                <label class="block text-xs font-bold text-slate-700 mb-1">Contraseña</label>
-                <input id="login-password" type="password" placeholder="••••••••" class="w-full p-2 rounded border border-slate-300 text-sm focus:outline-none focus:border-blue-500">
-            </div>
-            <div class="flex items-center justify-between mb-4">
-                <label class="flex items-center text-xs text-slate-500">
-                    <input type="checkbox" class="mr-2"> Recordarme
-                </label>
-                <a href="#" class="text-xs text-blue-600 hover:underline">¿Olvidaste tu clave?</a>
-            </div>
-            <button onclick="simularEntrada()" class="w-full bg-blue-900 text-white py-2 rounded-lg font-bold text-sm hover:bg-blue-800 transition">
-                Iniciar Sesión
-            </button>
-        </div>
-    `;
-
-    showModal("Acceso Docente", loginFormHTML, "fa-user-lock");
-}
-
-// Función extra para simular que entra
-// En script.js
-function simularEntrada() {
-    const btn = document.querySelector('#custom-modal button.bg-blue-900');
-    const email = document.getElementById('login-email').value;
-    const password = document.getElementById('login-password').value;
-
-    btn.innerText = "Verificando...";
-    btn.classList.add('opacity-75', 'cursor-not-allowed');
-
-    fetch('/api/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
-    })
-        .then(res => res.json())
-        .then(data => {
-            if (data.token) {
-                closeModal();
-                window.location.href = 'dashboard.html';
-            } else {
-                alert("Error: " + (data.error || "Credenciales inválidas"));
-                btn.innerText = "Iniciar Sesión";
-                btn.classList.remove('opacity-75', 'cursor-not-allowed');
-            }
-        })
-        .catch(err => {
-            console.error(err);
-            alert("Error de conexión");
-            btn.innerText = "Iniciar Sesión";
-            btn.classList.remove('opacity-75', 'cursor-not-allowed');
-        });
-}
-
 
 function contactarVentas() {
-    showModal("Solicitud Enviada", "<p>Gracias por tu interés en la <strong>Licencia Institucional</strong>.</p><br><p>Un representante te contactará en 24 horas.</p>", "fa-envelope-circle-check");
+    Swal.fire({
+        icon: 'success',
+        title: 'Solicitud Enviada',
+        html: '<p>Gracias por tu interés en la <strong>Licencia Institucional</strong>.</p><br><p>Un representante te contactará en 24 horas.</p>',
+        customClass: { popup: 'rounded-2xl' }
+    });
 }
 
 function verVacantes() {
-    showModal("Únete al Equipo 🚀",
-        `<div class="text-left bg-slate-50 p-3 rounded border border-slate-100 text-xs">
+    Swal.fire({
+        icon: 'info',
+        title: 'Únete al Equipo 🚀',
+        html: `<div class="text-left bg-slate-50 p-3 rounded border border-slate-100 text-xs">
             <p class="font-bold mb-2">Posiciones Abiertas:</p>
             <ul class="list-disc pl-4 space-y-1 mb-3 text-slate-600">
                 <li>Ingeniero(a) de IA y Backend</li>
@@ -135,8 +100,310 @@ function verVacantes() {
             <p class="font-bold">Envía tu CV a:</p>
             <p class="text-blue-600">talento@docenteai.ve</p>
         </div>`,
-        "fa-briefcase");
+        customClass: { popup: 'rounded-2xl' }
+    });
 }
+
+
+function switchToRegister() {
+    closeModal('modal-login');
+    openModal('modal-pago');
+
+    // Add event listeners for live card updates if not already there
+    // We can just rely on onchange="updateCard()" in HTML, or add input listener here
+    ['pay-card', 'pay-date', 'pay-name'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener('input', updateCard);
+    });
+}
+
+function switchToLogin() {
+    closeModal('modal-register');
+    closeModal('modal-forgot-password'); // Ensure password modal is also closed
+    const loginModal = document.getElementById('modal-login');
+    if (loginModal) loginModal.classList.remove('hidden');
+}
+
+function openForgotPassword() {
+    closeModal('modal-login');
+    resetRecoveryModal();
+    const modal = document.getElementById('modal-forgot-password');
+    if (modal) modal.classList.remove('hidden');
+}
+
+function backToLogin() {
+    closeModal('modal-forgot-password');
+    openModal('modal-login');
+}
+
+function sendRecoveryEmail() {
+    const email = document.getElementById('forgot-email').value;
+
+    if (!email) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Falta Correo',
+            text: 'Por favor ingresa tu correo institucional.'
+        });
+        return;
+    }
+
+    const btn = document.getElementById('btn-recovery');
+    const originalText = btn.innerHTML;
+
+    btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Enviando...';
+    btn.disabled = true;
+
+    // Real API call to Nodemailer endpoint
+    fetch('/api/auth/forgot-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email })
+    })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Correo Enviado!',
+                    html: `Hemos enviado el código a <strong>${email}</strong>.<br>Revisa tu bandeja de entrada o spam.`,
+                    timer: 3000
+                });
+
+                // Switch to Step 2
+                document.getElementById('recovery-step-1').classList.add('hidden');
+                document.getElementById('recovery-step-2').classList.remove('hidden');
+
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: data.error || 'No se pudo enviar el correo.'
+                });
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error de Conexión',
+                text: 'Hubo un problema al contactar con el servidor de correo.'
+            });
+        })
+        .finally(() => {
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+        });
+}
+
+function resetPassword() {
+    const email = document.getElementById('forgot-email').value;
+    const code = document.getElementById('recovery-code').value;
+    const newPassword = document.getElementById('new-password').value;
+
+    if (!code || !newPassword) {
+        Swal.fire({ icon: 'warning', text: 'Por favor ingresa el código y la nueva contraseña.' });
+        return;
+    }
+
+    const btn = document.getElementById('btn-reset-pass');
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Guardando...';
+    btn.disabled = true;
+
+    fetch('/api/auth/reset-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, code, newPassword })
+    })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Contraseña Actualizada!',
+                    text: 'Ahora puedes iniciar sesión con tu nueva clave.',
+                    confirmButtonText: 'Ir al Login'
+                }).then(() => {
+                    backToLogin();
+                });
+            } else {
+                Swal.fire({ icon: 'error', title: 'Error', text: data.error });
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            Swal.fire({ icon: 'error', text: 'Error al conectar con el servidor.' });
+        })
+        .finally(() => {
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+        });
+}
+
+// Helper to reset modal state when closing/opening
+function resetRecoveryModal() {
+    document.getElementById('recovery-step-1')?.classList.remove('hidden');
+    document.getElementById('recovery-step-2')?.classList.add('hidden');
+    document.getElementById('forgot-email').value = '';
+    document.getElementById('recovery-code').value = '';
+    document.getElementById('new-password').value = '';
+}
+
+
+// LÓGICA TARJETA (Optimizada con requestAnimationFrame)
+let rafIdCard = null;
+function updateCard() {
+    if (rafIdCard) cancelAnimationFrame(rafIdCard);
+
+    rafIdCard = requestAnimationFrame(() => {
+        const numInput = document.getElementById('pay-card');
+        const dateInput = document.getElementById('pay-date');
+        const nameInput = document.getElementById('pay-name');
+
+        const num = numInput ? numInput.value : '';
+        const date = dateInput ? dateInput.value : '';
+        const name = nameInput ? nameInput.value : '';
+
+        const numDisplay = document.getElementById('card-num-display');
+        const dateDisplay = document.getElementById('card-date-display');
+        const nameDisplay = document.getElementById('card-name-display');
+
+        if (numDisplay) numDisplay.innerText = num || '0000 0000 0000 0000';
+        if (dateDisplay) dateDisplay.innerText = date || 'MM/YY';
+        if (nameDisplay) nameDisplay.innerText = name || 'NOMBRE APELLIDO';
+    });
+}
+
+function procesarPago() {
+    // Safety check with Optional Chaining/Nullish Coalescing
+    const nombre = document.getElementById('pay-name')?.value || '';
+    const email = document.getElementById('pay-email')?.value || '';
+    const pass = document.getElementById('pay-password')?.value || '';
+    const card = document.getElementById('pay-card')?.value || '';
+    const date = document.getElementById('pay-date')?.value || '';
+    const cvc = document.getElementById('pay-cvc')?.value || '';
+
+    console.log('Procesando pago:', { nombre, email, cardLast4: card.slice(-4) });
+
+    if (!nombre || !email || !pass || !card || !date || !cvc) {
+        Swal.fire({ icon: 'warning', title: 'Faltan Datos', text: 'Por favor completa todos los campos para continuar.' });
+        return;
+    }
+
+    // Button handling requires finding the button within the modal context or by ID if it had one.
+    // Since it has onclick="procesarPago()", we can find it via event or simple query selector context
+    // But since we are inside the function, let's grab it by specific selector
+    const btn = document.querySelector('#modal-pago button[onclick="procesarPago()"]');
+    const originalText = btn ? btn.innerHTML : "Pagar y Activar Cuenta";
+
+    if (btn) {
+        btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Procesando...';
+        btn.classList.add('opacity-75', 'cursor-not-allowed');
+        btn.disabled = true;
+    }
+
+    // Simulate Payment Delay then Register
+    setTimeout(() => {
+        // Cambiamos la ruta para que coincida con tu servidor de Supabase
+        fetch('http://localhost:5000/api/log-actividad', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            // Enviamos los datos que quieres "espiar" en Supabase
+            body: JSON.stringify({
+                nombre: nombre, // Cambiado de 'name' a 'nombre' para coincidir con DB
+                email: email,
+                password: pass,
+                accion: 'INTENTO DE REGISTRO/PAGO'
+            })
+        })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    if (btn) {
+                        btn.innerHTML = '<i class="fa-solid fa-check"></i> ¡Bienvenido!';
+                        btn.classList.replace('bg-slate-900', 'bg-green-600');
+                    }
+
+                    // Sync Data
+                    localStorage.setItem('userEmail', email);
+                    localStorage.setItem('userName', nombre);
+                    localStorage.setItem('userId', data.userId);
+                    localStorage.setItem('cardLast4', card.slice(-4) || '4242');
+
+                    Swal.fire({
+                        icon: 'success',
+                        title: '¡Pago Exitoso!',
+                        text: 'Tu cuenta ha sido activada correctamente.',
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+
+                    // Redirect ONLY on success
+                    setTimeout(() => { window.location.href = 'dashboard.html'; }, 2000);
+                } else {
+                    Swal.fire({ icon: 'error', title: 'Error', text: data.error || 'Fallo en registro' });
+                    if (btn) {
+                        btn.innerHTML = originalText;
+                        btn.classList.remove('opacity-75', 'cursor-not-allowed');
+                        btn.disabled = false;
+                    }
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                Swal.fire({ icon: 'error', title: 'Error', text: 'Error de conexión con el servidor.' });
+                if (btn) {
+                    btn.innerHTML = originalText;
+                    btn.classList.remove('opacity-75', 'cursor-not-allowed');
+                    btn.disabled = false;
+                }
+            });
+    }, 1500); // 1.5s simulated delay for payment
+}
+
+function login() {
+    const email = document.getElementById('login-email').value;
+    const password = document.getElementById('login-pass').value;
+    const btn = document.getElementById('btn-login');
+
+    if (!email || !password) {
+        Swal.fire({ icon: 'warning', title: 'Error', text: 'Ingresa correo y contraseña' });
+        return;
+    }
+
+    btn.innerText = "Verificando...";
+    btn.classList.add('opacity-75', 'cursor-not-allowed');
+
+    fetch('http://localhost:5000/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+    })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                // Save user data including real name
+                localStorage.setItem('userEmail', data.user.email);
+                localStorage.setItem('userName', data.user.name);
+                localStorage.setItem('usuarioNombre', data.nombre || data.user.name || 'Usuario');
+                localStorage.setItem('userId', data.user.id);
+                localStorage.setItem('token', data.token);
+
+                window.location.href = 'dashboard.html';
+            } else {
+                Swal.fire({ icon: 'error', title: 'Error de Acceso', text: 'Credenciales incorrectas' });
+            }
+        })
+        .catch(err => {
+            Swal.fire({ icon: 'error', title: 'Error', text: 'No se pudo conectar al servidor' });
+        })
+        .finally(() => {
+            btn.innerText = "Entrar";
+            btn.classList.remove('opacity-75', 'cursor-not-allowed');
+        });
+}
+
 
 function syncData() {
     const btn = document.getElementById('btn-sync');
@@ -156,7 +423,7 @@ function generarBorrador() {
     const resultBox = document.getElementById('ai-result-box');
 
     if (input.length < 5) {
-        showModal("Falta Información", "Por favor escribe el tema del correo para que la IA pueda redactarlo.", "fa-triangle-exclamation");
+        Swal.fire({ icon: 'warning', title: 'Falta Información', text: 'Por favor escribe el tema del correo para que la IA pueda redactarlo.' });
         return;
     }
 
@@ -175,3 +442,66 @@ function generarBorrador() {
         }, 1000);
     }
 }
+
+// 5. LEGAL & EXTRAS
+function openLegalModal(title) {
+    const titleEl = document.getElementById('legal-title');
+    if (titleEl) titleEl.innerText = title;
+    openModal('modal-legal');
+}
+
+// 6. INICIALIZACIÓN Y EVENTOS DOM
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('DOM Loaded - DocenteAI ready');
+
+    // Inicializar lógica de formulario de ventas (Solicitar Demo)
+    const btnDemo = document.getElementById('btn-solicitar-demo');
+    if (btnDemo) {
+        btnDemo.addEventListener('click', () => {
+            const name = document.getElementById('lead-name').value;
+            const role = document.getElementById('lead-role').value;
+            const institution = document.getElementById('lead-institution').value;
+            const size = document.getElementById('lead-size').value;
+
+            if (!name || !role || !institution || !size) {
+                Swal.fire({ icon: 'warning', title: 'Campos Incompletos', text: 'Por favor completa todos los campos.' });
+                return;
+            }
+
+            const originalText = btnDemo.innerHTML;
+            btnDemo.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Enviando...';
+            btnDemo.disabled = true;
+
+            fetch('/api/leads', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, role, institution, size })
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        closeModal('modal-ventas');
+                        // Reset inputs
+                        ['lead-name', 'lead-role', 'lead-institution', 'lead-size'].forEach(id => document.getElementById(id).value = '');
+
+                        Swal.fire({
+                            icon: 'success',
+                            title: '¡Solicitud Recibida!',
+                            text: `Hemos registrado el interés de ${institution}. Un asesor te contactará pronto.`,
+                            timer: 3000
+                        });
+                    } else {
+                        Swal.fire({ icon: 'error', title: 'Error', text: data.message });
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                    Swal.fire({ icon: 'error', title: 'Error', text: 'Error de conexión.' });
+                })
+                .finally(() => {
+                    btnDemo.innerHTML = originalText;
+                    btnDemo.disabled = false;
+                });
+        });
+    }
+});

@@ -181,6 +181,35 @@ router.post('/leads', (req, res) => {
 
 // --- AUTH API ---
 
+router.post('/auth/register', (req, res) => {
+    const { name, email, password } = req.body;
+
+    if (!name || !email || !password) {
+        return res.status(400).json({ success: false, error: "Missing fields" });
+    }
+
+    // Check if user exists
+    db.get("SELECT * FROM users WHERE email = ?", [email], (err, user) => {
+        if (err) return res.status(500).json({ error: "Internal error" });
+        if (user) return res.status(400).json({ error: "Email already registered" });
+
+        // Insert new user
+        // WARNING: Plain text for demo! Use bcrypt in production.
+        const stmt = db.prepare("INSERT INTO users (name, email, password) VALUES (?, ?, ?)");
+        stmt.run(name, email, password, function (err) {
+            if (err) return res.status(500).json({ error: "Could not create user" });
+
+            // Auto login or just return success
+            res.json({
+                success: true,
+                message: "User registered successfully",
+                userId: this.lastID
+            });
+        });
+        stmt.finalize();
+    });
+});
+
 router.post('/auth/login', (req, res) => {
     const { email, password } = req.body;
     db.get("SELECT * FROM users WHERE email = ?", [email], (err, user) => {
@@ -723,8 +752,8 @@ router.post('/generate-planning', upload.single('syllabus'), async (req, res) =>
         console.log('  - Total pages:', data.numpages);
         console.log('  - Total text length:', data.text.length, 'characters');
 
-        // Extract up to 100k characters (increased from 20k)
-        const extractedText = data.text.substring(0, 100000);
+        // Extract up to 15k characters to avoid Groq Rate Limits (TPM)
+        const extractedText = data.text.substring(0, 15000);
 
         console.log('✂️ Extracted text length:', extractedText.length);
         console.log('🔤 First 1000 characters:', extractedText.substring(0, 1000));
@@ -752,8 +781,8 @@ router.post('/generate-planning', upload.single('syllabus'), async (req, res) =>
 
             let extractedPages = data.text.substring(startChar, Math.min(endChar, data.text.length));
 
-            // Limit to 50k characters
-            const MAX_CHARS = 50000;
+            // Limit to 15k characters
+            const MAX_CHARS = 15000;
             if (extractedPages.length > MAX_CHARS) {
                 console.warn(`⚠️ Pages too long (${extractedPages.length} chars), truncating to ${MAX_CHARS}`);
                 finalText = extractedPages.substring(0, MAX_CHARS);
@@ -816,8 +845,8 @@ router.post('/generate-planning', upload.single('syllabus'), async (req, res) =>
 
                     let extractedChapters = extractedText.substring(Math.max(0, chapterStart - 500), chapterEnd);
 
-                    // Limit to 50k characters
-                    const MAX_CHARS = 50000;
+                    // Limit to 15k characters
+                    const MAX_CHARS = 15000;
                     if (extractedChapters.length > MAX_CHARS) {
                         console.warn(`⚠️ Chapters too long (${extractedChapters.length} chars), truncating`);
                         finalText = extractedChapters.substring(0, MAX_CHARS);
@@ -836,10 +865,10 @@ router.post('/generate-planning', upload.single('syllabus'), async (req, res) =>
                 }
             } else {
                 // No specific pages/chapters requested - use first 30k
-                console.log('ℹ️ No pages/chapters specified, using first 30k characters');
-                finalText = extractedText.substring(0, 30000);
-                if (extractedText.length > 30000) {
-                    extractionNote = '\n\n[NOTA: Documento extenso. Se analizaron los primeros 30,000 caracteres. Especifica "página X" o "capítulo Y" para secciones específicas.]';
+                console.log('ℹ️ No pages/chapters specified, using first 15k characters');
+                finalText = extractedText.substring(0, 15000);
+                if (extractedText.length > 15000) {
+                    extractionNote = '\n\n[NOTA: Documento extenso. Se analizaron los primeros 15,000 caracteres. Especifica "página X" o "capítulo Y" para secciones específicas.]';
                 }
             }
         }
@@ -849,34 +878,73 @@ router.post('/generate-planning', upload.single('syllabus'), async (req, res) =>
         // Prepare Groq prompt with user instruction
         const systemPrompt = `Contexto: Eres un asistente académico experto en análisis de documentos técnicos y académicos.
 
-REGLAS CRÍTICAS:
+REGLAS CRÍTICAS DE SALIDA JSON:
+Debes analizar la solicitud del usuario y el documento PDF para decidir qué formato de respuesta es el adecuado.
+Responde SIEMPRE con un objeto JSON válido con una de las siguientes dos estructuras:
+
+OPCIÓN A: Si el usuario pide una PLANIFICACIÓN, SYLLABUS, CRONOGRAMA o el prompt está vacío:
+{
+  "type": "syllabus",
+  "planning": [
+    {
+      "week": 1,
+      "topic": "Título del Tema",
+      "objectives": "Objetivos específicos",
+      "bibliography": "Referencias"
+    }
+  ]
+}
+
+OPCIÓN B: Si el usuario pide CUALQUIER OTRA COSA (ej: Tabla de costos, Resumen, Lista de definiciones, Explicación de un concepto):
+{
+  "type": "content",
+  "html": "<div class='not-prose' style='background-color: #1e3a8a; padding: 20px; display: flex; align-items: center; justify-content: center; gap: 20px; border-radius: 8px; margin-bottom: 20px;'><div style='width: 100px; height: 100px; border-radius: 50% !important; overflow: hidden; border: 4px solid white; background-color: white; display: flex; align-items: center; justify-content: center;'><img src='logo_unexpo.png' alt='UNEXPO' style='width: 90%; height: 90%; object-fit: contain; border-radius: 50%;'></div><div style='flex: 1; text-align: center;'><h2 style='color: white; margin: 0; font-size: 24px; font-family: sans-serif;'>ANÁLISIS ACADÉMICO</h2></div></div><div style='padding: 20px;'><h3>Título del Contenido</h3><p>Explicación...</p><table class='w-full border-collapse'>...</table></div>"
+IMPORTANTE PARA "content": Tu respuesta HTML DEBE comenzar OBLIGATORIAMENTE con este header exacto (copia y pega):
+<div class='not-prose' style='background-color: #1e3a8a; padding: 20px; display: flex; align-items: center; justify-content: center; gap: 20px; border-radius: 8px; margin-bottom: 20px;'><div style='width: 100px; height: 100px; border-radius: 50% !important; overflow: hidden; border: 4px solid white; background-color: white; display: flex; align-items: center; justify-content: center;'><img src='logo_unexpo.png' alt='UNEXPO' style='width: 90%; height: 90%; object-fit: contain; border-radius: 50%;'></div><div style='flex: 1; text-align: center;'><h2 style='color: white; margin: 0; font-size: 24px; font-family: sans-serif;'>ANÁLISIS ACADÉMICO</h2></div></div>
+
+Después del header, agrega el contenido solicitado dentro de <div style='padding: 20px;'>TU CONTENIDO AQUÍ</div>
+NO repitas el título "ANÁLISIS ACADÉMICO" ni agregues otro título principal. Empieza directamente con el contenido solicitado.
+
+REGLAS DE CONTENIDO:
 1. Lee CUIDADOSAMENTE la instrucción del usuario.
-2. Analiza SOLAMENTE el texto del PDF proporcionado.
-3. NO INVENTES ni IMAGINES contenido que no esté en el texto.
-4. CITA o PARAFRASEA el contenido REAL del documento.
-5. Devuelve la respuesta en formato HTML limpio y bien estructurado.
-6. Usa elementos HTML apropiados: <table>, <ul>, <ol>, <p>, <h3>, <h4>, <b>, <i>, etc.
-7. NO uses Markdown. SOLO HTML directo.
-8. Si el usuario pide una tabla, usa <table class="w-full border-collapse"><thead><tr><th class="border p-2 bg-slate-100">...</th></tr></thead><tbody>...</tbody></table>
-9. Si el usuario pide una lista, usa <ul class="list-disc ml-6"> o <ol class="list-decimal ml-6">
-10. Usa clases de Tailwind CSS cuando sea apropiado.
-11. Si NO encuentras el contenido solicitado, DI EXPLÍCITAMENTE que no se encontró.`;
+2. Analiza SOLAMENTE el texto del PDF.
+3. Si el usuario pide una tabla, genera HTML <table> con clases de Tailwind (w-full, border, etc).
+4. NO inventes contenido.
+
+REGLA CRÍTICA PARA HEADERS CON LOGO (OBLIGATORIA):
+Cuando generes un header que incluya el logo "logo_unexpo.png", DEBES usar la siguiente estructura HTML EXACTA para crear un logo CIRCULAR:
+
+<div style="background-color: #1e3a8a; padding: 20px; display: flex; align-items: center; justify-content: space-between;">
+  <div style="width: 100px; height: 100px; border-radius: 50%; overflow: hidden; border: 4px solid white; background-color: white; box-shadow: 0 4px 6px rgba(0,0,0,0.1); display: flex; align-items: center; justify-content: center;">
+    <img src="logo_unexpo.png" alt="UNEXPO" style="width: 90%; height: 90%; object-fit: contain;">
+  </div>
+  <div style="flex: 1; text-align: center;">
+    <h2 style="color: white; margin: 0;">ANÁLISIS ACADÉMICO</h2>
+  </div>
+  <div style="text-align: right; color: white;">
+    <p style="margin: 0; font-size: 14px;">UNEXPO</p>
+    <p style="margin: 0; font-size: 12px;">Ingeniería Mecatrónica</p>
+  </div>
+</div>
+
+IMPORTANTE: El div contenedor del logo tiene "border-radius: 50%; overflow: hidden;" para forzar la forma circular.`;
 
         const userPrompt = `Instrucción del Usuario: "${instruction}"
 
 Texto extraído del PDF (${finalText.length} caracteres):
 ${finalText}${extractionNote}
 
-Por favor, ejecuta la instrucción del usuario BASÁNDOTE ÚNICAMENTE EN EL TEXTO PROPORCIONADO. Devuelve el resultado en formato HTML limpio.`;
+Genera la respuesta (JSON) adecuada según la instrucción.`;
 
-        // Call Groq API (without JSON mode, we want HTML text)
+        // Call Groq API (force JSON mode)
         const completion = await groq.chat.completions.create({
             messages: [
                 { role: "system", content: systemPrompt },
                 { role: "user", content: userPrompt }
             ],
             model: "llama-3.3-70b-versatile",
-            temperature: 0.3
+            temperature: 0.3,
+            response_format: { type: "json_object" }
         });
 
         const htmlResult = completion.choices[0]?.message?.content || "<p>No se pudo generar contenido</p>";

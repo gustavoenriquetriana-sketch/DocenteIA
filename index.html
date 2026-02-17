@@ -114,6 +114,7 @@
         </div>
     </nav>
 
+
     <!-- LOGIN MODAL -->
     <div id="modal-login" class="fixed inset-0 z-[70] hidden overflow-y-auto">
         <div class="absolute inset-0 bg-slate-950/80 backdrop-blur-sm transition-opacity duration-300"
@@ -151,8 +152,58 @@
 
                 <div class="mt-8 text-center border-t border-slate-100 pt-6">
                     <p class="text-sm text-slate-500 font-medium">¿No tienes cuenta? <button
-                            onclick="switchToRegister()" class="text-blue-600 font-bold hover:text-blue-800">Regístrate
+                            onclick="window.location.href='register.html'"
+                            class="text-blue-600 font-bold hover:text-blue-800">Regístrate
                             aquí</button></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- REGISTER MODAL -->
+    <div id="modal-register" class="fixed inset-0 z-[70] hidden overflow-y-auto">
+        <div class="absolute inset-0 bg-slate-950/80 backdrop-blur-sm transition-opacity duration-300"
+            onclick="closeModal('modal-register')"></div>
+        <div class="relative flex min-h-screen items-center justify-center p-4">
+            <div
+                class="bg-white rounded-3xl shadow-2xl w-full max-w-md overflow-hidden transform transition-all scale-100 relative animate-fade-in-up md:p-8 p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-2xl font-bold text-slate-900">Crear Cuenta</h3>
+                    <button onclick="closeModal('modal-register')" class="text-slate-400 hover:text-slate-600"><i
+                            class="fa-solid fa-xmark text-xl"></i></button>
+                </div>
+
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 uppercase mb-2">Nombre Completo</label>
+                        <input id="reg-name" type="text" placeholder="Ej: Gustavo Triana"
+                            class="w-full p-4 border border-slate-200 bg-slate-50 rounded-xl focus:outline-none focus:border-blue-600 focus:bg-white transition text-sm font-bold text-slate-800">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 uppercase mb-2">Correo
+                            Institucional</label>
+                        <input id="reg-email" type="email" placeholder="profesor@unexpo.edu.ve"
+                            class="w-full p-4 border border-slate-200 bg-slate-50 rounded-xl focus:outline-none focus:border-blue-600 focus:bg-white transition text-sm font-bold text-slate-800">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 uppercase mb-2">Contraseña</label>
+                        <input id="reg-pass" type="password" placeholder="••••••••"
+                            class="w-full p-4 border border-slate-200 bg-slate-50 rounded-xl focus:outline-none focus:border-blue-600 focus:bg-white transition text-sm font-bold text-slate-800">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 uppercase mb-2">Confirmar
+                            Contraseña</label>
+                        <input id="reg-pass-confirm" type="password" placeholder="••••••••"
+                            class="w-full p-4 border border-slate-200 bg-slate-50 rounded-xl focus:outline-none focus:border-blue-600 focus:bg-white transition text-sm font-bold text-slate-800">
+                    </div>
+
+                    <button onclick="register()" id="btn-register"
+                        class="w-full bg-blue-600 text-white py-4 rounded-xl font-bold text-sm hover:bg-blue-700 transition shadow-lg mt-2">Registrarse</button>
+                </div>
+
+                <div class="mt-8 text-center border-t border-slate-100 pt-6">
+                    <p class="text-sm text-slate-500 font-medium">¿Ya tienes cuenta? <button onclick="switchToLogin()"
+                            class="text-slate-700 font-bold hover:text-slate-900">Inicia Sesión</button></p>
                 </div>
             </div>
         </div>
@@ -174,7 +225,8 @@
                 <p class="text-sm text-slate-500 mb-6 font-medium">Ingresa tu correo institucional y te enviaremos una
                     contraseña temporal.</p>
 
-                <div class="space-y-4">
+                <!-- Step 1: Solicitar Código -->
+                <div id="recovery-step-1" class="space-y-4">
                     <div>
                         <label class="block text-xs font-bold text-slate-700 uppercase mb-2">Correo
                             Institucional</label>
@@ -185,6 +237,25 @@
                     <button onclick="sendRecoveryEmail()" id="btn-recovery"
                         class="w-full bg-blue-600 text-white py-4 rounded-xl font-bold text-sm hover:bg-blue-700 transition shadow-lg mt-2">Enviar
                         Correo de Recuperación</button>
+                </div>
+
+                <!-- Step 2: Verificar y Cambiar -->
+                <div id="recovery-step-2" class="space-y-4 hidden">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 uppercase mb-2">Código de
+                            Recuperación</label>
+                        <input id="recovery-code" type="text" placeholder="Ej: 123456" maxlength="6"
+                            class="w-full p-4 border border-slate-200 bg-slate-50 rounded-xl focus:outline-none focus:border-blue-600 focus:bg-white transition text-sm font-bold text-slate-800 tracking-widest text-center">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 uppercase mb-2">Nueva Contraseña</label>
+                        <input id="new-password" type="password" placeholder="••••••••"
+                            class="w-full p-4 border border-slate-200 bg-slate-50 rounded-xl focus:outline-none focus:border-blue-600 focus:bg-white transition text-sm font-bold text-slate-800">
+                    </div>
+
+                    <button onclick="resetPassword()" id="btn-reset-pass"
+                        class="w-full bg-green-600 text-white py-4 rounded-xl font-bold text-sm hover:bg-green-700 transition shadow-lg mt-2">Restablecer
+                        Contraseña</button>
                 </div>
 
                 <div class="mt-6 text-center">
@@ -222,7 +293,7 @@
                 gestionar notas, asistencia y consultas en segundos.
             </p>
             <div class="flex flex-col sm:flex-row justify-center gap-4">
-                <button onclick="openModal('modal-pago')"
+                <button onclick="window.location.href='register.html'"
                     class="group bg-slate-900 text-white px-8 py-4 rounded-full font-bold text-sm shadow-xl hover:shadow-2xl hover:bg-slate-800 transition transform hover:-translate-y-1 flex items-center justify-center gap-2">
                     Empezar Ahora <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition"></i>
                 </button>
@@ -351,7 +422,7 @@
                     modernos.</p>
             </div>
 
-            <div class="relative group cursor-pointer" onclick="openModal('modal-pago')">
+            <div class="relative group cursor-pointer" onclick="window.location.href='register.html'">
                 <!-- Browser Chrome -->
                 <div
                     class="bg-slate-900 rounded-t-2xl p-4 flex items-center gap-4 border-b border-white/10 shadow-2xl relative z-10">
@@ -546,7 +617,7 @@
                             </div> Redactor IA
                         </li>
                     </ul>
-                    <button onclick="openModal('modal-pago')"
+                    <button onclick="window.location.href='register.html'"
                         class="w-full bg-white/50 border border-slate-300/50 text-slate-800 py-4 rounded-xl font-bold text-sm hover:bg-blue-600 hover:text-white hover:border-blue-600 transition shadow-sm backdrop-blur-sm">Comenzar
                         Ahora</button>
                 </div>
@@ -847,19 +918,19 @@
                         <div>
                             <label class="block text-xs font-bold text-slate-700 uppercase mb-2 tracking-wider">Nombre
                                 Completo</label>
-                            <input id="reg-nombre" type="text" placeholder="Ej: Gustavo Triana"
+                            <input id="pay-name" type="text" placeholder="Ej: Gustavo Triana"
                                 class="w-full p-4 border border-slate-300 bg-white rounded-xl focus:outline-none focus:border-blue-600 focus:ring-4 focus:ring-blue-100 transition text-sm font-bold text-slate-800 placeholder:font-normal shadow-sm">
                         </div>
                         <div>
                             <label class="block text-xs font-bold text-slate-700 uppercase mb-2 tracking-wider">Correo
                                 Institucional</label>
-                            <input id="reg-email" type="email" placeholder="profesor@unexpo.edu.ve"
+                            <input id="pay-email" type="email" placeholder="profesor@unexpo.edu.ve"
                                 class="w-full p-4 border border-slate-300 bg-white rounded-xl focus:outline-none focus:border-blue-600 focus:ring-4 focus:ring-blue-100 transition text-sm font-bold text-slate-800 placeholder:font-normal shadow-sm">
                         </div>
                         <div>
                             <label
                                 class="block text-xs font-bold text-slate-700 uppercase mb-2 tracking-wider">Contraseña</label>
-                            <input id="reg-pass" type="password" placeholder="••••••••"
+                            <input id="pay-password" type="password" placeholder="••••••••"
                                 class="w-full p-4 border border-slate-300 bg-white rounded-xl focus:outline-none focus:border-blue-600 focus:ring-4 focus:ring-blue-100 transition text-sm font-bold text-slate-800 placeholder:font-normal shadow-sm">
                         </div>
                     </div>
@@ -1094,415 +1165,14 @@
         </div>
     </div>
 
+    <!-- Scripts -->
     <script>
-        // Optimización: Debounce para evitar lag en escritura
-        function debounce(func, timeout = 300) {
-            let timer;
-            return (...args) => {
-                clearTimeout(timer);
-                timer = setTimeout(() => { func.apply(this, args); }, timeout);
-            };
-        }
-
-        function openModal(id) {
-            if (id === 'modal-ventas') { document.getElementById('form-view').classList.remove('hidden'); document.getElementById('success-view').classList.add('hidden'); }
-            document.getElementById(id).classList.remove('hidden');
-        }
-        function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
-        function openLegalModal(title) { document.getElementById('legal-title').innerText = title; openModal('modal-legal'); }
-
-        function showWarning(msg) {
-            const toast = document.getElementById('toast-warning');
-            const msgEl = toast.querySelector('p');
-            msgEl.innerText = msg;
-            toast.classList.remove('translate-y-20', 'opacity-0');
-            setTimeout(() => { toast.classList.add('translate-y-20', 'opacity-0'); }, 3000);
-        }
-
-        // LÓGICA TARJETA (Optimizada con requestAnimationFrame)
-        let rafIdCard = null;
-        function updateCard() {
-            if (rafIdCard) cancelAnimationFrame(rafIdCard);
-
-            rafIdCard = requestAnimationFrame(() => {
-                const num = document.getElementById('pay-card').value;
-                const date = document.getElementById('pay-date').value;
-
-                const numDisplay = document.getElementById('card-num-display');
-                const dateDisplay = document.getElementById('card-date-display');
-
-                if (numDisplay) numDisplay.innerText = num || '0000 0000 0000 0000';
-                if (dateDisplay) dateDisplay.innerText = date || 'MM/YY';
-            });
-        }
-
-        function procesarPago() {
-            const nombre = document.getElementById('reg-nombre').value;
-            const email = document.getElementById('reg-email').value;
-            const pass = document.getElementById('reg-pass').value;
-            const card = document.getElementById('pay-card').value;
-            const date = document.getElementById('pay-date').value;
-            const cvc = document.getElementById('pay-cvc').value;
-
-            if (!nombre || !email || !pass || !card || !date || !cvc) {
-                showWarning("Por favor completa todos los campos para continuar.");
-                return;
-            }
-
-            const btn = document.querySelector('#modal-pago button[onclick="procesarPago()"]');
-            const originalText = btn.innerHTML;
-            btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Procesando...';
-            btn.classList.add('opacity-75', 'cursor-not-allowed');
-            btn.disabled = true;
-
-            fetch('/api/auth/register', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ name: nombre, email: email, password: pass })
-            })
-                .then(res => res.json())
-                .then(data => {
-                    if (data.success) {
-                        btn.innerHTML = '<i class="fa-solid fa-check"></i> ¡Bienvenido!';
-                        btn.classList.replace('bg-slate-900', 'bg-green-600');
-
-                        // Sync Data
-                        localStorage.setItem('userEmail', email);
-                        localStorage.setItem('userName', nombre);
-                        if (card && card.length >= 4) {
-                            localStorage.setItem('cardLast4', card.slice(-4));
-                        } else {
-                            localStorage.setItem('cardLast4', '4242'); // Default
-                        }
-
-                        // Redirect ONLY on success
-                        setTimeout(() => { window.location.href = 'dashboard.html'; }, 1000);
-                    } else {
-                        showWarning('Error: ' + (data.message || 'Fallo en registro'));
-                        btn.innerHTML = originalText;
-                        btn.classList.remove('opacity-75', 'cursor-not-allowed');
-                        btn.disabled = false;
-                    }
-                })
-                .catch(err => {
-                    console.error(err);
-                    showWarning('Error de conexión con el servidor.');
-                    btn.innerHTML = originalText;
-                    btn.classList.remove('opacity-75', 'cursor-not-allowed');
-                    btn.disabled = false;
-                });
-        }
-
-        // Lógica del Botón "Solicitar Demo"
-        document.addEventListener('DOMContentLoaded', () => {
-            const btnDemo = document.getElementById('btn-solicitar-demo');
-            if (btnDemo) {
-                btnDemo.addEventListener('click', () => {
-
-                    const name = document.getElementById('lead-name').value;
-                    const role = document.getElementById('lead-role').value;
-                    const institution = document.getElementById('lead-institution').value;
-                    const size = document.getElementById('lead-size').value;
-
-                    // Validación
-                    if (!name || !role || !institution || !size) {
-                        if (typeof Swal !== 'undefined') {
-                            Swal.fire({
-                                icon: 'warning',
-                                title: 'Campos Incompletos',
-                                text: 'Por favor completa todos los campos.',
-                                customClass: { popup: 'rounded-2xl' }
-                            });
-                        } else {
-                            alert("Por favor completa todos los campos.");
-                        }
-                        return;
-                    }
-
-                    // Loading State
-                    const originalText = btnDemo.innerHTML;
-                    btnDemo.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Enviando...';
-                    btnDemo.disabled = true;
-
-                    // API Call
-                    fetch('/api/leads', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ name, role, institution, size })
-                    })
-                        .then(res => res.json())
-                        .then(data => {
-                            if (data.success) {
-                                closeModal('modal-ventas');
-
-                                // Reset Form
-                                document.getElementById('lead-name').value = '';
-                                document.getElementById('lead-role').value = '';
-                                document.getElementById('lead-institution').value = '';
-                                document.getElementById('lead-size').value = '';
-
-                                // Success Alert
-                                if (typeof Swal !== 'undefined') {
-                                    Swal.fire({
-                                        icon: 'success',
-                                        title: '¡Solicitud Recibida!',
-                                        text: `Hemos registrado el interés de ${institution}. Un asesor te contactará pronto.`,
-                                        confirmButtonColor: '#1e3a8a',
-                                        customClass: { popup: 'rounded-2xl' }
-                                    });
-                                } else {
-                                    alert(`¡Solicitud Recibida! Hemos registrado el interés de ${institution}.`);
-                                }
-                            } else {
-                                if (typeof Swal !== 'undefined') {
-                                    Swal.fire({ icon: 'error', title: 'Error', text: data.message });
-                                } else {
-                                    alert('Error: ' + data.message);
-                                }
-                            }
-                        })
-                        .catch(err => {
-                            console.error(err);
-                            alert('Error de conexión.');
-                        })
-                        .finally(() => {
-                            btnDemo.innerHTML = originalText;
-                            btnDemo.disabled = false;
-                        });
-                });
-            }
-        });
-
-        // Optimización de la calculadora
-        const calcularAhorro = debounce(() => {
-            requestAnimationFrame(() => {
-                const hoursInput = document.getElementById('input-hours');
-                const rateInput = document.getElementById('input-rate');
-
-                if (!hoursInput || !rateInput) return;
-
-                const hours = parseFloat(hoursInput.value) || 0;
-                const rate = parseFloat(rateInput.value) || 0;
-                const subsPrice = 3.99;
-
-                document.getElementById('display-hours').innerText = hours + 'h';
-
-                const monthlySavings = (hours * rate) * 4;
-                const semesterSavings = monthlySavings * 6;
-                const semesterTime = hours * 24;
-
-                // Avoid division by zero
-                const hoursToPay = rate > 0 ? (subsPrice / rate).toFixed(1) : 0;
-
-                let roiMessage = "Se paga sola en " + hoursToPay + "h";
-                if (hoursToPay < 1 && hoursToPay > 0) roiMessage = "Se paga sola en minutos";
-
-                document.getElementById('result-savings').innerText = '$' + monthlySavings.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
-                document.getElementById('result-semester').innerText = '$' + semesterSavings.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
-                document.getElementById('result-time').innerText = semesterTime + 'h';
-                document.getElementById('roi-text').innerText = roiMessage;
-            });
-        }, 150); // Keep 150ms, it's reasonable. The RequestAnimationFrame handles the paint.
-
-        // Initial run
-        setTimeout(calcularAhorro, 500);
-
-        // --- LÓGICA DE VACANTES (Gamificación) ---
-        function openApplicationForm(title) {
-            document.getElementById('vacancies-list').classList.add('hidden');
-            document.getElementById('application-form-view').classList.remove('hidden');
-            document.getElementById('app-vacancy-title').innerText = title;
-            document.getElementById('app-hidden-title').value = title;
-            document.getElementById('vacancies-title').innerText = "Postulación";
-        }
-
-        function showVacanciesList() {
-            document.getElementById('vacancies-list').classList.remove('hidden');
-            document.getElementById('application-form-view').classList.add('hidden');
-            document.getElementById('vacancies-title').innerText = "Vacantes Disponibles";
-        }
-
-        function submitApplication() {
-            const name = document.getElementById('app-name').value;
-            const email = document.getElementById('app-email').value;
-            const link = document.getElementById('app-link').value;
-            const vacancy_title = document.getElementById('app-hidden-title').value;
-
-            if (!name || !email || !link) {
-                if (typeof Swal !== 'undefined') {
-                    Swal.fire({ icon: 'warning', title: 'Faltan datos', text: 'El enlace a tu perfil es obligatorio para evaluar tu código.', customClass: { popup: 'rounded-2xl' } });
-                } else {
-                    alert("Por favor completa todos los campos.");
-                }
-                return;
-            }
-
-            // Show Analysis Loader
-            document.getElementById('application-form-view').classList.add('hidden');
-            document.getElementById('analysis-view').classList.remove('hidden');
-
-            // Simulate Analysis Delay (2s)
-            setTimeout(() => {
-                // Determine random compatibility (85% - 98%)
-                const compatibility = Math.floor(Math.random() * (99 - 85) + 85);
-
-                fetch('/api/careers', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ name, email, profile_link: link, vacancy_title })
-                })
-                    .then(res => res.json())
-                    .then(data => {
-                        closeModal('modal-vacantes');
-                        // Reset views for next time
-                        setTimeout(() => {
-                            showVacanciesList();
-                            document.getElementById('analysis-view').classList.add('hidden');
-                            document.getElementById('app-name').value = '';
-                            document.getElementById('app-email').value = '';
-                            document.getElementById('app-link').value = '';
-                        }, 500);
-
-                        if (typeof Swal !== 'undefined') {
-                            Swal.fire({
-                                icon: 'success',
-                                title: `Compatibilidad: ${compatibility}%`,
-                                text: `¡Impresionante! Tu perfil tiene una alta compatibilidad con ${vacancy_title}. Te contactaremos pronto.`,
-                                confirmButtonColor: '#1e3a8a',
-                                customClass: { popup: 'rounded-2xl' }
-                            });
-                        } else {
-                            alert(`¡Compatibilidad: ${compatibility}%! Perfil recibido.`);
-                        }
-                    })
-                    .catch(err => {
-                        console.error(err);
-                        closeModal('modal-vacantes');
-                        alert("Error enviando solicitud.");
-                    });
-
-            }, 2500); // 2.5s simulation
-        }
-        function openForgotPassword() {
-            closeModal('modal-login');
-            openModal('modal-forgot-password');
-        }
-
-        function backToLogin() {
-            closeModal('modal-forgot-password');
-            openModal('modal-login');
-        }
-
-        function switchToRegister() {
-            closeModal('modal-login');
-            openModal('modal-pago');
-        }
-
-        function login() {
-            const email = document.getElementById('login-email').value;
-            const password = document.getElementById('login-pass').value;
-            const btn = document.getElementById('btn-login');
-
-            if (!email || !password) {
-                if (typeof Swal !== 'undefined') {
-                    Swal.fire({ icon: 'warning', title: 'Campos vacíos', text: 'Por favor ingresa tu correo y contraseña.' });
-                } else {
-                    alert('Por favor ingresa tu correo y contraseña.');
-                }
-                return;
-            }
-
-            const originalText = btn.innerHTML;
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Iniciando...';
-            btn.disabled = true;
-
-            fetch('/api/auth/login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password })
-            })
-                .then(res => res.json())
-                .then(data => {
-                    if (data.success) {
-                        // Save session
-                        localStorage.setItem('userEmail', data.user.email);
-                        localStorage.setItem('userName', data.user.name);
-                        localStorage.setItem('authToken', data.token);
-
-                        btn.innerHTML = '<i class="fa-solid fa-check"></i> ¡Éxito!';
-                        btn.classList.replace('bg-slate-900', 'bg-green-600');
-
-                        setTimeout(() => {
-                            window.location.href = 'dashboard.html';
-                        }, 1000);
-                    } else {
-                        if (typeof Swal !== 'undefined') {
-                            Swal.fire({ icon: 'error', title: 'Error de acceso', text: data.error || 'Credenciales inválidas.' });
-                        } else {
-                            alert(data.error || 'Credenciales inválidas.');
-                        }
-                        btn.innerHTML = originalText;
-                        btn.disabled = false;
-                    }
-                })
-                .catch(err => {
-                    console.error(err);
-                    alert('Error de conexión.');
-                    btn.innerHTML = originalText;
-                    btn.disabled = false;
-                });
-        }
-
-        function sendRecoveryEmail() {
-            const email = document.getElementById('forgot-email').value;
-            const btn = document.getElementById('btn-recovery');
-
-            if (!email) {
-                alert('Ingresa tu correo institucional.');
-                return;
-            }
-
-            const originalText = btn.innerHTML;
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Enviando...';
-            btn.disabled = true;
-
-            fetch('/api/auth/forgot-password', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email })
-            })
-                .then(res => res.json())
-                .then(data => {
-                    if (data.success) {
-                        if (typeof Swal !== 'undefined') {
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Correo Enviado',
-                                text: 'Revisa tu bandeja de entrada. Te hemos enviado un enlace de recuperación.'
-                            });
-                        } else {
-                            alert('Correo enviado. Revisa tu bandeja.');
-                        }
-                        closeModal('modal-forgot-password');
-                        openModal('modal-login');
-                    } else {
-                        if (typeof Swal !== 'undefined') {
-                            Swal.fire({ icon: 'error', title: 'Error', text: data.error });
-                        } else {
-                            alert(data.error);
-                        }
-                    }
-                })
-                .catch(err => {
-                    console.error(err);
-                    alert('Error de conexión.');
-                })
-                .finally(() => {
-                    btn.innerHTML = originalText;
-                    btn.disabled = false;
-                });
-        }
+        // Funciones utilitarias mínimas si son necesarias antes de cargar script.js
+        // Por ahora delegamos todo a script.js
     </script>
+
+    <!-- Main Script -->
+    <script src="script.js?v=4"></script>
 </body>
 
 </html>
