@@ -54,43 +54,26 @@ const nodemailer = require('nodemailer');
 
 // 📧 CONFIGURACIÓN NODEMAILER (Gmail)
 // 📧 CONFIGURACIÓN NODEMAILER (Gmail con Resolución DNS Manual IPv4)
-let transporter = null;
+// 📧 CONFIGURACIÓN NODEMAILER (Gmail con IP Directa)
+// Hardcoded IP para evitar DNS/IPv6 issues en Railway
+const GMAIL_IP = '142.250.113.109';
 
-const initEmailService = () => {
-    console.log('⏳ Resolviendo IP de Gmail (IPv4)...');
-    dns.resolve4('smtp.gmail.com', (err, addresses) => {
-        if (err || !addresses || addresses.length === 0) {
-            console.error('❌ Error DNS:', err);
-            // Fallback
-            transporter = nodemailer.createTransport({
-                service: 'gmail',
-                auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASS }
-            });
-            return;
-        }
+console.log(`>>> INTENTANDO ENVIO CON IP DIRECTA: ${GMAIL_IP} (PUERTO 465) <<<`);
 
-        const ip = addresses[0];
-        console.log(`✅ Gmail IP resuelta: ${ip}`);
-
-        transporter = nodemailer.createTransport({
-            host: ip, // Usamos la IP directamente
-            port: 587, // Puerto STARTTLS
-            secure: false, // OBLIGATORIO false para 587
-            auth: {
-                user: process.env.EMAIL_USER,
-                pass: process.env.EMAIL_PASS
-            },
-            tls: {
-                servername: 'smtp.gmail.com', // Importante para que el certificado coincida
-                rejectUnauthorized: false
-            },
-            connectionTimeout: 10000
-        });
-        console.log('✅ Nodemailer listo con conexión IPv4 forzada');
-    });
-};
-
-initEmailService();
+const transporter = nodemailer.createTransport({
+    host: GMAIL_IP,
+    port: 465,
+    secure: true,
+    auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS
+    },
+    tls: {
+        servername: 'smtp.gmail.com',
+        rejectUnauthorized: false
+    },
+    connectionTimeout: 10000
+});
 
 
 // Almacén temporal de códigos (En memoria, se borra al reiniciar servidor)
