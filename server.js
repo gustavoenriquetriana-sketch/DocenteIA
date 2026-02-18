@@ -1,4 +1,5 @@
 const express = require('express');
+const dns = require('dns'); // Agregamos módulo DNS
 const path = require('path');
 const { createClient } = require('@supabase/supabase-js');
 const cors = require('cors');
@@ -52,21 +53,44 @@ app.post('/api/log-actividad', async (req, res) => {
 const nodemailer = require('nodemailer');
 
 // 📧 CONFIGURACIÓN NODEMAILER (Gmail)
-console.log('>>> INTENTANDO ENVIO CON CONFIGURACION FINAL V3 (PUERTO 587) <<<');
-const transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 587, // VOLVEMOS A 587
-    secure: false, // OBLIGATORIO false para 587
-    auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS
-    },
-    tls: {
-        rejectUnauthorized: false
-    },
-    family: 4, // MANTENER: Vital para evitar IPv6
-    connectionTimeout: 60000 // NUEVO: 60 segundos antes de rendirse
-});
+// 📧 CONFIGURACIÓN NODEMAILER (Gmail con Resolución DNS Manual IPv4)
+let transporter = null;
+
+const initEmailService = () => {
+    console.log('⏳ Resolviendo IP de Gmail (IPv4)...');
+    dns.resolve4('smtp.gmail.com', (err, addresses) => {
+        if (err || !addresses || addresses.length === 0) {
+            console.error('❌ Error DNS:', err);
+            // Fallback
+            transporter = nodemailer.createTransport({
+                service: 'gmail',
+                auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASS }
+            });
+            return;
+        }
+
+        const ip = addresses[0];
+        console.log(`✅ Gmail IP resuelta: ${ip}`);
+
+        transporter = nodemailer.createTransport({
+            host: ip, // Usamos la IP directamente
+            port: 465, // Puerto SSL Seguro
+            secure: true,
+            auth: {
+                user: process.env.EMAIL_USER,
+                pass: process.env.EMAIL_PASS
+            },
+            tls: {
+                servername: 'smtp.gmail.com', // Importante para que el certificado coincida
+                rejectUnauthorized: false
+            },
+            connectionTimeout: 10000
+        });
+        console.log('✅ Nodemailer listo con conexión IPv4 forzada');
+    });
+};
+
+initEmailService();
 
 
 // Almacén temporal de códigos (En memoria, se borra al reiniciar servidor)
