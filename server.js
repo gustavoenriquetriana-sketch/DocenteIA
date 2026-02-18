@@ -52,10 +52,11 @@ app.post('/api/log-actividad', async (req, res) => {
 const nodemailer = require('nodemailer');
 
 // 📧 CONFIGURACIÓN NODEMAILER (Gmail)
+console.log('>>> INTENTANDO ENVIO CON CONFIGURACION FINAL V3 (PUERTO 587) <<<');
 const transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com',
-    port: 465, // CAMBIO: Usamos puerto SSL directo
-    secure: true, // CAMBIO: true es obligatorio para puerto 465
+    port: 587, // VOLVEMOS A 587
+    secure: false, // OBLIGATORIO false para 587
     auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS
@@ -64,7 +65,7 @@ const transporter = nodemailer.createTransport({
         rejectUnauthorized: false
     },
     family: 4, // MANTENER: Vital para evitar IPv6
-    connectionTimeout: 10000 // NUEVO: Damos 10 segundos antes de rendirse
+    connectionTimeout: 60000 // NUEVO: 60 segundos antes de rendirse
 });
 
 
