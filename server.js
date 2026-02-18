@@ -74,8 +74,8 @@ const initEmailService = () => {
 
         transporter = nodemailer.createTransport({
             host: ip, // Usamos la IP directamente
-            port: 465, // Puerto SSL Seguro
-            secure: true,
+            port: 587, // Puerto STARTTLS
+            secure: false, // OBLIGATORIO false para 587
             auth: {
                 user: process.env.EMAIL_USER,
                 pass: process.env.EMAIL_PASS
