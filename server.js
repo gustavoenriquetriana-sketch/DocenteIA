@@ -53,12 +53,16 @@ const nodemailer = require('nodemailer');
 
 // 📧 CONFIGURACIÓN NODEMAILER (Gmail)
 const transporter = nodemailer.createTransport({
-    service: 'gmail',
+    host: 'smtp.gmail.com',
+    port: 587,
+    secure: false, // OBLIGATORIO false para puerto 587
     auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS
     },
-    family: 4 // Force IPv4 to avoid ENETUNREACH errors
+    tls: {
+        rejectUnauthorized: false
+    }
 });
 
 
