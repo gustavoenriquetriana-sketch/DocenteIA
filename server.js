@@ -1,5 +1,4 @@
 const express = require('express');
-const dns = require('dns'); // Agregamos módulo DNS
 const path = require('path');
 const { createClient } = require('@supabase/supabase-js');
 const cors = require('cors');
@@ -50,30 +49,10 @@ app.post('/api/log-actividad', async (req, res) => {
     }
 });
 
-const nodemailer = require('nodemailer');
+const { Resend } = require('resend');
 
-// 📧 CONFIGURACIÓN NODEMAILER (Gmail)
-// 📧 CONFIGURACIÓN NODEMAILER (Gmail con Resolución DNS Manual IPv4)
-// 📧 CONFIGURACIÓN NODEMAILER (Gmail con IP Directa)
-// Hardcoded IP para evitar DNS/IPv6 issues en Railway
-const GMAIL_IP = '142.250.113.109';
-
-console.log(`>>> INTENTANDO ENVIO CON IP DIRECTA: ${GMAIL_IP} (PUERTO 465) <<<`);
-
-const transporter = nodemailer.createTransport({
-    host: GMAIL_IP,
-    port: 465,
-    secure: true,
-    auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS
-    },
-    tls: {
-        servername: 'smtp.gmail.com',
-        rejectUnauthorized: false
-    },
-    connectionTimeout: 10000
-});
+// 📧 CONFIGURACIÓN RESEND (API HTTP - Sin bloqueo de puertos SMTP)
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 
 // Almacén temporal de códigos (En memoria, se borra al reiniciar servidor)
@@ -136,7 +115,7 @@ app.post('/api/auth/login', async (req, res) => {
     }
 });
 
-// 🚀 RUTA DE RECUPERACIÓN DE CONTRASEÑA (Nodemailer)
+// 🚀 RUTA DE RECUPERACIÓN DE CONTRASEÑA (Resend API)
 app.post('/api/auth/forgot-password', async (req, res) => {
     const { email } = req.body;
 
@@ -150,9 +129,9 @@ app.post('/api/auth/forgot-password', async (req, res) => {
         // Guardar código en memoria (expira en 10 min)
         recoveryCodes.set(email, { code, expires: Date.now() + 600000 });
 
-        const mailOptions = {
-            from: `"Soporte DocenteAI" <${process.env.EMAIL_USER}>`,
-            to: email,
+        const { data, error } = await resend.emails.send({
+            from: 'Soporte DocenteAI <onboarding@resend.dev>',
+            to: [email],
             subject: 'Recuperación de Contraseña - DocenteAI',
             html: `
                 <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 10px;">
@@ -171,10 +150,11 @@ app.post('/api/auth/forgot-password', async (req, res) => {
                     <p style="margin-top: 30px; font-size: 12px; color: #94a3b8; text-align: center;">© 2026 DocenteAI - UNEXPO Guarenas</p>
                 </div>
             `
-        };
+        });
 
-        const info = await transporter.sendMail(mailOptions);
-        console.log('✅ Correo enviado:', info.messageId);
+        if (error) throw error;
+
+        console.log('✅ Correo enviado vía Resend:', data.id);
 
         // Guardar log en Supabase
         await supabase.from('historial').insert([{
