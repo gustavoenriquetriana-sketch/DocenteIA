@@ -5,7 +5,9 @@ const cors = require('cors');
 require('dotenv').config();
 const Groq = require('groq-sdk');
 const multer = require('multer');
-const db = require('./backend/database');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const { Resend } = require('resend');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -49,87 +51,136 @@ app.post('/api/log-actividad', async (req, res) => {
     }
 });
 
-const { Resend } = require('resend');
-
 // 📧 CONFIGURACIÓN RESEND (API HTTP - Sin bloqueo de puertos SMTP)
 const resend = new Resend(process.env.RESEND_API_KEY);
 
+// 🔐 CONSTANTES DE AUTENTICACIÓN
+const SALT_ROUNDS = 10;
 
-// Almacén temporal de códigos (En memoria, se borra al reiniciar servidor)
-const recoveryCodes = new Map();
-
-// 🚀 RUTA DE LOGIN: Para guardar intentos de login y devolver success con nombre real
-app.post('/api/auth/login', async (req, res) => {
+// 🛡️ MIDDLEWARE DE AUTENTICACIÓN JWT
+const verifyToken = (req, res, next) => {
+    const authHeader = req.headers['authorization'];
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        return res.status(401).json({ success: false, error: 'Token de autenticación requerido.' });
+    }
+    const token = authHeader.split(' ')[1];
     try {
-        const { email, password } = req.body;
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        req.user = decoded;
+        next();
+    } catch (err) {
+        return res.status(403).json({ success: false, error: 'Token inválido o expirado. Inicia sesión nuevamente.' });
+    }
+};
 
-        // Buscamos el nombre más reciente asociado a este email en el historial
-        const { data: registros, error: queryError } = await supabase
+// 🚀 RUTA DE LOGIN: Autenticación real con bcrypt + JWT
+app.post('/api/auth/login', async (req, res) => {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+        return res.status(400).json({ success: false, error: 'Email y contraseña son requeridos.' });
+    }
+
+    try {
+        // 1. Buscar el registro de registro del usuario (no logs de login)
+        const { data: usuarios, error: queryError } = await supabase
             .from('historial')
-            .select('nombre')
+            .select('*')
             .eq('email', email)
+            .eq('accion', 'REGISTRO NUEVO USUARIO')
             .order('created_at', { ascending: false })
             .limit(1);
 
-        // Si encontramos un nombre, lo usamos; si no, usamos "Docente" por defecto
-        const nombreUsuario = (registros && registros.length > 0 && registros[0].nombre)
-            ? registros[0].nombre
-            : 'Docente';
+        if (queryError) throw queryError;
 
-        // Guardamos el intento de login en el historial (como un log)
-        const { error } = await supabase
-            .from('historial')
-            .insert([{
-                email,
-                password,
-                nombre: nombreUsuario,
-                accion: 'INTENTO DE LOGIN'
-            }]);
+        if (!usuarios || usuarios.length === 0) {
+            return res.status(401).json({ success: false, error: 'Credenciales incorrectas.' });
+        }
 
-        if (error) console.error("Error al insertar log:", error.message);
+        const usuario = usuarios[0];
 
-        // Devolvemos éxito con el nombre real
+        // 2. Comparar contraseña con hash almacenado
+        const passwordValida = await bcrypt.compare(password, usuario.password);
+        if (!passwordValida) {
+            return res.status(401).json({ success: false, error: 'Credenciales incorrectas.' });
+        }
+
+        // 3. Firmar JWT con 24h de expiración
+        const token = jwt.sign(
+            { id: usuario.id, email: usuario.email, nombre: usuario.nombre },
+            process.env.JWT_SECRET,
+            { expiresIn: '24h' }
+        );
+
+        // 4. Registrar log de login exitoso (sin password)
+        await supabase.from('historial').insert([{
+            email,
+            nombre: usuario.nombre,
+            accion: 'LOGIN EXITOSO'
+        }]);
+
         res.json({
             success: true,
-            nombre: nombreUsuario,
+            token,
+            nombre: usuario.nombre,
             user: {
-                email: email,
-                name: nombreUsuario,
-                id: 'uuid-simulado'
-            },
-            token: 'token-simulado-123'
+                id: usuario.id,
+                email: usuario.email,
+                name: usuario.nombre,
+                nombre: usuario.nombre
+            }
         });
+
     } catch (error) {
-        console.error("Error en Login Supabase:", error.message);
-        // Devolvemos éxito con nombre por defecto aunque falle
-        res.json({
-            success: true,
-            nombre: 'Docente',
-            user: {
-                email: email,
-                name: 'Docente',
-                id: 'uuid-fallback'
-            },
-            token: 'token-fallback'
-        });
+        console.error('❌ Error en Login:', error.message);
+        res.status(500).json({ success: false, error: 'Error interno del servidor.' });
     }
 });
 
-// 🚀 RUTA DE RECUPERACIÓN DE CONTRASEÑA (Resend API)
+// 🚀 RUTA DE RECUPERACIÓN DE CONTRASEÑA (Supabase + Resend)
 app.post('/api/auth/forgot-password', async (req, res) => {
     const { email } = req.body;
 
-    if (!email) return res.status(400).json({ success: false, error: 'Falta el correo' });
-
-    console.log(`📧 Enviando correo de recuperación a: ${email}`);
+    if (!email) return res.status(400).json({ success: false, error: 'Falta el correo.' });
 
     try {
+        // 1. Verificar que el usuario exista en la tabla historial
+        const { data: usuarios, error: userError } = await supabase
+            .from('historial')
+            .select('id, nombre')
+            .eq('email', email)
+            .eq('accion', 'REGISTRO NUEVO USUARIO')
+            .limit(1);
+
+        if (userError) throw userError;
+
+        if (!usuarios || usuarios.length === 0) {
+            return res.status(404).json({ success: false, error: 'No existe una cuenta con ese correo.' });
+        }
+
+        const usuario = usuarios[0];
+
+        // 2. Generar código de 6 dígitos
         const code = Math.floor(100000 + Math.random() * 900000).toString();
 
-        // Guardar código en memoria (expira en 10 min)
-        recoveryCodes.set(email, { code, expires: Date.now() + 600000 });
+        // 3. Calcular expiración: ahora + 15 minutos
+        const expiresAt = new Date(Date.now() + 15 * 60 * 1000).toISOString();
 
-        const { data, error } = await resend.emails.send({
+        // 4. Eliminar tokens previos de este usuario (evitar acumulación)
+        await supabase
+            .from('recovery_tokens')
+            .delete()
+            .eq('user_id', usuario.id);
+
+        // 5. Insertar nuevo token en Supabase
+        const { error: insertError } = await supabase
+            .from('recovery_tokens')
+            .insert([{ user_id: usuario.id, token: code, expires_at: expiresAt }]);
+
+        if (insertError) throw insertError;
+
+        // 6. Enviar el correo via Resend
+        const { data: emailData, error: emailError } = await resend.emails.send({
             from: 'Soporte DocenteAI <onboarding@resend.dev>',
             to: [email],
             subject: 'Recuperación de Contraseña - DocenteAI',
@@ -139,175 +190,225 @@ app.post('/api/auth/forgot-password', async (req, res) => {
                         <h2 style="color: #2563eb;">DocenteAI</h2>
                         <p style="color: #64748b;">Plataforma de Gestión Académica</p>
                     </div>
-                    <p>Hola,</p>
+                    <p>Hola, <strong>${usuario.nombre}</strong></p>
                     <p>Hemos recibido una solicitud para restablecer la contraseña de tu cuenta asociada a <strong>${email}</strong>.</p>
                     <p>Tu código de recuperación temporal es:</p>
-                    <div style="background-color: #f1f5f9; padding: 15px; text-align: center; font-size: 24px; font-weight: bold; letter-spacing: 5px; color: #1e293b; border-radius: 8px; margin: 20px 0;">
+                    <div style="background-color: #f1f5f9; padding: 15px; text-align: center; font-size: 32px; font-weight: bold; letter-spacing: 8px; color: #1e293b; border-radius: 8px; margin: 20px 0;">
                         ${code}
                     </div>
-                    <p>Este código expira en 10 minutos.</p>
-                    <p>Si no solicitaste este cambio, puedes ignorar este correo.</p>
+                    <p>⏱️ Este código expira en <strong>15 minutos</strong>.</p>
+                    <p>Si no solicitaste este cambio, puedes ignorar este correo con seguridad.</p>
                     <p style="margin-top: 30px; font-size: 12px; color: #94a3b8; text-align: center;">© 2026 DocenteAI - UNEXPO Guarenas</p>
                 </div>
             `
         });
 
-        if (error) throw error;
+        if (emailError) throw emailError;
 
-        console.log('✅ Correo enviado vía Resend:', data.id);
+        console.log(`✅ Código de recuperación enviado a ${email} | Resend ID: ${emailData.id}`);
 
-        // Guardar log en Supabase
-        await supabase.from('historial').insert([{
-            email,
-            accion: 'SOLICITUD RECUPERACION CLAVE',
-            nombre: 'Sistema'
-        }]);
-
-        res.json({ success: true, message: 'Correo enviado correctamente' });
+        res.json({ success: true, message: 'Correo enviado correctamente.' });
 
     } catch (error) {
-        console.error('❌ Error enviando correo:', error);
-        res.status(500).json({ success: false, error: 'Error al enviar el correo. Verifique el servidor.' });
+        console.error('❌ Error en forgot-password:', error.message);
+        res.status(500).json({ success: false, error: 'Error al procesar la solicitud.' });
     }
 });
 
-// 🚀 RUTA DE RESTABLECIMIENTO DE CONTRASEÑA
+// 🚀 RUTA DE RESTABLECIMIENTO DE CONTRASEÑA (Supabase - Sin RAM)
 app.post('/api/auth/reset-password', async (req, res) => {
     const { email, code, newPassword } = req.body;
 
     if (!email || !code || !newPassword) {
-        return res.status(400).json({ success: false, error: 'Faltan datos' });
+        return res.status(400).json({ success: false, error: 'Faltan datos: email, code y newPassword son requeridos.' });
     }
-
-    const record = recoveryCodes.get(email);
-
-    if (!record) {
-        return res.status(400).json({ success: false, error: 'Código no solicitado o expirado.' });
-    }
-
-    if (record.code !== code) {
-        return res.status(400).json({ success: false, error: 'Código incorrecto.' });
-    }
-
-    if (Date.now() > record.expires) {
-        recoveryCodes.delete(email);
-        return res.status(400).json({ success: false, error: 'El código ha expirado.' });
-    }
-
-    // Código válido: "Actualizar" contraseña
-    // Como no tenemos tabla de usuarios real, registramos el cambio en el historial
-    // y asumimos que el próximo login usará esta contraseña (en un sistema real haríamos UPDATE users SET password = ...)
 
     try {
-        await supabase.from('historial').insert([{
-            email,
-            password: newPassword, // Guardamos la nueva contraseña como el registro más reciente
-            accion: 'CAMBIO DE CONTRASEÑA EXITOSO',
-            nombre: 'Sistema'
-        }]);
+        // 1. Buscar el user_id a partir del email
+        const { data: usuarios, error: userError } = await supabase
+            .from('historial')
+            .select('id')
+            .eq('email', email)
+            .eq('accion', 'REGISTRO NUEVO USUARIO')
+            .limit(1);
 
-        recoveryCodes.delete(email); // Borrar código usado
+        if (userError) throw userError;
 
+        if (!usuarios || usuarios.length === 0) {
+            return res.status(404).json({ success: false, error: 'No existe una cuenta con ese correo.' });
+        }
+
+        const userId = usuarios[0].id;
+
+        // 2. Buscar el token en recovery_tokens
+        const { data: tokens, error: tokenError } = await supabase
+            .from('recovery_tokens')
+            .select('*')
+            .eq('user_id', userId)
+            .eq('token', code)
+            .limit(1);
+
+        if (tokenError) throw tokenError;
+
+        if (!tokens || tokens.length === 0) {
+            return res.status(400).json({ success: false, error: 'Código incorrecto o no solicitado.' });
+        }
+
+        const tokenRecord = tokens[0];
+
+        // 3. Verificar caducidad
+        if (new Date() > new Date(tokenRecord.expires_at)) {
+            // Purgar token expirado de la BD
+            await supabase.from('recovery_tokens').delete().eq('id', tokenRecord.id);
+            return res.status(400).json({ success: false, error: 'El código ha expirado. Solicita uno nuevo.' });
+        }
+
+        // 4. ¡CRÍTICO! Hashear la nueva contraseña antes de guardar
+        const hashedPassword = await bcrypt.hash(newPassword, SALT_ROUNDS);
+
+        // 5. UPDATE real en historial: actualizar contraseña del usuario registrado
+        const { error: updateError } = await supabase
+            .from('historial')
+            .update({ password: hashedPassword })
+            .eq('id', userId)
+            .eq('accion', 'REGISTRO NUEVO USUARIO');
+
+        if (updateError) throw updateError;
+
+        // 6. Eliminar token usado (evitar ataques de repetición / Replay Attack)
+        await supabase.from('recovery_tokens').delete().eq('id', tokenRecord.id);
+
+        console.log(`✅ Contraseña restablecida para user_id: ${userId}`);
+
+        res.json({ success: true, message: 'Contraseña actualizada correctamente. Ya puedes iniciar sesión.' });
+
+    } catch (error) {
+        console.error('❌ Error en reset-password:', error.message);
+        res.status(500).json({ success: false, error: 'Error interno al restablecer la contraseña.' });
+    }
+});
+
+// 🚀 RUTA DE CAMBIO DE CONTRASEÑA (Desde Dashboard) - Protegida con JWT
+app.post('/api/auth/change-password', verifyToken, async (req, res) => {
+    const { currentPassword, newPassword } = req.body;
+    const userId = req.user.id; // Viene del JWT — no del body
+
+    if (!currentPassword || !newPassword) {
+        return res.status(400).json({ success: false, error: 'Faltan datos: currentPassword y newPassword son requeridos.' });
+    }
+
+    if (newPassword.length < 8) {
+        return res.status(400).json({ success: false, error: 'La nueva contraseña debe tener al menos 8 caracteres.' });
+    }
+
+    try {
+        // 1. Obtener el hash actual del usuario autenticado (por ID, no por email)
+        const { data: usuarios, error: userError } = await supabase
+            .from('historial')
+            .select('id, password')
+            .eq('id', userId)
+            .eq('accion', 'REGISTRO NUEVO USUARIO')
+            .limit(1);
+
+        if (userError) throw userError;
+
+        if (!usuarios || usuarios.length === 0) {
+            return res.status(404).json({ success: false, error: 'Usuario no encontrado.' });
+        }
+
+        const usuario = usuarios[0];
+
+        // 2. Verificar contraseña actual con bcrypt
+        const passwordValida = await bcrypt.compare(currentPassword, usuario.password);
+        if (!passwordValida) {
+            return res.status(401).json({ success: false, error: 'La contraseña actual es incorrecta.' });
+        }
+
+        // 3. Hashear la nueva contraseña
+        const hashedPassword = await bcrypt.hash(newPassword, SALT_ROUNDS);
+
+        // 4. UPDATE en historial por ID (operación atómica y segura)
+        const { error: updateError } = await supabase
+            .from('historial')
+            .update({ password: hashedPassword })
+            .eq('id', userId)
+            .eq('accion', 'REGISTRO NUEVO USUARIO');
+
+        if (updateError) throw updateError;
+
+        console.log(`✅ Contraseña cambiada para user_id: ${userId}`);
         res.json({ success: true, message: 'Contraseña actualizada correctamente.' });
 
     } catch (error) {
-        console.error('Error al guardar cambio:', error);
-        res.status(500).json({ success: false, error: 'Error interno al actualizar.' });
-    }
-});
-
-// 🚀 RUTA DE CAMBIO DE CONTRASEÑA (Desde Dashboard)
-app.post('/api/auth/change-password', async (req, res) => {
-    const { email, currentPassword, newPassword } = req.body;
-
-    if (!email || !currentPassword || !newPassword) {
-        return res.status(400).json({ success: false, error: 'Faltan datos obligatorios' });
-    }
-
-    console.log(`🔐 Solicitud de cambio de clave para: ${email}`);
-
-    // NOTA: En un sistema real, aquí verificaríamos:
-    // 1. Que el usuario exista.
-    // 2. Que hash(currentPassword) coincida con la BD.
-    // Como estamos en modo "Simulación con Historial", confiamos en la sesión activa y solo registramos el cambio.
-
-    try {
-        // Guardar el cambio en el historial de Supabase
-        const { error } = await supabase.from('historial').insert([{
-            email,
-            password: newPassword, // Guardamos la nueva contraseña
-            accion: 'CAMBIO DE CLAVE (DASHBOARD)',
-            nombre: 'Usuario (Dashboard)'
-        }]);
-
-        if (error) throw error;
-
-        console.log('✅ Clave actualizada en historial');
-        res.json({ success: true, message: 'Contraseña actualizada correctamente' });
-
-    } catch (error) {
         console.error('❌ Error al cambiar clave:', error.message);
-        res.status(500).json({ success: false, error: 'Error al actualizar en base de datos' });
+        res.status(500).json({ success: false, error: 'Error al actualizar la contraseña.' });
     }
 });
 
-// 🚀 RUTA DE REGISTRO PROFESIONAL: Docentes e Instituciones
+// 🚀 RUTA DE REGISTRO PROFESIONAL: Con hash bcrypt + verificación de duplicados
 app.post('/api/auth/register', async (req, res) => {
+    const { nombre, email, password, institucion, departamento, cargo } = req.body;
+
+    if (!email || !password || !nombre) {
+        return res.status(400).json({ success: false, error: 'Faltan datos obligatorios: nombre, email y contraseña.' });
+    }
+
     try {
-        const { nombre, email, password, institucion, departamento, cargo } = req.body;
+        // 1. Verificar si el email ya está registrado
+        const { data: existentes, error: checkError } = await supabase
+            .from('historial')
+            .select('email')
+            .eq('email', email)
+            .eq('accion', 'REGISTRO NUEVO USUARIO')
+            .limit(1);
 
-        console.log(`📝 Nuevo Registro Profesional: ${nombre} | ${cargo} en ${institucion}`);
+        if (checkError) throw checkError;
 
-        if (!email || !password || !nombre) {
-            return res.status(400).json({ error: "Faltan datos obligatorios" });
+        if (existentes && existentes.length > 0) {
+            return res.status(409).json({ success: false, error: 'Este email ya está registrado. Inicia sesión o recupera tu contraseña.' });
         }
 
-        // 1. Guardar en Supabase (Historial como log de actividad por ahora)
-        const { data, error } = await supabase
+        // 2. Aplicar hash criptográfico a la contraseña
+        const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
+
+        // 3. Guardar en Supabase con el hash (nunca texto plano)
+        const { error: insertError } = await supabase
             .from('historial')
             .insert([{
                 email,
-                password,
+                password: hashedPassword,
                 nombre,
                 accion: 'REGISTRO NUEVO USUARIO',
-                universidad: institucion,
-                especialidad: departamento,
-                cargo: cargo
+                universidad: institucion || null,
+                especialidad: departamento || null,
+                cargo: cargo || null
             }]);
 
-        if (error) {
-            console.error("Supabase Error:", error.message);
-            // No bloqueamos el registro si falla el log
-        }
+        if (insertError) throw insertError;
 
-        // 2. Responder con éxito y los datos para el frontend
-        res.json({
+        console.log(`✅ Nuevo usuario registrado: ${nombre} <${email}>`);
+
+        return res.status(201).json({
             success: true,
-            user: {
-                nombre,
-                email,
-                institucion,
-                departamento,
-                cargo
-            },
-            message: "Registro exitoso"
+            message: 'Registro exitoso. Ya puedes iniciar sesión.',
+            user: { nombre, email, institucion, departamento, cargo }
         });
 
     } catch (error) {
-        console.error("❌ Error en Registro:", error.message);
+        console.error('❌ Error en Registro:', error.message);
         res.status(500).json({ success: false, error: error.message });
     }
 });
 
 // --- MOCK DATA ROUTES (Para revivir el Dashboard) ---
 
-// 1. IA Generativa (Plantillas Genéricas)
-// 1. Redactor IA Inteligente (Groq AI)
-app.post('/api/ai/generate', async (req, res) => {
+// 1. Redactor IA Inteligente (Groq AI) - Protegido con JWT
+app.post('/api/ai/generate', verifyToken, async (req, res) => {
     try {
         const { prompt } = req.body;
+        const userId = req.user.id; // Disponible para futuro historial de IA por usuario
 
-        console.log('✍️ Redactando para:', prompt);
+        console.log(`✍️ Redactando para user_id: ${userId} | prompt: ${prompt?.substring(0, 60)}...`);
 
         const systemPrompt = `Actúa como un profesor universitario experto en comunicación académica.
         
@@ -354,10 +455,11 @@ REGLA DE ORO: NO inventes NINGÚN dato que no esté explícitamente en el prompt
     }
 });
 
-// 2. Generador de Exámenes Universitario INTELIGENTE (Groq AI)
-app.post('/api/generate-exam', async (req, res) => {
+// 2. Generador de Exámenes Universitario INTELIGENTE (Groq AI) - Protegido con JWT
+app.post('/api/generate-exam', verifyToken, async (req, res) => {
     try {
         const { topic, difficulty, numQuestions, type } = req.body;
+        const userId = req.user.id; // Disponible para historial futuro
 
         console.log(`🎓 Generando examen: ${topic} | Tipo: ${type} | Nivel: ${difficulty} | ${numQuestions} preguntas`);
 
@@ -430,9 +532,11 @@ Cada pregunta debe ser específica, técnica y relevante para un estudiante univ
     }
 });
 
-// 3. Asistente de Planificación (Conectado a Groq AI + PDF Parse) - IMPLEMENTACIÓN COMPLETA
-app.post('/api/generate-planning', upload.single('syllabus'), async (req, res) => {
+// 3. Asistente de Planificación (Groq AI + PDF Parse) - Protegido con JWT
+// NOTA: upload.single() va primero (procesa el multipart), luego verifyToken valida el JWT en el header
+app.post('/api/generate-planning', upload.single('syllabus'), verifyToken, async (req, res) => {
     try {
+        const userId = req.user.id; // Disponible para registrar planificaciones por usuario en el futuro
         if (!req.file) {
             return res.status(400).json({ error: 'No se recibió ningún archivo PDF' });
         }
@@ -526,56 +630,38 @@ REGLAS:
     }
 });
 
-// 4. Agenda (Simulada)
-app.get('/api/agenda', (req, res) => {
-    const today = new Date().toISOString().split('T')[0];
-    res.json([
-        { title: 'Clase PLC', start: today, type: 'clase' },
-        { title: 'Entrega de Notas', start: '2026-02-20', type: 'entrega' },
-        { title: 'Reunión Dept.', start: '2026-02-25', type: 'reunion' }
-    ]);
+// 4. Agenda - Eliminada mock, redirigida internamente a /api/tasks (ya con user_id)
+// El frontend usa directamente /api/tasks. Esta ruta se mantiene como alias protegido.
+app.get('/api/agenda', verifyToken, (req, res) => {
+    res.redirect(307, '/api/tasks');
 });
 
-// 5. Tareas
-app.get('/api/tasks', (req, res) => {
-    res.json({
-        success: true,
-        data: [
-            { id: 1, text: 'Corregir tesis de grado', done: false },
-            { id: 2, text: 'Subir notas al sistema', done: false },
-            { id: 3, text: 'Preparar material unidad 2', done: true }
-        ]
-    });
-});
 
-// 6. Estudiantes - Conectado a Supabase
-app.get('/api/students', async (req, res) => {
+// 6. Estudiantes - Conectado a Supabase (Ruta protegida + Tenancy)
+app.get('/api/students', verifyToken, async (req, res) => {
     try {
         const { data, error } = await supabase
             .from('estudiantes')
-            .select('*');
+            .select('*')
+            .eq('user_id', req.user.id) // 🔒 Solo los estudiantes de este profesor
+            .order('id', { ascending: true });
 
         if (error) throw error;
 
         // Mapear los datos de Supabase al formato que espera el frontend
-        const mappedStudents = data.map(student => {
-            // Usar nombres de columnas en español de Supabase
+        const mappedStudents = (data || []).map(student => {
             const nombreCompleto = (student.nombre || student.name || '').trim();
 
-            // Generar iniciales del nombre con validación robusta
             let initials = '??';
             if (nombreCompleto) {
                 const nameParts = nombreCompleto.split(/\s+/).filter(part => part.length > 0);
                 if (nameParts.length >= 2) {
-                    // Nombre y apellido: primera letra de cada uno
                     initials = nameParts[0][0].toUpperCase() + nameParts[nameParts.length - 1][0].toUpperCase();
                 } else if (nameParts.length === 1) {
-                    // Solo una palabra: primeras dos letras
                     initials = nameParts[0].substring(0, 2).toUpperCase();
                 }
             }
 
-            // Generar clase de color para el avatar
             const colors = [
                 'bg-gradient-to-br from-blue-500 to-purple-600',
                 'bg-gradient-to-br from-green-500 to-teal-600',
@@ -585,10 +671,8 @@ app.get('/api/students', async (req, res) => {
             ];
             const avatarClass = colors[student.id % colors.length];
 
-            // Obtener nota (puede estar como 'nota' o 'grade')
             const grade = parseFloat(student.nota || student.grade || 0);
 
-            // Determinar estado basado en la nota
             let status = student.estado || student.status;
             if (!status) {
                 if (grade >= 10) status = 'aprobado';
@@ -614,12 +698,11 @@ app.get('/api/students', async (req, res) => {
     }
 });
 
-// 7. Crear Estudiante - POST
-app.post('/api/students', async (req, res) => {
+// 7. Crear Estudiante - POST (Ruta protegida + Tenancy)
+app.post('/api/students', verifyToken, async (req, res) => {
     try {
         const { name, subject, grade } = req.body;
 
-        // Validación básica
         if (!name || !subject || grade === undefined) {
             return res.status(400).json({
                 success: false,
@@ -627,22 +710,21 @@ app.post('/api/students', async (req, res) => {
             });
         }
 
-        // Determinar estado basado en la nota
         let status = 'aprobado';
         if (grade >= 10) status = 'aprobado';
         else if (grade >= 7) status = 'riesgo';
         else status = 'reprobado';
 
-        // Insertar en Supabase usando nombres de columnas en español
         const { data, error } = await supabase
             .from('estudiantes')
             .insert([{
-                nombre: name,      // nombre en vez de name
-                materia: subject,  // materia en vez de subject
-                nota: parseFloat(grade),  // nota en vez de grade
-                estado: status     // estado en vez de status
+                nombre: name,
+                materia: subject,
+                nota: parseFloat(grade),
+                estado: status,
+                user_id: req.user.id  // 🔒 Asociar al profesor autenticado
             }])
-            .select(); // Devolver el registro insertado
+            .select();
 
         if (error) throw error;
 
@@ -653,23 +735,28 @@ app.post('/api/students', async (req, res) => {
     }
 });
 
-// 8. Actualizar Estudiante - PUT
-app.put('/api/students/:id', async (req, res) => {
+// 8. Actualizar Estudiante - PUT (Ruta protegida + Tenancy)
+app.put('/api/students/:id', verifyToken, async (req, res) => {
     try {
         const { id } = req.params;
         const { grade, status } = req.body;
 
         const updateData = {};
-        if (grade !== undefined) updateData.nota = parseFloat(grade);  // nota en vez de grade
-        if (status !== undefined) updateData.estado = status.toLowerCase();  // estado en vez de status
+        if (grade !== undefined) updateData.nota = parseFloat(grade);
+        if (status !== undefined) updateData.estado = status.toLowerCase();
 
         const { data, error } = await supabase
             .from('estudiantes')
             .update(updateData)
             .eq('id', id)
+            .eq('user_id', req.user.id) // 🔒 Solo puede editar sus propios estudiantes
             .select();
 
         if (error) throw error;
+
+        if (!data || data.length === 0) {
+            return res.status(404).json({ success: false, error: 'Estudiante no encontrado o no autorizado.' });
+        }
 
         res.json({ success: true, data: data[0] });
     } catch (error) {
@@ -678,53 +765,133 @@ app.put('/api/students/:id', async (req, res) => {
     }
 });
 
-// 9. Configuración (GET y POST)
-app.get('/api/settings', (req, res) => {
-    res.json({ theme: 'light', notifications: true, reminders: true, summary: false });
-});
+// 8b. Eliminar Estudiante - DELETE (Ruta protegida + Tenancy)
+app.delete('/api/students/:id', verifyToken, async (req, res) => {
+    try {
+        const { id } = req.params;
 
-app.post('/api/settings', (req, res) => {
-    // Simulamos guardado
-    res.json({ success: true });
-});
+        const { data, error } = await supabase
+            .from('estudiantes')
+            .delete()
+            .eq('id', id)
+            .eq('user_id', req.user.id) // 🔒 Solo puede borrar sus propios estudiantes
+            .select();
 
-// 10. Gestión de Tareas (Agenda) - SQLite
-app.get('/api/tasks', (req, res) => {
-    db.all("SELECT * FROM tasks ORDER BY date ASC", [], (err, rows) => {
-        if (err) {
-            console.error("Error fetching tasks:", err.message);
-            res.status(500).json({ error: err.message });
-            return;
+        if (error) throw error;
+
+        if (!data || data.length === 0) {
+            return res.status(404).json({ success: false, error: 'Estudiante no encontrado o no autorizado.' });
         }
-        res.json({
-            success: true,
-            data: rows
-        });
-    });
+
+        res.json({ success: true, message: 'Estudiante eliminado correctamente.' });
+    } catch (error) {
+        console.error('Error al eliminar estudiante:', error.message);
+        res.status(500).json({ success: false, error: error.message });
+    }
 });
 
-app.post('/api/tasks', (req, res) => {
+// 9. Configuración de usuario - Supabase (Aislamiento por user_id)
+app.get('/api/settings', verifyToken, async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('user_settings')
+            .select('*')
+            .eq('user_id', req.user.id)
+            .limit(1);
+
+        if (error) throw error;
+
+        if (!data || data.length === 0) {
+            // Si no tiene configuración aún, retornar defaults
+            return res.json({ theme: 'light', reminders: true, summary: false });
+        }
+
+        res.json(data[0]);
+    } catch (error) {
+        console.error('Error al obtener settings:', error.message);
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+app.post('/api/settings', verifyToken, async (req, res) => {
+    const { reminders, summary, theme } = req.body;
+    try {
+        // UPSERT: inserta si no existe, actualiza si ya existe
+        const { error } = await supabase
+            .from('user_settings')
+            .upsert(
+                { user_id: req.user.id, reminders, summary, theme: theme || 'light' },
+                { onConflict: 'user_id' }
+            );
+
+        if (error) throw error;
+
+        res.json({ success: true });
+    } catch (error) {
+        console.error('Error al guardar settings:', error.message);
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+// 10. Gestión de Tareas (Agenda) - Supabase (Aislamiento por usuario)
+app.get('/api/tasks', verifyToken, async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('tasks')
+            .select('*')
+            .eq('user_id', req.user.id)
+            .order('date', { ascending: true });
+
+        if (error) throw error;
+
+        res.json({ success: true, data: data || [] });
+    } catch (error) {
+        console.error("Error fetching tasks:", error.message);
+        res.status(500).json({ error: error.message });
+    }
+});
+
+app.post('/api/tasks', verifyToken, async (req, res) => {
     const { title, date, type } = req.body;
     if (!title || !date) {
         return res.status(400).json({ error: "Faltan datos" });
     }
 
-    db.run(
-        'INSERT INTO tasks (title, date, type) VALUES (?,?,?)',
-        [title, date, type || 'general'],
-        function (err) {
-            if (err) {
-                console.error("Error creating task:", err.message);
-                res.status(500).json({ error: err.message });
-                return;
-            }
-            res.json({
-                success: true,
-                message: "Tarea guardada",
-                data: { id: this.lastID, title, date, type }
-            });
-        }
-    );
+    try {
+        const { data, error } = await supabase
+            .from('tasks')
+            .insert([{ title, date, type: type || 'general', user_id: req.user.id }])
+            .select();
+
+        if (error) throw error;
+
+        res.json({
+            success: true,
+            message: "Tarea guardada",
+            data: data[0]
+        });
+    } catch (error) {
+        console.error("Error creating task:", error.message);
+        res.status(500).json({ error: error.message });
+    }
+});
+
+app.delete('/api/tasks/:id', verifyToken, async (req, res) => {
+    const { id } = req.params;
+    try {
+        const { error } = await supabase
+            .from('tasks')
+            .delete()
+            .eq('id', id)
+            .eq('user_id', req.user.id); // Solo puede borrar sus propias tareas
+
+        if (error) throw error;
+
+        res.json({ success: true, message: 'Tarea eliminada' });
+    } catch (error) {
+        console.error('Error deleting task:', error.message);
+        res.status(500).json({ error: error.message });
+    }
 });
 
 app.listen(PORT, '0.0.0.0', () => {

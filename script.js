@@ -303,63 +303,60 @@ function procesarPago() {
         btn.disabled = true;
     }
 
-    // Simulate Payment Delay then Register
-    setTimeout(() => {
-        // Cambiamos la ruta para que coincida con tu servidor de Supabase
-        fetch('/api/log-actividad', {
+    const delay = new Promise(resolve => setTimeout(resolve, 1500));
+    delay.then(() => {
+        fetch('/api/auth/register', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            // Enviamos los datos que quieres "espiar" en Supabase
             body: JSON.stringify({
-                nombre: nombre, // Cambiado de 'name' a 'nombre' para coincidir con DB
+                nombre: nombre,
                 email: email,
-                password: pass,
-                accion: 'INTENTO DE REGISTRO/PAGO'
+                password: pass
             })
         })
-            .then(res => res.json())
-            .then(data => {
-                if (data.success) {
+            .then(async res => {
+                const data = await res.json();
+                if (res.status === 409) {
+                    Swal.fire({ icon: 'warning', title: 'Email ya registrado', text: data.error });
+                    if (btn) { btn.innerHTML = originalText; btn.classList.remove('opacity-75', 'cursor-not-allowed'); btn.disabled = false; }
+                    return;
+                }
+                if (res.ok && data.success) {
                     if (btn) {
                         btn.innerHTML = '<i class="fa-solid fa-check"></i> ¡Bienvenido!';
                         btn.classList.replace('bg-slate-900', 'bg-green-600');
                     }
-
-                    // Sync Data
                     localStorage.setItem('userEmail', email);
                     localStorage.setItem('userName', nombre);
-                    localStorage.setItem('userId', data.userId);
-                    localStorage.setItem('cardLast4', card.slice(-4) || '4242');
-
                     Swal.fire({
                         icon: 'success',
-                        title: '¡Pago Exitoso!',
-                        text: 'Tu cuenta ha sido activada correctamente.',
-                        timer: 2000,
+                        title: '¡Registro Exitoso!',
+                        text: 'Tu cuenta fue creada. Ahora inicia sesión.',
+                        timer: 2500,
                         showConfirmButton: false
                     });
-
-                    // Redirect ONLY on success
-                    setTimeout(() => { window.location.href = 'dashboard.html'; }, 2000);
+                    setTimeout(() => { closeModal('modal-pago'); openModal('modal-login'); }, 2500);
                 } else {
                     Swal.fire({ icon: 'error', title: 'Error', text: data.error || 'Fallo en registro' });
-                    if (btn) {
-                        btn.innerHTML = originalText;
-                        btn.classList.remove('opacity-75', 'cursor-not-allowed');
-                        btn.disabled = false;
-                    }
+                    if (btn) { btn.innerHTML = originalText; btn.classList.remove('opacity-75', 'cursor-not-allowed'); btn.disabled = false; }
                 }
             })
-            .catch(err => {
-                console.error(err);
+            .catch(() => {
                 Swal.fire({ icon: 'error', title: 'Error', text: 'Error de conexión con el servidor.' });
-                if (btn) {
-                    btn.innerHTML = originalText;
-                    btn.classList.remove('opacity-75', 'cursor-not-allowed');
-                    btn.disabled = false;
-                }
+                if (btn) { btn.innerHTML = originalText; btn.classList.remove('opacity-75', 'cursor-not-allowed'); btn.disabled = false; }
             });
-    }, 1500); // 1.5s simulated delay for payment
+    });
+}
+
+// 🔑 HELPER: Fetch con autorización JWT automática
+function authFetch(url, options = {}) {
+    const token = localStorage.getItem('docenteai_token');
+    const headers = {
+        'Content-Type': 'application/json',
+        ...(token ? { 'Authorization': 'Bearer ' + token } : {}),
+        ...(options.headers || {})
+    };
+    return fetch(url, { ...options, headers });
 }
 
 function login() {
@@ -380,23 +377,30 @@ function login() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
     })
-        .then(res => res.json())
-        .then(data => {
-            if (data.success) {
-                // Save user data including real name
+        .then(async res => {
+            const data = await res.json();
+            if (res.status === 401 || res.status === 403) {
+                Swal.fire({ icon: 'error', title: 'Acceso Denegado', text: data.error || 'Credenciales incorrectas.' });
+                return;
+            }
+            if (!res.ok) {
+                Swal.fire({ icon: 'error', title: 'Error', text: data.error || 'Error en el servidor.' });
+                return;
+            }
+            if (data.success && data.token) {
+                // Guardar token JWT real y datos del usuario
+                localStorage.setItem('docenteai_token', data.token);
                 localStorage.setItem('userEmail', data.user.email);
                 localStorage.setItem('userName', data.user.name);
                 localStorage.setItem('usuarioNombre', data.nombre || data.user.name || 'Usuario');
                 localStorage.setItem('userId', data.user.id);
-                localStorage.setItem('token', data.token);
-
                 window.location.href = 'dashboard.html';
             } else {
-                Swal.fire({ icon: 'error', title: 'Error de Acceso', text: 'Credenciales incorrectas' });
+                Swal.fire({ icon: 'error', title: 'Error de Acceso', text: data.error || 'Credenciales incorrectas.' });
             }
         })
-        .catch(err => {
-            Swal.fire({ icon: 'error', title: 'Error', text: 'No se pudo conectar al servidor' });
+        .catch(() => {
+            Swal.fire({ icon: 'error', title: 'Error', text: 'No se pudo conectar al servidor.' });
         })
         .finally(() => {
             btn.innerText = "Entrar";
