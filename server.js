@@ -870,7 +870,7 @@ app.get('/api/evaluaciones/:estudianteId', verifyToken, async (req, res) => {
             .from('evaluaciones')
             .select('*')
             .eq('estudiante_id', estudianteId)
-            .order('created_at', { ascending: false });
+            .order('creado_en', { ascending: false });
 
         if (error) throw error;
 
