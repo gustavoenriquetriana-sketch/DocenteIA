@@ -918,17 +918,16 @@ app.post('/api/evaluaciones', verifyToken, async (req, res) => {
 
         if (evalsError) throw evalsError;
 
-        // 4. Calcular Nota Final Segura (Reglamento UNEXPO)
+        // 4. Calcular Nota Final Segura (Reglamento UNEXPO - Absoluto)
         let sumaRegulares = 0;
-        let porcentajeTotal = 0;
+        let porcentajeTotal = 0; // Se mantiene por si el frontend lo necesita
         let menorRegularPuntos = Infinity;
         let tieneSustitutiva = false;
         let puntosSustitutiva = 0;
 
         evaluaciones.forEach(ev => {
-            const nota = parseFloat(ev.nota);
-            const peso = parseFloat(ev.peso_porcentual);
-            const puntos = nota * (peso / 100);
+            const puntos = parseFloat(ev.nota); // La nota YA SON los puntos directos (Ej: 18)
+            const peso = parseFloat(ev.peso_porcentual); // Referencia
 
             porcentajeTotal += peso;
 
@@ -936,6 +935,7 @@ app.post('/api/evaluaciones', verifyToken, async (req, res) => {
                 tieneSustitutiva = true;
                 puntosSustitutiva += puntos;
             } else {
+                // Es una evaluación regular
                 sumaRegulares += puntos;
                 if (puntos < menorRegularPuntos) {
                     menorRegularPuntos = puntos;
@@ -943,6 +943,7 @@ app.post('/api/evaluaciones', verifyToken, async (req, res) => {
             }
         });
 
+        // Aplicar regla de sustitutiva: resta la regular más baja y suma la sustitutiva
         let sumaFinal = sumaRegulares;
         if (tieneSustitutiva && menorRegularPuntos !== Infinity) {
             sumaFinal = sumaFinal - menorRegularPuntos + puntosSustitutiva;
