@@ -1043,14 +1043,16 @@
             </div>
         </div>
 
-        <div id="modal-history"
+        <div id="modal-history" onclick="if(event.target === this) toggleHistoryModal()"
             class="force-hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
             <div
-                class="bg-white rounded-2xl shadow-2xl w-full max-w-3xl overflow-hidden animate-[fadeIn_0.2s_ease-out] max-h-[80vh] flex flex-col">
-                <div class="bg-slate-50 px-6 py-4 border-b border-slate-200 flex justify-between items-center">
+                class="bg-white rounded-2xl shadow-2xl w-full max-w-3xl overflow-hidden animate-[fadeIn_0.2s_ease-out] max-h-[80vh] flex flex-col relative">
+                <button onclick="toggleHistoryModal()"
+                    class="text-gray-400 hover:text-gray-600 absolute top-4 right-4 z-10 transition">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+                <div class="bg-slate-50 px-6 py-4 border-b border-slate-200 flex items-center">
                     <h3 class="font-bold text-slate-800">Historial de Soporte</h3>
-                    <button onclick="toggleHistoryModal()" class="text-slate-400 hover:text-red-500"><i
-                            class="fa-solid fa-xmark text-lg"></i></button>
                 </div>
                 <div class="p-0 overflow-y-auto flex-1">
                     <table class="w-full text-left border-collapse">
@@ -1075,13 +1077,16 @@
             </div>
         </div>
 
-        <div id="modal-ticket"
+        <div id="modal-ticket" onclick="if(event.target === this) toggleTicketModal()"
             class="force-hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-            <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden animate-[fadeIn_0.2s_ease-out]">
-                <div class="bg-slate-50 px-6 py-4 border-b border-slate-200 flex justify-between items-center">
-                    <h3 class="font-bold text-slate-800">Nuevo Ticket de Soporte</h3><button
-                        onclick="toggleTicketModal()" class="text-slate-400 hover:text-red-500"><i
-                            class="fa-solid fa-xmark text-lg"></i></button>
+            <div
+                class="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden relative animate-[fadeIn_0.2s_ease-out]">
+                <button onclick="toggleTicketModal()"
+                    class="text-gray-400 hover:text-gray-600 absolute top-4 right-4 z-10 transition">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+                <div class="bg-slate-50 px-6 py-4 border-b border-slate-200 flex items-center">
+                    <h3 class="font-bold text-slate-800">Nuevo Ticket de Soporte</h3>
                 </div>
                 <div class="p-6 space-y-4">
                     <div><label class="block text-xs font-bold text-slate-500 uppercase mb-1.5">Asunto</label><input
@@ -1100,15 +1105,16 @@
             </div>
         </div>
 
-        <div id="modal-subscription"
+        <div id="modal-subscription" onclick="if(event.target === this) toggleSubscriptionModal()"
             class="force-hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-y-auto">
-            <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl relative my-8">
+            <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl relative my-8 relative">
+                <button onclick="toggleSubscriptionModal()"
+                    class="text-gray-400 hover:text-gray-600 absolute top-4 right-4 z-10 transition">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
                 <div id="sub-view-summary" class="p-8 flex flex-col transition-all duration-300">
-                    <div class="flex justify-between items-center mb-6">
+                    <div class="flex items-center mb-6">
                         <h3 class="font-bold text-slate-800 text-lg">Tu Suscripción</h3>
-                        <button onclick="toggleSubscriptionModal()" class="text-slate-400 hover:text-red-500">
-                            <i class="fa-solid fa-xmark text-xl"></i>
-                        </button>
                     </div>
                     <div
                         class="bg-gradient-to-r from-slate-800 to-slate-900 rounded-xl p-8 text-white mb-8 shadow-lg relative overflow-hidden group">
@@ -1217,9 +1223,14 @@
             </div>
         </div>
 
-        <div id="modal-logout"
+        <div id="modal-logout" onclick="if(event.target === this) closeModal('modal-logout')"
             class="force-hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-            <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-sm w-full text-center animate-[fadeIn_0.2s_ease-out]">
+            <div
+                class="bg-white rounded-2xl shadow-2xl p-8 max-w-sm w-full text-center relative animate-[fadeIn_0.2s_ease-out]">
+                <button onclick="closeModal('modal-logout')"
+                    class="text-gray-400 hover:text-gray-600 absolute top-4 right-4 z-10 transition">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
                 <div
                     class="w-16 h-16 bg-rose-50 rounded-full flex items-center justify-center mx-auto mb-6 transform transition hover:scale-110 duration-300">
                     <i class="fa-solid fa-right-from-bracket text-3xl text-rose-500"></i>
@@ -1238,14 +1249,16 @@
             </div>
         </div>
 
-        <div id="modal-editar-estudiante"
+        <div id="modal-editar-estudiante" onclick="if(event.target === this) toggleEditModal()"
             class="force-hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
             <div
-                class="bg-white rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden transform transition-all scale-100 animate-[fadeIn_0.2s_ease-out]">
-                <div class="bg-slate-50 px-6 py-4 border-b border-slate-200 flex justify-between items-center">
-                    <h3 class="font-bold text-slate-800">Editar Estudiante</h3><button onclick="toggleEditModal()"
-                        class="text-slate-400 hover:text-red-500 transition"><i
-                            class="fa-solid fa-xmark text-lg"></i></button>
+                class="bg-white rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden transform transition-all scale-100 relative animate-[fadeIn_0.2s_ease-out]">
+                <button onclick="toggleEditModal()"
+                    class="text-gray-400 hover:text-gray-600 absolute top-4 right-4 z-10 transition">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+                <div class="bg-slate-50 px-6 py-4 border-b border-slate-200 flex items-center">
+                    <h3 class="font-bold text-slate-800">Editar Estudiante</h3>
                 </div>
                 <div class="p-6 space-y-4">
                     <div><label class="block text-xs font-bold text-slate-500 uppercase mb-1.5">Estudiante</label><input
@@ -1280,15 +1293,16 @@
             </div>
         </div>
 
-        <div id="modal-nueva-tarea"
+        <div id="modal-nueva-tarea" onclick="if(event.target === this) closeModal('modal-nueva-tarea')"
             class="force-hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
             <div
-                class="bg-white rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden transform transition-all scale-100">
-                <div class="bg-slate-50 px-6 py-4 border-b border-slate-200 flex justify-between items-center">
-                    <h3 class="font-bold text-slate-800">Agendar Tarea</h3><button
-                        onclick="closeModal('modal-nueva-tarea')"
-                        class="text-slate-400 hover:text-red-500 transition"><i
-                            class="fa-solid fa-xmark text-lg"></i></button>
+                class="bg-white rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden transform transition-all scale-100 relative">
+                <button onclick="closeModal('modal-nueva-tarea')"
+                    class="text-gray-400 hover:text-gray-600 absolute top-4 right-4 z-10 transition">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+                <div class="bg-slate-50 px-6 py-4 border-b border-slate-200 flex items-center">
+                    <h3 class="font-bold text-slate-800">Agendar Tarea</h3>
                 </div>
                 <div class="p-6 space-y-4">
                     <div><label class="block text-xs font-bold text-slate-500 uppercase mb-1.5">Título</label><input
@@ -1315,15 +1329,16 @@
             </div>
         </div>
 
-        <div id="modal-nuevo-estudiante"
+        <div id="modal-nuevo-estudiante" onclick="if(event.target === this) closeModal('modal-nuevo-estudiante')"
             class="force-hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
             <div
-                class="bg-white rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden transform transition-all scale-100 animate-[fadeIn_0.2s_ease-out]">
-                <div class="bg-slate-50 px-6 py-4 border-b border-slate-200 flex justify-between items-center">
-                    <h3 class="font-bold text-slate-800">Registrar Estudiante</h3><button
-                        onclick="closeModal('modal-nuevo-estudiante')"
-                        class="text-slate-400 hover:text-red-500 transition"><i
-                            class="fa-solid fa-xmark text-lg"></i></button>
+                class="bg-white rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden transform transition-all scale-100 relative animate-[fadeIn_0.2s_ease-out]">
+                <button onclick="closeModal('modal-nuevo-estudiante')"
+                    class="text-gray-400 hover:text-gray-600 absolute top-4 right-4 z-10 transition">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+                <div class="bg-slate-50 px-6 py-4 border-b border-slate-200 flex items-center">
+                    <h3 class="font-bold text-slate-800">Registrar Estudiante</h3>
                 </div>
                 <div class="p-6 space-y-4">
                     <div><label class="block text-xs font-bold text-slate-500 uppercase mb-1.5">Nombre
@@ -1357,16 +1372,16 @@
             </div>
         </div>
 
-        <div id="modal-change-password"
+        <div id="modal-change-password" onclick="if(event.target === this) closeModal('modal-change-password')"
             class="force-hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
             <div
-                class="bg-white rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden transform transition-all scale-100 animate-[fadeIn_0.2s_ease-out]">
-                <div class="bg-slate-50 px-6 py-4 border-b border-slate-200 flex justify-between items-center">
+                class="bg-white rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden transform transition-all scale-100 relative animate-[fadeIn_0.2s_ease-out]">
+                <button onclick="closeModal('modal-change-password')"
+                    class="text-gray-400 hover:text-gray-600 absolute top-4 right-4 z-10 transition">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+                <div class="bg-slate-50 px-6 py-4 border-b border-slate-200 flex items-center">
                     <h3 class="font-bold text-slate-800">Cambiar Contraseña</h3>
-                    <button onclick="closeModal('modal-change-password')"
-                        class="text-slate-400 hover:text-red-500 transition">
-                        <i class="fa-solid fa-xmark text-lg"></i>
-                    </button>
                 </div>
                 <div class="p-6 space-y-4">
                     <div>
