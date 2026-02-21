@@ -877,7 +877,37 @@ app.get('/api/stats/clases-hoy', verifyToken, async (req, res) => {
     }
 });
 
-// 10b. Estadísticas de Rendimiento (Gráfico)
+// 10b. Estadísticas Por Calificar
+app.get('/api/stats/por-calificar', verifyToken, async (req, res) => {
+    try {
+        const hoy = new Date();
+        const year = hoy.getFullYear();
+        const month = String(hoy.getMonth() + 1).padStart(2, '0');
+        const day = String(hoy.getDate()).padStart(2, '0');
+        const fechaHoy = `${year}-${month}-${day}`;
+
+        const tiposCalificables = ['examen', 'practica', 'exposicion', 'defensa', 'revision'];
+
+        const { data, error } = await supabase
+            .from('tasks')
+            .select('id')
+            .eq('user_id', req.user.id)
+            .lt('date', fechaHoy)
+            .in('type', tiposCalificables);
+
+        if (error) throw error;
+
+        const pendientes = data ? data.length : 0;
+        const mensaje = pendientes > 0 ? 'Evaluaciones atrasadas' : 'Al día';
+
+        res.json({ success: true, pendientes, mensaje });
+    } catch (error) {
+        console.error('Error al obtener pendientes por calificar:', error.message);
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+// 10c. Estadísticas de Rendimiento (Gráfico)
 app.get('/api/stats/rendimiento', verifyToken, async (req, res) => {
     try {
         const { data, error } = await supabase

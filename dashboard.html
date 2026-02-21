@@ -471,10 +471,10 @@
                             class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover-card flex justify-between items-start">
                             <div>
                                 <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Por Calificar</p>
-                                <p class="text-4xl font-extrabold text-slate-900 mt-2">12</p>
-                                <div
+                                <p id="contador-calificar" class="text-4xl font-extrabold text-slate-900 mt-2">0</p>
+                                <div id="detalle-calificar"
                                     class="mt-3 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-orange-50 text-orange-700 text-xs font-bold border border-orange-100">
-                                    <i class="fa-solid fa-circle-exclamation text-[10px]"></i> Quiz 1
+                                    <i class="fa-solid fa-circle-exclamation text-[10px]"></i> Cargando...
                                 </div>
                             </div>
                             <div
@@ -1883,6 +1883,24 @@
                 }
             }
 
+            async function cargarPendientesCalificar() {
+                try {
+                    const res = await authFetch('/api/stats/por-calificar');
+                    if (!res || handleAuthError(res.status)) return;
+
+                    const result = await res.json();
+                    if (result.success) {
+                        const contadorEl = document.getElementById('contador-calificar');
+                        const detalleEl = document.getElementById('detalle-calificar');
+
+                        if (contadorEl) contadorEl.innerText = result.pendientes;
+                        if (detalleEl) detalleEl.innerHTML = `<i class="fa-solid fa-circle-exclamation text-[10px]"></i> ${result.mensaje}`;
+                    }
+                } catch (e) {
+                    console.error('Error al cargar pendientes por calificar', e);
+                }
+            }
+
             async function cargarGraficoRendimiento() {
                 try {
                     const res = await authFetch('/api/stats/rendimiento');
@@ -1963,6 +1981,7 @@
                 setTimeout(() => {
                     cargarGraficoRendimiento();
                     cargarRadarClases();
+                    cargarPendientesCalificar();
                 }, 500);
             });
 
