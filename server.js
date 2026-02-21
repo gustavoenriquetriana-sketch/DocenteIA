@@ -1153,6 +1153,54 @@ app.post('/api/settings', verifyToken, async (req, res) => {
     }
 });
 
+// 9c. Cambiar Contraseña (Gamificación / Seguridad)
+app.put('/api/user/password', verifyToken, async (req, res) => {
+    try {
+        const { passwordActual, nuevaPassword } = req.body;
+
+        if (!passwordActual || !nuevaPassword) {
+            return res.status(400).json({ success: false, error: 'Ambas contraseñas son requeridas.' });
+        }
+
+        // Obtener usuario del historial
+        const { data: users, error: userError } = await supabase
+            .from('historial')
+            .select('id, password')
+            .eq('id', req.user.id);
+
+        if (userError) throw userError;
+
+        if (!users || users.length === 0) {
+            return res.status(404).json({ success: false, error: 'Usuario no encontrado.' });
+        }
+
+        const user = users[0];
+
+        // Comparar contraseñas
+        const match = await bcrypt.compare(passwordActual, user.password);
+        if (!match) {
+            return res.status(400).json({ success: false, error: 'La contraseña actual es incorrecta' });
+        }
+
+        // Hashear nueva contraseña
+        const saltRounds = 10;
+        const hashedNewPassword = await bcrypt.hash(nuevaPassword, saltRounds);
+
+        // Actualizar tabla
+        const { error: updateError } = await supabase
+            .from('historial')
+            .update({ password: hashedNewPassword })
+            .eq('id', req.user.id);
+
+        if (updateError) throw updateError;
+
+        res.json({ success: true, message: 'Contraseña actualizada correctamente.' });
+    } catch (error) {
+        console.error('Error al cambiar contraseña:', error.message);
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
 // 10. Gestión de Tareas (Agenda) - Supabase (Aislamiento por usuario)
 app.get('/api/tasks', verifyToken, async (req, res) => {
     try {

@@ -2406,8 +2406,8 @@
                     return;
                 }
 
-                if (newPassword.length < 8) {
-                    Swal.fire({ icon: 'warning', title: 'Contraseña débil', text: 'La nueva contraseña debe tener al menos 8 caracteres.', confirmButtonColor: '#2563eb' });
+                if (newPassword.length < 6) {
+                    Swal.fire({ icon: 'warning', title: 'Contraseña débil', text: 'La nueva contraseña debe tener al menos 6 caracteres.', confirmButtonColor: '#2563eb' });
                     return;
                 }
 
@@ -2417,9 +2417,9 @@
                 btn.disabled = true;
 
                 try {
-                    const res = await authFetch('/api/auth/change-password', {
-                        method: 'POST',
-                        body: JSON.stringify({ currentPassword, newPassword })
+                    const res = await authFetch('/api/user/password', {
+                        method: 'PUT',
+                        body: JSON.stringify({ passwordActual: currentPassword, nuevaPassword: newPassword })
                     });
 
                     // Manejar expiración de sesión
@@ -2427,33 +2427,19 @@
 
                     const data = await res.json();
 
-                    if (res.status === 401) {
-                        Swal.fire({ icon: 'error', title: 'Contraseña incorrecta', text: data.error || 'La contraseña actual que ingresaste no es correcta.', confirmButtonColor: '#2563eb' });
-                        return;
-                    }
-
                     if (!res.ok) {
-                        Swal.fire({ icon: 'error', title: 'Error', text: data.error || 'No se pudo actualizar la contraseña.', confirmButtonColor: '#2563eb' });
+                        Swal.fire({ icon: 'error', title: 'Error', text: data.error || 'La contraseña actual es incorrecta o hubo un fallo.', confirmButtonColor: '#2563eb' });
                         return;
                     }
 
                     // Éxito: limpiar campos y cerrar modal
+                    Swal.fire({ icon: 'success', title: '¡Actualizada!', text: 'Contraseña cambiada correctamente.', confirmButtonColor: '#2563eb' });
                     document.getElementById('current-password').value = '';
                     document.getElementById('new-password-change').value = '';
                     document.getElementById('confirm-password-change').value = '';
                     closeModal('modal-change-password');
-
-                    Swal.fire({
-                        icon: 'success',
-                        title: '¡Contraseña Actualizada!',
-                        text: 'Tu contraseña ha sido cambiada correctamente.',
-                        timer: 2000,
-                        showConfirmButton: false
-                    });
-
                 } catch (err) {
-                    console.error('Error en cambio de contraseña:', err);
-                    Swal.fire({ icon: 'error', title: 'Error de conexión', text: 'No se pudo conectar con el servidor.', confirmButtonColor: '#2563eb' });
+                    Swal.fire({ icon: 'error', title: 'Error de conexión', text: 'No se pudo contactar el servidor.', confirmButtonColor: '#2563eb' });
                 } finally {
                     btn.innerHTML = originalText;
                     btn.disabled = false;
@@ -2830,62 +2816,6 @@
                 `;
             }
 
-            function submitChangePassword() {
-                const currentPassword = document.getElementById('current-password').value;
-                const newPassword = document.getElementById('new-password-change').value;
-                const confirmPassword = document.getElementById('confirm-password-change').value;
-
-                // Get email from DOM or localStorage
-                const userEmailElement = document.getElementById('email-text');
-                let email = "gustavo.triana@unexpo.edu.ve"; // Default fallback
-                if (localStorage.getItem('userEmail')) {
-                    email = localStorage.getItem('userEmail');
-                } else if (userEmailElement) {
-                    email = userEmailElement.innerText;
-                }
-
-                if (!currentPassword || !newPassword || !confirmPassword) {
-                    showToast('Error', 'Todos los campos son obligatorios', 'error');
-                    return;
-                }
-
-                if (newPassword !== confirmPassword) {
-                    showToast('Error', 'Las contraseñas nuevas no coinciden', 'error');
-                    return;
-                }
-
-                const btn = document.getElementById('btn-change-pass-submit');
-                const originalText = btn.innerText;
-                btn.innerText = 'Actualizando...';
-                btn.disabled = true;
-
-                authFetch('/api/auth/change-password', {
-                    method: 'POST',
-                    body: JSON.stringify({ email, currentPassword, newPassword })
-                })
-                    .then(async res => {
-                        if (handleAuthError(res.status)) return;
-                        const data = await res.json();
-                        if (data.success) {
-                            showToast('Éxito', 'Contraseña actualizada correctamente');
-                            closeModal('modal-change-password');
-                            // Clear fields
-                            document.getElementById('current-password').value = '';
-                            document.getElementById('new-password-change').value = '';
-                            document.getElementById('confirm-password-change').value = '';
-                        } else {
-                            showToast('Error', data.error || 'No se pudo cambiar la contraseña', 'error');
-                        }
-                    })
-                    .catch(err => {
-                        console.error(err);
-                        showToast('Error', 'Error de conexión', 'error');
-                    })
-                    .finally(() => {
-                        btn.innerText = originalText;
-                        btn.disabled = false;
-                    });
-            }
 
             // --- END NAVIGATION LOGIC ---
 
