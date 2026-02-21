@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/driver.js@1.0.1/dist/driver.css" />
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Share+Tech+Mono&display=swap"
         rel="stylesheet">
@@ -1532,6 +1533,7 @@
             let currentMonth = today.getMonth();
             let currentYear = 2026;
             let tasks = []; // Load from API
+            let studentsList = []; // Carga global de estudiantes
             let currentExamData = []; // Store the exam data for PDF export
 
 
@@ -1552,9 +1554,10 @@
                     .then(async res => {
                         if (handleAuthError(res.status)) return;
                         const data = await res.json();
+                        studentsList = data.data || [];
                         const tbody = document.getElementById('students-table-body');
                         tbody.innerHTML = '';
-                        (data.data || []).forEach(s => {
+                        studentsList.forEach(s => {
                             let statusBadge = '';
                             if (s.status === 'aprobado') statusBadge = '<span class="bg-green-100 text-green-700 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide border border-green-200">Aprobado</span>';
                             else if (s.status === 'riesgo') statusBadge = '<span class="bg-yellow-100 text-yellow-700 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide border border-yellow-200">Riesgo</span>';
@@ -1774,20 +1777,70 @@
             }
 
             function exportarPDF() {
+                if (!studentsList || studentsList.length === 0) {
+                    showToast('Info', 'No hay estudiantes para exportar', 'error');
+                    return;
+                }
+
                 const btn = document.getElementById('btn-exportar');
-                const original = btn.innerHTML;
+                const originalText = btn.innerHTML;
                 btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Generando...';
                 btn.classList.add('opacity-75', 'cursor-not-allowed');
+
                 setTimeout(() => {
-                    const blob = new Blob(["LISTA DE ESTUDIANTES 2025-2"], { type: "text/plain" });
-                    const a = document.createElement("a");
-                    a.href = URL.createObjectURL(blob);
-                    a.download = "Lista_Estudiantes.txt";
-                    a.click();
-                    btn.innerHTML = original;
-                    btn.classList.remove('opacity-75', 'cursor-not-allowed');
-                    showToast("Descarga Lista", "Reporte generado correctamente.");
-                }, 1500);
+                    try {
+                        const { jsPDF } = window.jspdf;
+                        const doc = new jsPDF();
+                        let yPos = 20;
+
+                        // Header
+                        doc.setFontSize(18);
+                        doc.setFont('helvetica', 'bold');
+                        doc.text('LISTA DE ESTUDIANTES', 105, yPos, { align: 'center' });
+                        yPos += 15;
+
+                        // Table Headers
+                        doc.setFontSize(11);
+                        doc.setFont('helvetica', 'bold');
+                        doc.text('Nombre', 20, yPos);
+                        doc.text('Materia', 90, yPos);
+                        doc.text('Nota', 150, yPos);
+                        doc.text('Estado', 175, yPos);
+                        yPos += 3;
+
+                        doc.setLineWidth(0.5);
+                        doc.line(20, yPos, 190, yPos);
+                        yPos += 8;
+
+                        // Table Body
+                        doc.setFont('helvetica', 'normal');
+                        studentsList.forEach(s => {
+                            if (yPos > 275) {
+                                doc.addPage();
+                                yPos = 20;
+                            }
+                            const name = s.name.length > 25 ? s.name.substring(0, 22) + '...' : s.name;
+                            const subject = s.subject.length > 20 ? s.subject.substring(0, 17) + '...' : s.subject;
+                            const grade = Number(s.grade).toFixed(1);
+                            const status = (s.status || '').toUpperCase();
+
+                            doc.text(name, 20, yPos);
+                            doc.text(subject, 90, yPos);
+                            doc.text(grade, 150, yPos);
+                            doc.text(status, 175, yPos);
+                            yPos += 8;
+                        });
+
+                        doc.save('Lista_Estudiantes.pdf');
+                        showToast('Descarga Lista', 'Reporte PDF generado correctamente.');
+                    } catch (err) {
+                        console.error('Error generando PDF:', err);
+                        showToast('Error', 'No se pudo generar el documento.', 'error');
+                    } finally {
+                        btn.innerHTML = originalText;
+                        btn.classList.remove('opacity-75', 'cursor-not-allowed');
+                    }
+                }, 500);
             }
 
             function toggleNewStudentModal() { document.getElementById('modal-nuevo-estudiante').classList.toggle('force-hidden'); }
