@@ -684,6 +684,7 @@ app.get('/api/students', verifyToken, async (req, res) => {
             return {
                 id: student.id,
                 name: nombreCompleto,
+                email: student.email || '',
                 subject: student.materia || student.subject || 'Sin materia',
                 grade: grade,
                 status: status.toLowerCase(),
@@ -702,7 +703,7 @@ app.get('/api/students', verifyToken, async (req, res) => {
 // 7. Crear Estudiante - POST (Ruta protegida + Tenancy)
 app.post('/api/students', verifyToken, async (req, res) => {
     try {
-        const { name, subject, grade } = req.body;
+        const { name, email, subject, grade } = req.body;
 
         if (!name || !subject || grade === undefined) {
             return res.status(400).json({
@@ -720,6 +721,7 @@ app.post('/api/students', verifyToken, async (req, res) => {
             .from('estudiantes')
             .insert([{
                 nombre: name,
+                email: email || null,
                 materia: subject,
                 nota: parseFloat(grade),
                 estado: status,
@@ -740,11 +742,12 @@ app.post('/api/students', verifyToken, async (req, res) => {
 app.put('/api/students/:id', verifyToken, async (req, res) => {
     try {
         const { id } = req.params;
-        const { grade, status } = req.body;
+        const { grade, status, email } = req.body;
 
         const updateData = {};
         if (grade !== undefined) updateData.nota = parseFloat(grade);
         if (status !== undefined) updateData.estado = status.toLowerCase();
+        if (email !== undefined) updateData.email = email || null;
 
         const { data, error } = await supabase
             .from('estudiantes')
@@ -762,6 +765,57 @@ app.put('/api/students/:id', verifyToken, async (req, res) => {
         res.json({ success: true, data: data[0] });
     } catch (error) {
         console.error('Error al actualizar estudiante:', error.message);
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+// 9. Enviar Comunicado Masivo (Ruta protegida + Tenancy)
+app.post('/api/send-announcement', verifyToken, async (req, res) => {
+    try {
+        const { message } = req.body;
+
+        if (!message) {
+            return res.status(400).json({ success: false, error: 'El mensaje es requerido.' });
+        }
+
+        // Obtener correos de los estudiantes del profesor
+        const { data, error } = await supabase
+            .from('estudiantes')
+            .select('email')
+            .eq('user_id', req.user.id)
+            .not('email', 'is', null)
+            .neq('email', '');
+
+        if (error) throw error;
+
+        if (!data || data.length === 0) {
+            return res.status(400).json({ success: false, error: 'No tienes estudiantes con dirección de correo electrónico.' });
+        }
+
+        const validEmails = data.map(s => s.email).filter(e => e && e.includes('@'));
+
+        if (validEmails.length === 0) {
+            return res.status(400).json({ success: false, error: 'Ningún estudiante tiene un correo válido.' });
+        }
+
+        // Configurar envío BCC
+        const sendResponse = await resend.emails.send({
+            from: 'DocenteAI <onboarding@resend.dev>', // Asumiendo default de resend para prueba
+            to: req.user.email || 'profesor@docenteai.com', // El TO puede ser el profe
+            bcc: validEmails,
+            subject: 'Nuevo Comunicado de tu Profesor',
+            html: `<p>${message.replace(/\n/g, '<br>')}</p>`,
+            text: message
+        });
+
+        if (sendResponse.error) {
+            console.error('Resend error:', sendResponse.error);
+            return res.status(500).json({ success: false, error: 'Error al enviar usando el servicio de correo.' });
+        }
+
+        res.json({ success: true, count: validEmails.length });
+    } catch (error) {
+        console.error('Error al enviar comunicado masivo:', error.message);
         res.status(500).json({ success: false, error: error.message });
     }
 });
