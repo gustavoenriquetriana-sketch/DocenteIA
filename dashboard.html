@@ -2077,10 +2077,12 @@
                     formData.append('syllabus', file);
                     formData.append('instruction', instruction);
 
-                    const response = await fetch('/api/generate-planning', {
+                    const response = await authFetch('/api/generate-planning', {
                         method: 'POST',
                         body: formData
                     });
+
+                    if (handleAuthError(response.status)) return;
 
                     // Read response as text first
                     const responseText = await response.text();
@@ -2700,13 +2702,13 @@
                 empty.classList.add('hidden');
                 results.classList.add('hidden');
 
-                fetch('/api/generate-exam', {
+                authFetch('/api/generate-exam', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ topic, difficulty, numQuestions, type })
                 })
-                    .then(res => res.json())
-                    .then(data => {
+                    .then(async res => {
+                        if (handleAuthError(res.status)) return;
+                        const data = await res.json();
                         if (data.success) {
                             // showToast('Éxito', 'Examen generado correctamente con IA.', 'success');
                             loading.classList.add('hidden');

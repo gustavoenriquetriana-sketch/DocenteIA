@@ -348,6 +348,16 @@ function procesarPago() {
     });
 }
 
+// 🔑 HELPER: Manejo global de errores de autenticación
+function handleAuthError(status) {
+    if (status === 401 || status === 403) {
+        localStorage.clear();
+        window.location.href = 'index.html';
+        return true;
+    }
+    return false;
+}
+
 // 🔑 HELPER: Fetch con autorización JWT automática
 function authFetch(url, options = {}) {
     const token = localStorage.getItem('docenteai_token');
@@ -356,6 +366,11 @@ function authFetch(url, options = {}) {
         ...(token ? { 'Authorization': 'Bearer ' + token } : {}),
         ...(options.headers || {})
     };
+
+    if (options.body instanceof FormData) {
+        delete headers['Content-Type'];
+    }
+
     return fetch(url, { ...options, headers });
 }
 
