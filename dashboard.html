@@ -1322,12 +1322,13 @@
                                     <option value="exposicion">Exposición</option>
                                     <option value="proyecto">Proyecto</option>
                                     <option value="otro">Otro</option>
+                                    <option value="sustitutiva">Prueba Sustitutiva</option>
                                 </select>
                             </div>
                             <div class="md:col-span-1">
                                 <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Nota
-                                    (0-20)</label>
-                                <input type="number" id="eval-nota" step="0.1" min="0" max="20" placeholder="15.5"
+                                    (0-100)</label>
+                                <input type="number" id="eval-nota" step="0.1" min="0" max="100" placeholder="85.5"
                                     class="w-full p-2.5 border border-slate-300 rounded-lg text-sm focus:outline-none focus:border-blue-500 font-bold">
                             </div>
                             <div class="md:col-span-1">
@@ -2160,8 +2161,8 @@
                     return;
                 }
 
-                if (parseFloat(nota) < 0 || parseFloat(nota) > 20) {
-                    showToast('Aviso', 'La nota debe estar entre 0 y 20.', 'error');
+                if (parseFloat(nota) < 0 || parseFloat(nota) > 100) {
+                    showToast('Aviso', 'La nota debe estar entre 0 y 100.', 'error');
                     return;
                 }
 

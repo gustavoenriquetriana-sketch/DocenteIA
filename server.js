@@ -913,28 +913,49 @@ app.post('/api/evaluaciones', verifyToken, async (req, res) => {
         // 3. Consultar TODAS las evaluaciones para recalcular la nota final
         const { data: evaluaciones, error: evalsError } = await supabase
             .from('evaluaciones')
-            .select('nota, peso_porcentual')
+            .select('tipo, nota, peso_porcentual')
             .eq('estudiante_id', estudiante_id);
 
         if (evalsError) throw evalsError;
 
-        // 4. Calcular Nota Final Segura
-        let suma = 0;
+        // 4. Calcular Nota Final Segura (Reglamento UNEXPO)
+        let sumaRegulares = 0;
         let porcentajeTotal = 0;
+        let menorRegularPuntos = Infinity;
+        let tieneSustitutiva = false;
+        let puntosSustitutiva = 0;
 
         evaluaciones.forEach(ev => {
-            suma += (parseFloat(ev.nota) * (parseFloat(ev.peso_porcentual) / 100));
-            porcentajeTotal += parseFloat(ev.peso_porcentual);
+            const nota = parseFloat(ev.nota);
+            const peso = parseFloat(ev.peso_porcentual);
+            const puntos = nota * (peso / 100);
+
+            porcentajeTotal += peso;
+
+            if (ev.tipo === 'sustitutiva') {
+                tieneSustitutiva = true;
+                puntosSustitutiva += puntos;
+            } else {
+                sumaRegulares += puntos;
+                if (puntos < menorRegularPuntos) {
+                    menorRegularPuntos = puntos;
+                }
+            }
         });
 
-        // 5. Determinar nuevo estado
-        const nuevoEstado = suma >= 10 ? 'aprobado' : 'riesgo';
+        let sumaFinal = sumaRegulares;
+        if (tieneSustitutiva && menorRegularPuntos !== Infinity) {
+            sumaFinal = sumaFinal - menorRegularPuntos + puntosSustitutiva;
+        }
+
+        // 5. Determinar nuevo estado (Regla Universidad: 0-100, Aprobado >= 50)
+        const nuevoEstado = sumaFinal >= 50 ? 'aprobado' : 'riesgo';
 
         // 6. Actualizar la tabla principal de Estudiantes
         const { error: updateError } = await supabase
             .from('estudiantes')
             .update({
-                nota: parseFloat(suma.toFixed(2)),
+                nota: parseFloat(sumaFinal.toFixed(2)),
                 estado: nuevoEstado
             })
             .eq('id', estudiante_id)
@@ -944,7 +965,7 @@ app.post('/api/evaluaciones', verifyToken, async (req, res) => {
 
         res.json({
             success: true,
-            nuevaNota: parseFloat(suma.toFixed(2)),
+            nuevaNota: parseFloat(sumaFinal.toFixed(2)),
             nuevoEstado,
             porcentajeAcumulado: porcentajeTotal
         });
