@@ -509,44 +509,13 @@
                                 <option value="asistencia">Asistencia (%)</option>
                             </select>
                         </div>
-                        <div
+                        <div id="chart-bars-container"
                             class="h-64 flex items-end justify-between gap-4 md:gap-8 px-2 md:px-6 border-b border-slate-100 pb-0 relative">
-                            <div
-                                class="w-full h-full flex flex-col justify-end items-center group relative cursor-pointer">
-                                <span id="val-1"
-                                    class="text-xs font-bold mb-3 opacity-0 group-hover:opacity-100 transition-all transform translate-y-2 group-hover:translate-y-0 bg-slate-800 text-white px-2 py-1 rounded shadow-lg">14.5</span>
-                                <div id="bar-1" class="w-full rounded-t-lg bar-transition hover:opacity-80"
-                                    style="--final-height: 70%; animation: growBar 1s ease-out forwards; background-color: #1e3a8a;">
-                                </div>
-                            </div>
-                            <div
-                                class="w-full h-full flex flex-col justify-end items-center group relative cursor-pointer">
-                                <span id="val-2"
-                                    class="text-xs font-bold mb-3 opacity-0 group-hover:opacity-100 transition-all transform translate-y-2 group-hover:translate-y-0 bg-slate-800 text-white px-2 py-1 rounded shadow-lg">12.0</span>
-                                <div id="bar-2" class="w-full rounded-t-lg bar-transition hover:opacity-80"
-                                    style="--final-height: 55%; animation: growBar 1s ease-out forwards; background-color: #1e3a8a;">
-                                </div>
-                            </div>
-                            <div
-                                class="w-full h-full flex flex-col justify-end items-center group relative cursor-pointer">
-                                <span id="val-3"
-                                    class="text-xs font-bold mb-3 opacity-0 group-hover:opacity-100 transition-all transform translate-y-2 group-hover:translate-y-0 bg-slate-800 text-white px-2 py-1 rounded shadow-lg">16.5</span>
-                                <div id="bar-3" class="w-full rounded-t-lg bar-transition hover:opacity-80"
-                                    style="--final-height: 85%; animation: growBar 1s ease-out forwards; background-color: #1e3a8a;">
-                                </div>
-                            </div>
-                            <div
-                                class="w-full h-full flex flex-col justify-end items-center group relative cursor-pointer">
-                                <span id="val-4"
-                                    class="text-xs font-bold mb-3 opacity-0 group-hover:opacity-100 transition-all transform translate-y-2 group-hover:translate-y-0 bg-slate-800 text-white px-2 py-1 rounded shadow-lg">13.5</span>
-                                <div id="bar-4" class="w-full rounded-t-lg bar-transition hover:opacity-80"
-                                    style="--final-height: 65%; animation: growBar 1s ease-out forwards; background-color: #1e3a8a;">
-                                </div>
-                            </div>
+                            <!-- Bars will be injected dynamically -->
                         </div>
-                        <div
+                        <div id="chart-labels-container"
                             class="flex justify-between mt-6 text-[10px] md:text-xs font-bold text-slate-400 uppercase px-2 md:px-6 tracking-wide text-center">
-                            <span>Matemática</span><span>Física</span><span>Programación</span><span>Electrónica</span>
+                            <!-- Labels will be injected dynamically -->
                         </div>
                     </div>
                 </div>
@@ -1894,23 +1863,75 @@
 
 
 
+            let chartRealData = { notas: [], labels: [] };
+
+            async function cargarGraficoRendimiento() {
+                try {
+                    const res = await authFetch('/api/stats/rendimiento');
+                    if (!res || handleAuthError(res.status)) return;
+
+                    const result = await res.json();
+                    if (result.success) {
+                        chartRealData.labels = result.labels.length ? result.labels : ['Sin Datos'];
+                        chartRealData.notas = result.data.length ? result.data : [0];
+                        renderChartUI();
+                        updateChart('notas');
+                    }
+                } catch (e) {
+                    console.error('Error fetching chart data', e);
+                }
+            }
+
+            function renderChartUI() {
+                const barsContainer = document.getElementById('chart-bars-container');
+                const labelsContainer = document.getElementById('chart-labels-container');
+                if (!barsContainer || !labelsContainer) return;
+
+                let barsHTML = '';
+                let labelsHTML = '';
+
+                chartRealData.labels.forEach((label, i) => {
+                    barsHTML += `
+                        <div class="w-full h-full flex flex-col justify-end items-center group relative cursor-pointer" title="${label}">
+                            <span id="val-${i + 1}" class="text-xs font-bold mb-3 opacity-0 group-hover:opacity-100 transition-all transform translate-y-2 group-hover:translate-y-0 bg-slate-800 text-white px-2 py-1 rounded shadow-lg">0</span>
+                            <div id="bar-${i + 1}" class="w-full rounded-t-lg bar-transition hover:opacity-80"
+                                style="--final-height: 0%; background-color: #1e3a8a;">
+                            </div>
+                        </div>
+                    `;
+                    labelsHTML += `<span class="truncate px-1 max-w-[80px]" title="${label}">${label}</span>`;
+                });
+
+                barsContainer.innerHTML = barsHTML;
+                labelsContainer.innerHTML = labelsHTML;
+            }
+
             function updateChart(type) {
-                const data = { notas: [70, 55, 85, 65], asistencia: [90, 85, 95, 80] };
-                const labels = { notas: ['14.5', '12.0', '16.5', '13.5'], asistencia: ['90%', '85%', '95%', '80%'] };
+                if (chartRealData.labels.length === 0) return;
+
+                const data = {
+                    notas: chartRealData.notas,
+                    asistencia: chartRealData.labels.map(() => Math.floor(Math.random() * (100 - 75 + 1) + 75)) // Mock Data for future proofing
+                };
+
+                const labels = {
+                    notas: chartRealData.notas.map(n => n.toFixed(1)),
+                    asistencia: data.asistencia.map(a => a + '%')
+                };
+
                 const colors = { notas: '#1e3a8a', asistencia: '#16a34a' };
+
                 if (!data[type]) type = 'notas';
-                for (let i = 1; i <= 4; i++) {
+
+                for (let i = 1; i <= chartRealData.labels.length; i++) {
                     const bar = document.getElementById(`bar-${i}`);
                     const val = document.getElementById(`val-${i}`);
                     if (bar && val) {
-                        // 1. Reset Animation
                         bar.style.animation = 'none';
-
-                        // 2. Trigger Reflow
                         void bar.offsetWidth;
 
-                        // 3. Update Data & Re-apply Animation
-                        bar.style.setProperty('--final-height', data[type][i - 1] + '%');
+                        // En la UNEXPO, la nota es 0-100, así que el porcentaje es numéricamente igual a la nota
+                        bar.style.setProperty('--final-height', (data[type][i - 1]) + '%');
                         bar.style.animation = 'growBar 1s ease-out forwards';
 
                         bar.style.backgroundColor = colors[type];
@@ -1918,6 +1939,11 @@
                     }
                 }
             }
+
+            // Inicializar el gráfico al cargar la página
+            document.addEventListener('DOMContentLoaded', () => {
+                setTimeout(cargarGraficoRendimiento, 500);
+            });
 
 
 

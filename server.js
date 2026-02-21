@@ -846,6 +846,38 @@ app.delete('/api/students/:id', verifyToken, async (req, res) => {
     }
 });
 
+// 10. Estadísticas de Rendimiento (Gráfico)
+app.get('/api/stats/rendimiento', verifyToken, async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('estudiantes')
+            .select('materia, nota')
+            .eq('user_id', req.user.id);
+
+        if (error) throw error;
+
+        const agrupar = {};
+        data.forEach(s => {
+            const mat = s.materia || 'General';
+            if (!agrupar[mat]) { agrupar[mat] = { sum: 0, count: 0 }; }
+            agrupar[mat].sum += parseFloat(s.nota || 0);
+            agrupar[mat].count++;
+        });
+
+        const labels = [];
+        const chartData = [];
+        for (const [materia, info] of Object.entries(agrupar)) {
+            labels.push(materia);
+            chartData.push(parseFloat((info.sum / info.count).toFixed(1)));
+        }
+
+        res.json({ success: true, labels, data: chartData });
+    } catch (error) {
+        console.error('Error al generar estadísticas:', error.message);
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
 // --- SISTEMA DE EVALUACIONES DINÁMICAS ---
 
 // 8c. Obtener Historial de Evaluaciones de un Estudiante - GET
