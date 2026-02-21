@@ -486,10 +486,10 @@
                             class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover-card flex justify-between items-start">
                             <div>
                                 <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Ahorro</p>
-                                <p class="text-4xl font-extrabold text-slate-900 mt-2">4.5h</p>
-                                <div
+                                <p id="contador-tiempo" class="text-4xl font-extrabold text-slate-900 mt-2">0</p>
+                                <div id="detalle-tiempo"
                                     class="mt-3 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-purple-50 text-purple-700 text-xs font-bold border border-purple-100">
-                                    <i class="fa-solid fa-bolt text-[10px]"></i> Esta semana
+                                    <i class="fa-solid fa-bolt text-[10px]"></i> Cargando...
                                 </div>
                             </div>
                             <div
@@ -1901,6 +1901,24 @@
                 }
             }
 
+            async function cargarTiempoAhorrado() {
+                try {
+                    const res = await authFetch('/api/stats/tiempo-ahorrado');
+                    if (!res || handleAuthError(res.status)) return;
+
+                    const result = await res.json();
+                    if (result.success) {
+                        const contadorEl = document.getElementById('contador-tiempo');
+                        const detalleEl = document.getElementById('detalle-tiempo');
+
+                        if (contadorEl) contadorEl.innerText = result.tiempo;
+                        if (detalleEl) detalleEl.innerHTML = `<i class="fa-solid fa-bolt text-[10px]"></i> ${result.mensaje}`;
+                    }
+                } catch (e) {
+                    console.error('Error al cargar tiempo ahorrado:', e);
+                }
+            }
+
             async function cargarGraficoRendimiento() {
                 try {
                     const res = await authFetch('/api/stats/rendimiento');
@@ -1982,6 +2000,7 @@
                     cargarGraficoRendimiento();
                     cargarRadarClases();
                     cargarPendientesCalificar();
+                    cargarTiempoAhorrado();
                 }, 500);
             });
 

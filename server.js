@@ -814,6 +814,15 @@ app.post('/api/send-announcement', verifyToken, async (req, res) => {
             return res.status(500).json({ success: false, error: 'Error al enviar usando el servicio de correo.' });
         }
 
+        // Registrar uso de IA (Gamificación)
+        try {
+            await supabase.from('uso_ia').insert([{
+                profesor_id: req.user.id,
+                minutos_ahorrados: 15,
+                accion: 'Envío de comunicado masivo'
+            }]);
+        } catch (e) { console.error('Error registrando uso IA:', e); }
+
         res.json({ success: true, count: validEmails.length });
     } catch (error) {
         console.error('Error al enviar comunicado masivo:', error.message);
@@ -907,7 +916,36 @@ app.get('/api/stats/por-calificar', verifyToken, async (req, res) => {
     }
 });
 
-// 10c. Estadísticas de Rendimiento (Gráfico)
+// 10c. Estadísticas de Tiempo Ahorrado con IA
+app.get('/api/stats/tiempo-ahorrado', verifyToken, async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('uso_ia')
+            .select('minutos_ahorrados')
+            .eq('profesor_id', req.user.id);
+
+        if (error) throw error;
+
+        let totalMinutos = 0;
+        if (data && data.length > 0) {
+            totalMinutos = data.reduce((acc, curr) => acc + (curr.minutos_ahorrados || 0), 0);
+        }
+
+        let tiempoStr = '';
+        if (totalMinutos < 60) {
+            tiempoStr = `${totalMinutos} min`;
+        } else {
+            tiempoStr = `${parseFloat((totalMinutos / 60).toFixed(1))}h`;
+        }
+
+        res.json({ success: true, tiempo: tiempoStr, mensaje: 'Ahorrados con IA' });
+    } catch (error) {
+        console.error('Error obteniendo tiempo ahorrado:', error.message);
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+// 10d. Estadísticas de Rendimiento (Gráfico)
 app.get('/api/stats/rendimiento', verifyToken, async (req, res) => {
     try {
         const { data, error } = await supabase
