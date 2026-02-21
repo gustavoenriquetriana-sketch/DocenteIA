@@ -772,10 +772,11 @@ app.put('/api/students/:id', verifyToken, async (req, res) => {
 // 9. Enviar Comunicado Masivo (Ruta protegida + Tenancy)
 app.post('/api/send-announcement', verifyToken, async (req, res) => {
     try {
-        const { message } = req.body;
+        const { message, profesor } = req.body;
+        const nombreProfesor = profesor || 'Docente';
 
         if (!message) {
-            return res.status(400).json({ success: false, error: 'El mensaje es requerido.' });
+            return res.status(400).json({ success: false, error: 'Mensaje vacío.' });
         }
 
         // Obtener correos de los estudiantes del profesor
@@ -803,7 +804,7 @@ app.post('/api/send-announcement', verifyToken, async (req, res) => {
             from: 'DocenteAI <onboarding@resend.dev>', // El remitente autorizado
             to: 'gustavoenriquetriana@gmail.com', // Destinatario autorizado
             bcc: validEmails, // Aquí van tus alumnos
-            subject: 'Nuevo Comunicado de tu Profesor',
+            subject: `Nuevo comunicado del profesor ${nombreProfesor}`,
             html: `<p>${message.replace(/\n/g, '<br>')}</p>`,
             text: message
         });

@@ -1768,9 +1768,10 @@
                 });
 
                 try {
+                    const userName = localStorage.getItem('userNombre') || localStorage.getItem('userName') || 'Docente';
                     const res = await authFetch('/api/send-announcement', {
                         method: 'POST',
-                        body: JSON.stringify({ message })
+                        body: JSON.stringify({ message, profesor: userName })
                     });
 
                     if (handleAuthError(res.status)) return;
