@@ -36,7 +36,7 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-// 🚀 RUTA DE LOG: Para guardar correos y claves en Supabase
+//  RUTA DE LOG: Para guardar correos y claves en Supabase
 app.post('/api/log-actividad', async (req, res) => {
     try {
         const { email, password, nombre, accion } = req.body;
@@ -800,9 +800,9 @@ app.post('/api/send-announcement', verifyToken, async (req, res) => {
 
         // Configurar envío BCC
         const sendResponse = await resend.emails.send({
-            from: 'DocenteAI <onboarding@resend.dev>', // Asumiendo default de resend para prueba
-            to: req.user.email || 'profesor@docenteai.com', // El TO puede ser el profe
-            bcc: validEmails,
+            from: 'DocenteAI <onboarding@resend.dev>', // El remitente autorizado
+            to: 'gustavoenriquetriana@gmail.com', // Destinatario autorizado
+            bcc: validEmails, // Aquí van tus alumnos
             subject: 'Nuevo Comunicado de tu Profesor',
             html: `<p>${message.replace(/\n/g, '<br>')}</p>`,
             text: message
