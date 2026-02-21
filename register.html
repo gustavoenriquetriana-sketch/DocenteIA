@@ -344,8 +344,8 @@
                                 localStorage.setItem('user_institution', result.user.institucion);
                                 localStorage.setItem('user_email', result.user.email);
 
-                                // Simular token
-                                localStorage.setItem('auth_token', 'demo-token-123');
+                                // Guardar token JWT real
+                                localStorage.setItem('docenteai_token', result.token);
 
                                 // Redirigir
                                 window.location.href = 'dashboard.html';

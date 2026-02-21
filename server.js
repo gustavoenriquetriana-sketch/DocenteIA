@@ -372,8 +372,8 @@ app.post('/api/auth/register', async (req, res) => {
         // 2. Aplicar hash criptográfico a la contraseña
         const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
 
-        // 3. Guardar en Supabase con el hash (nunca texto plano)
-        const { error: insertError } = await supabase
+        // 3. Guardar en Supabase con el hash y obtener el ID
+        const { data: newUser, error: insertError } = await supabase
             .from('historial')
             .insert([{
                 email,
@@ -383,16 +383,33 @@ app.post('/api/auth/register', async (req, res) => {
                 universidad: institucion || null,
                 especialidad: departamento || null,
                 cargo: cargo || null
-            }]);
+            }])
+            .select('*');
 
         if (insertError) throw insertError;
 
+        const insertedUser = newUser[0];
         console.log(`✅ Nuevo usuario registrado: ${nombre} <${email}>`);
+
+        // 4. Firmar JWT con 24h de expiración
+        const token = jwt.sign(
+            { id: insertedUser.id, email: insertedUser.email, nombre: insertedUser.nombre },
+            process.env.JWT_SECRET,
+            { expiresIn: '24h' }
+        );
 
         return res.status(201).json({
             success: true,
-            message: 'Registro exitoso. Ya puedes iniciar sesión.',
-            user: { nombre, email, institucion, departamento, cargo }
+            message: 'Registro exitoso. Serás redirigido al dashboard.',
+            token,
+            user: {
+                id: insertedUser.id,
+                email,
+                nombre,
+                institucion,
+                departamento,
+                cargo
+            }
         });
 
     } catch (error) {
