@@ -917,6 +917,29 @@
                             </div>
                         </div>
 
+                        <!-- Panel de Gestión de Materias -->
+                        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                            <h3 class="font-bold text-md text-slate-800 mb-4 flex items-center gap-2"><i
+                                    class="fa-solid fa-book text-emerald-500"></i> Gestión de Materias</h3>
+                            <p class="text-xs text-slate-500 mb-4">Administra las asignaturas que dictas.</p>
+
+                            <div class="flex gap-2 mb-4">
+                                <input type="text" id="newSubjectName" placeholder="Nueva materia (ej. Física II)"
+                                    class="flex-1 p-2.5 border border-slate-300 rounded-xl text-sm focus:outline-none focus:border-emerald-500 transition">
+                                <button onclick="agregarMateria()"
+                                    class="px-4 py-2.5 bg-emerald-600 text-white rounded-xl text-sm font-bold hover:bg-emerald-700 transition flex items-center gap-2 shadow-sm">
+                                    <i class="fa-solid fa-plus"></i> <span class="hidden md:inline">Añadir</span>
+                                </button>
+                            </div>
+
+                            <ul id="subjectsList" class="space-y-2 max-h-40 overflow-y-auto pr-2">
+                                <!-- Las materias cargadas dinámicamente aparecerán aquí -->
+                                <li
+                                    class="text-xs text-slate-400 text-center py-2 italic border border-dashed border-slate-200 rounded-lg">
+                                    Cargando materias...</li>
+                            </ul>
+                        </div>
+
                         <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
                             <h3 class="font-bold text-md text-slate-800 mb-4 flex items-center gap-2"><i
                                     class="fa-solid fa-headset text-purple-500"></i> Soporte Técnico</h3>
@@ -1409,13 +1432,7 @@
                     <div><label class="block text-xs font-bold text-slate-500 uppercase mb-1.5">Materia</label>
                         <select id="new-student-subject"
                             class="w-full p-3 border border-slate-300 rounded-xl text-sm focus:outline-none focus:border-blue-500 bg-white text-slate-700">
-                            <option value="Programación">Programación</option>
-                            <option value="Matemática">Matemática</option>
-                            <option value="Física">Física</option>
-                            <option value="Electrónica">Electrónica</option>
-                            <option value="Mecánica de fluidos">Mecánica de fluidos</option>
-                            <option value="Desarrollo de Emprendedores">Desarrollo de Emprendedores</option>
-                            <option value="Automatización Industrial">Automatización Industrial</option>
+                            <option value="" disabled selected>Seleccione una materia...</option>
                         </select>
                     </div>
 
@@ -1919,6 +1936,84 @@
                 }
             }
 
+            async function cargarMaterias() {
+                try {
+                    const res = await authFetch('/api/materias');
+                    if (!res || handleAuthError(res.status)) return;
+
+                    const result = await res.json();
+                    if (result.success) {
+                        const selectEl = document.getElementById('new-student-subject');
+                        const listEl = document.getElementById('subjectsList');
+
+                        // Llenar el select en el modal de nuevo estudiante
+                        if (selectEl) {
+                            selectEl.innerHTML = '<option value="" disabled selected>Seleccione una materia...</option>';
+                            result.data.forEach(materia => {
+                                const opt = document.createElement('option');
+                                opt.value = materia.nombre;
+                                opt.innerText = materia.nombre;
+                                selectEl.appendChild(opt);
+                            });
+                        }
+
+                        // Llenar la lista en la configuración
+                        if (listEl) {
+                            listEl.innerHTML = '';
+                            if (result.data.length === 0) {
+                                listEl.innerHTML = '<li class="text-xs text-slate-400 text-center py-2 italic border border-dashed border-slate-200 rounded-lg">No has añadido ninguna materia aún.</li>';
+                            } else {
+                                result.data.forEach(materia => {
+                                    const li = document.createElement('li');
+                                    li.className = 'flex justify-between items-center bg-slate-50 border border-slate-100 p-2.5 rounded-lg text-sm text-slate-700 font-medium';
+                                    li.innerHTML = `<span><i class="fa-solid fa-book-bookmark text-emerald-400 mr-2"></i> ${materia.nombre}</span>`;
+                                    listEl.appendChild(li);
+                                });
+                            }
+                        }
+                    }
+                } catch (e) {
+                    console.error('Error al cargar materias:', e);
+                }
+            }
+
+            async function agregarMateria() {
+                const inputEl = document.getElementById('newSubjectName');
+                const nombre = inputEl ? inputEl.value.trim() : '';
+
+                if (!nombre) {
+                    Swal.fire({ icon: 'warning', title: 'Campo vacío', text: 'Escribe el nombre de la materia primero.', confirmButtonColor: '#10b981' });
+                    return;
+                }
+
+                try {
+                    const res = await authFetch('/api/materias', {
+                        method: 'POST',
+                        body: JSON.stringify({ nombre })
+                    });
+
+                    if (handleAuthError(res.status)) return;
+
+                    const data = await res.json();
+                    if (data.success) {
+                        inputEl.value = '';
+                        Swal.fire({
+                            toast: true,
+                            position: 'bottom-end',
+                            showConfirmButton: false,
+                            timer: 2000,
+                            icon: 'success',
+                            title: 'Materia añadida'
+                        });
+                        cargarMaterias(); // Recargar instantáneamente
+                    } else {
+                        Swal.fire({ icon: 'error', title: 'Error', text: data.error || 'No se pudo agregar.', confirmButtonColor: '#10b981' });
+                    }
+                } catch (e) {
+                    Swal.fire({ icon: 'error', title: 'Conexión', text: 'Error de servidor.', confirmButtonColor: '#10b981' });
+                }
+            }
+
             async function cargarGraficoRendimiento() {
                 try {
                     const res = await authFetch('/api/stats/rendimiento');
@@ -2001,6 +2096,7 @@
                     cargarRadarClases();
                     cargarPendientesCalificar();
                     cargarTiempoAhorrado();
+                    cargarMaterias();
                 }, 500);
             });
 

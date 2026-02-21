@@ -1201,6 +1201,43 @@ app.put('/api/user/password', verifyToken, async (req, res) => {
     }
 });
 
+// 9d. Gestión de Materias (Multitenant)
+app.get('/api/materias', verifyToken, async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('materias')
+            .select('*')
+            .eq('profesor_id', req.user.id)
+            .order('nombre', { ascending: true });
+
+        if (error) throw error;
+        res.json({ success: true, data: data || [] });
+    } catch (error) {
+        console.error('Error al obtener materias:', error.message);
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+app.post('/api/materias', verifyToken, async (req, res) => {
+    try {
+        const { nombre } = req.body;
+        if (!nombre || nombre.trim() === '') {
+            return res.status(400).json({ success: false, error: 'El nombre de la materia es requerido.' });
+        }
+
+        const { data, error } = await supabase
+            .from('materias')
+            .insert([{ profesor_id: req.user.id, nombre: nombre.trim() }])
+            .select();
+
+        if (error) throw error;
+        res.json({ success: true, data: data[0] });
+    } catch (error) {
+        console.error('Error al agregar materia:', error.message);
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
 // 10. Gestión de Tareas (Agenda) - Supabase (Aislamiento por usuario)
 app.get('/api/tasks', verifyToken, async (req, res) => {
     try {
