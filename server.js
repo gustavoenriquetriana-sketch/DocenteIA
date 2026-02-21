@@ -846,7 +846,38 @@ app.delete('/api/students/:id', verifyToken, async (req, res) => {
     }
 });
 
-// 10. Estadísticas de Rendimiento (Gráfico)
+// 10. Estadísticas de Clases Hoy
+app.get('/api/stats/clases-hoy', verifyToken, async (req, res) => {
+    try {
+        const hoy = new Date();
+        const year = hoy.getFullYear();
+        const month = String(hoy.getMonth() + 1).padStart(2, '0');
+        const day = String(hoy.getDate()).padStart(2, '0');
+        const fechaHoy = `${year}-${month}-${day}`;
+
+        const { data, error } = await supabase
+            .from('tasks')
+            .select('title')
+            .eq('user_id', req.user.id)
+            .eq('date', fechaHoy)
+            .eq('type', 'clase');
+
+        if (error) throw error;
+
+        const totalClases = data ? data.length : 0;
+        let mensaje = 'Día libre';
+        if (totalClases > 0) {
+            mensaje = 'Agendadas hoy';
+        }
+
+        res.json({ success: true, totalClases, mensaje });
+    } catch (error) {
+        console.error('Error al obtener clases hoy:', error.message);
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+// 10b. Estadísticas de Rendimiento (Gráfico)
 app.get('/api/stats/rendimiento', verifyToken, async (req, res) => {
     try {
         const { data, error } = await supabase
