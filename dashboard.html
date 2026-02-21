@@ -1270,18 +1270,13 @@
                             placeholder="estudiante@correo.com"
                             class="w-full p-3 border border-slate-300 rounded-xl text-sm focus:outline-none focus:border-blue-500 transition">
                     </div>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div><label class="block text-xs font-bold text-slate-500 uppercase mb-1.5">Nota
-                                Actual</label><input type="number" id="edit-student-grade" step="0.1" min="0" max="20"
-                                class="w-full p-3 border border-slate-300 rounded-xl text-sm focus:outline-none focus:border-blue-500 font-bold text-slate-700">
-                        </div>
-                        <div><label
-                                class="block text-xs font-bold text-slate-500 uppercase mb-1.5">Estado</label><select
-                                id="edit-student-status"
-                                class="w-full p-3 border border-slate-300 rounded-xl text-sm focus:outline-none focus:border-blue-500 bg-white text-slate-700">
-                                <option value="aprobado">Aprobado</option>
-                                <option value="riesgo">Riesgo</option>
-                            </select></div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 uppercase mb-1.5">Estado</label>
+                        <select id="edit-student-status"
+                            class="w-full p-3 border border-slate-300 rounded-xl text-sm focus:outline-none focus:border-blue-500 bg-white text-slate-700">
+                            <option value="aprobado">Aprobado</option>
+                            <option value="riesgo">Riesgo</option>
+                        </select>
                     </div>
                     <div class="pt-2">
                         <button id="btn-save-student-changes" onclick="saveStudentChanges()"
@@ -1445,18 +1440,16 @@
                     <div><label class="block text-xs font-bold text-slate-500 uppercase mb-1.5">Materia</label>
                         <select id="new-student-subject"
                             class="w-full p-3 border border-slate-300 rounded-xl text-sm focus:outline-none focus:border-blue-500 bg-white text-slate-700">
-                            <option value="Mecatrónica">Mecatrónica</option>
                             <option value="Programación">Programación</option>
                             <option value="Matemática">Matemática</option>
                             <option value="Física">Física</option>
                             <option value="Electrónica">Electrónica</option>
+                            <option value="Mecánica de fluidos">Mecánica de fluidos</option>
+                            <option value="Desarrollo de Emprendedores">Desarrollo de Emprendedores</option>
+                            <option value="Automatización Industrial">Automatización Industrial</option>
                         </select>
                     </div>
-                    <div><label class="block text-xs font-bold text-slate-500 uppercase mb-1.5">Nota Definitiva
-                            (0-20)</label><input type="number" id="new-student-grade" step="0.1" min="0" max="20"
-                            placeholder="0.0"
-                            class="w-full p-3 border border-slate-300 rounded-xl text-sm focus:outline-none focus:border-blue-500 font-bold text-slate-700">
-                    </div>
+
                     <div class="pt-2"><button onclick="saveNewStudent()"
                             class="w-full py-3 text-sm font-bold bg-blue-600 text-white rounded-xl hover:bg-blue-700 shadow-md transition active:scale-[0.98]">Guardar
                             Estudiante</button></div>
@@ -2032,15 +2025,9 @@
                 const name = document.getElementById('new-student-name').value;
                 const email = document.getElementById('new-student-email').value;
                 const subject = document.getElementById('new-student-subject').value;
-                const grade = document.getElementById('new-student-grade').value;
 
-                if (!name || !grade) {
-                    showToast('Error', 'Por favor completa todos los campos.');
-                    return;
-                }
-
-                if (grade < 0 || grade > 20) {
-                    showToast('Error', 'La nota debe estar entre 0 y 20.');
+                if (!name) {
+                    showToast('Error', 'Por favor ingresa un nombre para el estudiante.');
                     return;
                 }
 
@@ -2051,7 +2038,7 @@
 
                 authFetch('/api/students', {
                     method: 'POST',
-                    body: JSON.stringify({ name, email, subject, grade })
+                    body: JSON.stringify({ name, email, subject, grade: 0 })
                 })
                     .then(async res => {
                         if (handleAuthError(res.status)) return;
@@ -2063,7 +2050,6 @@
                             toggleNewStudentModal();
                             document.getElementById('new-student-name').value = '';
                             document.getElementById('new-student-email').value = '';
-                            document.getElementById('new-student-grade').value = '';
                             fetchStudents();
                         }
                     })
@@ -2079,7 +2065,6 @@
             function openEditModal(name, email, grade, statusValue, id) {
                 document.getElementById('edit-student-name').value = name;
                 document.getElementById('edit-student-email').value = email || '';
-                document.getElementById('edit-student-grade').value = grade;
                 document.getElementById('edit-student-status').value = statusValue.toLowerCase();
                 currentEditId = id;
                 toggleEditModal();
@@ -2209,7 +2194,6 @@
             // ----------------------------------------
             function saveStudentChanges() {
                 const email = document.getElementById('edit-student-email').value;
-                const grade = document.getElementById('edit-student-grade').value;
                 const status = document.getElementById('edit-student-status').value;
 
                 if (!currentEditId) return;
@@ -2220,7 +2204,7 @@
 
                 authFetch('/api/students/' + currentEditId, {
                     method: 'PUT',
-                    body: JSON.stringify({ email, grade, status })
+                    body: JSON.stringify({ email, status })
                 })
                     .then(async res => {
                         if (handleAuthError(res.status)) return;
