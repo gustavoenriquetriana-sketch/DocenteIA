@@ -1383,29 +1383,41 @@
 
         <script>
             // 🔑 AUTH HELPERS (Disponibles en todo el dashboard)
-            function authFetch(url, options = {}) {
+            // Función Helper de Lazo Cerrado para inyectar JWT
+            async function authFetch(url, options = {}) {
+                // 1. Extraemos el token de la memoria de estado sólido
                 const token = localStorage.getItem('docenteai_token');
+
+                // 2. Preparamos las cabeceras (Headers)
                 const headers = {
                     'Content-Type': 'application/json',
-                    ...(token ? { 'Authorization': 'Bearer ' + token } : {}),
-                    ...(options.headers || {})
+                    ...options.headers // Mantenemos cualquier otro header que ya existiera
                 };
-                return fetch(url, { ...options, headers });
-            }
 
-            function handleAuthError(status) {
-                if (status === 401 || status === 403) {
-                    localStorage.clear();
-                    Swal.fire({
-                        icon: 'warning',
-                        title: 'Sesión Expirada',
-                        text: 'Tu sesión ha caducado. Por favor, inicia sesión nuevamente.',
-                        timer: 2500,
-                        showConfirmButton: false
-                    }).then(() => window.location.href = 'index.html');
-                    return true;
+                // 3. Inyección Criptográfica: Si hay token, lo concatenamos con la sintaxis estricta 'Bearer '
+                if (token) {
+                    headers['Authorization'] = `Bearer ${token}`;
                 }
-                return false;
+
+                // 4. Ejecutamos la petición al servidor
+                const response = await fetch(url, {
+                    ...options,
+                    headers: headers
+                });
+
+                // 5. Prevención de fallas (Poka-yoke): Si el servidor rechaza el token (401 o 403)
+                if (response.status === 401 || response.status === 403) {
+                    console.error("Fallo de seguridad: Token expirado o inválido.");
+                    localStorage.removeItem('docenteai_token'); // Purgamos la memoria
+
+                    // Opcional: Si tienes SweetAlert, puedes mostrar una alerta aquí
+                    // Swal.fire('Sesión Expirada', 'Por favor, inicia sesión nuevamente.', 'warning');
+
+                    window.location.href = 'index.html'; // Abortamos al login
+                    return null;
+                }
+
+                return response;
             }
 
             // --- NAVIGATION FUNCTION ---
