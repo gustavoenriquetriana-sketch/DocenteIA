@@ -846,6 +846,117 @@ app.delete('/api/students/:id', verifyToken, async (req, res) => {
     }
 });
 
+// --- SISTEMA DE EVALUACIONES DINÁMICAS ---
+
+// 8c. Obtener Historial de Evaluaciones de un Estudiante - GET
+app.get('/api/evaluaciones/:estudianteId', verifyToken, async (req, res) => {
+    try {
+        const { estudianteId } = req.params;
+
+        // Primero verificamos que el estudiante pertenezca al profesor (seguridad)
+        const { data: studentCheck, error: studentError } = await supabase
+            .from('estudiantes')
+            .select('id')
+            .eq('id', estudianteId)
+            .eq('user_id', req.user.id)
+            .single();
+
+        if (studentError || !studentCheck) {
+            return res.status(404).json({ success: false, error: 'Estudiante no encontrado o no autorizado.' });
+        }
+
+        // Si es válido, buscamos sus evaluaciones
+        const { data, error } = await supabase
+            .from('evaluaciones')
+            .select('*')
+            .eq('estudiante_id', estudianteId)
+            .order('created_at', { ascending: false });
+
+        if (error) throw error;
+
+        res.json({ success: true, evaluaciones: data });
+    } catch (error) {
+        console.error('Error al obtener evaluaciones:', error.message);
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+// 8d. Añadir Evaluación y Recalcular Nota Final - POST
+app.post('/api/evaluaciones', verifyToken, async (req, res) => {
+    try {
+        const { estudiante_id, tipo, nota, peso_porcentual } = req.body;
+
+        // 1. Verificación de Seguridad
+        const { data: studentCheck, error: studentError } = await supabase
+            .from('estudiantes')
+            .select('id')
+            .eq('id', estudiante_id)
+            .eq('user_id', req.user.id)
+            .single();
+
+        if (studentError || !studentCheck) {
+            return res.status(404).json({ success: false, error: 'Estudiante no autorizado.' });
+        }
+
+        // 2. Insertar Nueva Evaluación
+        const { error: insertError } = await supabase
+            .from('evaluaciones')
+            .insert([{
+                estudiante_id,
+                tipo,
+                nota: parseFloat(nota),
+                peso_porcentual: parseFloat(peso_porcentual)
+            }]);
+
+        if (insertError) throw insertError;
+
+        // 3. Consultar TODAS las evaluaciones para recalcular la nota final
+        const { data: evaluaciones, error: evalsError } = await supabase
+            .from('evaluaciones')
+            .select('nota, peso_porcentual')
+            .eq('estudiante_id', estudiante_id);
+
+        if (evalsError) throw evalsError;
+
+        // 4. Calcular Nota Final Segura
+        let suma = 0;
+        let porcentajeTotal = 0;
+
+        evaluaciones.forEach(ev => {
+            suma += (parseFloat(ev.nota) * (parseFloat(ev.peso_porcentual) / 100));
+            porcentajeTotal += parseFloat(ev.peso_porcentual);
+        });
+
+        // 5. Determinar nuevo estado
+        const nuevoEstado = suma >= 10 ? 'aprobado' : 'riesgo';
+
+        // 6. Actualizar la tabla principal de Estudiantes
+        const { error: updateError } = await supabase
+            .from('estudiantes')
+            .update({
+                nota: parseFloat(suma.toFixed(2)),
+                estado: nuevoEstado
+            })
+            .eq('id', estudiante_id)
+            .eq('user_id', req.user.id);
+
+        if (updateError) throw updateError;
+
+        res.json({
+            success: true,
+            nuevaNota: parseFloat(suma.toFixed(2)),
+            nuevoEstado,
+            porcentajeAcumulado: porcentajeTotal
+        });
+
+    } catch (error) {
+        console.error('Error al procesar evaluación:', error.message);
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+// ----------------------------------------
+
 // 9. Configuración de usuario - Supabase (Aislamiento por user_id)
 app.get('/api/settings', verifyToken, async (req, res) => {
     try {
