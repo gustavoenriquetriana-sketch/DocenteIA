@@ -2427,13 +2427,13 @@
                 btn.innerText = 'Actualizando...';
                 btn.disabled = true;
 
-                fetch('/api/auth/change-password', {
+                authFetch('/api/auth/change-password', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email, currentPassword, newPassword })
                 })
-                    .then(res => res.json())
-                    .then(data => {
+                    .then(async res => {
+                        if (handleAuthError(res.status)) return;
+                        const data = await res.json();
                         if (data.success) {
                             showToast('Éxito', 'Contraseña actualizada correctamente');
                             closeModal('modal-change-password');
