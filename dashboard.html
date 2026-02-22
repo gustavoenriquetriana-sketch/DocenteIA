@@ -3711,7 +3711,81 @@
             updateHeaderDate();
         </script>
         <script src="https://cdn.jsdelivr.net/npm/driver.js@1.0.1/dist/driver.js.iife.js"></script>
+        <script>
+            // 7. ONBOARDING TOUR (Driver.js)
+            function iniciarTutorial() {
+                // Close support chat if open
+                const chat = document.getElementById('modal-support-chat');
+                if (chat && typeof chat.classList !== 'undefined') {
+                    chat.classList.add('force-hidden');
+                }
 
+                if (!window.driver || !window.driver.js) {
+                    console.error("Driver.js no está cargado.");
+                    return;
+                }
+
+                const driver = window.driver.js.driver;
+                const driverObj = driver({
+                    showProgress: true,
+                    animate: true,
+                    opacity: 0.75,
+                    doneBtnText: '¡Entendido!',
+                    closeBtnText: 'Cerrar',
+                    nextBtnText: 'Siguiente',
+                    prevBtnText: 'Anterior',
+                    steps: [
+                        {
+                            popover: {
+                                title: '¡Bienvenido a DocenteAI! 👋',
+                                description: 'Tu nueva plataforma de gestión académica inteligente. Te daremos un recorrido rápido por las herramientas clave para potenciar tu productividad.',
+                                align: 'center'
+                            }
+                        },
+                        {
+                            element: '#btn-estudiantes',
+                            popover: {
+                                title: 'Tu Lista de Clase',
+                                description: 'Aquí gestionarás a todos tus alumnos y sus notas.',
+                                side: "right",
+                                align: 'start'
+                            }
+                        },
+                        {
+                            element: '#btn-nueva-tarea-nav',
+                            popover: {
+                                title: 'Organiza tu Semestre',
+                                description: 'Programa exámenes, clases y entregas para que el sistema te avise.',
+                                side: "left",
+                                align: 'start'
+                            }
+                        },
+                        {
+                            element: '#btn-redactor',
+                            popover: {
+                                title: 'Tu Asistente Virtual',
+                                description: 'Deja que la IA redacte correos y anuncios por ti en segundos.',
+                                side: "right",
+                                align: 'start'
+                            }
+                        }
+                    ],
+                    onDestroyStarted: () => {
+                        if (!driverObj.hasNextStep() || confirm("¿Saltar el tour?")) {
+                            localStorage.setItem('docenteai_tour_seen', 'true');
+                            driverObj.destroy();
+                        }
+                    },
+                    onPopoverRender: (popover, { config, state }) => {
+                        if (state.activeIndex === config.steps.length - 1) {
+                            localStorage.setItem('docenteai_tour_seen', 'true');
+                        }
+                    }
+                });
+
+                driverObj.drive();
+            }
+        </script>
         <script>
             document.addEventListener('DOMContentLoaded', () => {
                 const userEmail = localStorage.getItem('user_email') || localStorage.getItem('userEmail');
@@ -3780,6 +3854,13 @@
                     const cardDisplay = document.getElementById('current-card-digits');
                     if (cardDisplay) cardDisplay.innerText = cardLast4;
                 }
+
+                // Auto-start Driver.js tour
+                setTimeout(() => {
+                    if (!localStorage.getItem('docenteai_tour_seen')) {
+                        iniciarTutorial();
+                    }
+                }, 1000);
             });
         </script>
 </body>
