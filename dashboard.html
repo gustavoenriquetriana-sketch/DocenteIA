@@ -3142,7 +3142,16 @@
             }
 
             function mostrarDetalleTicket(descripcion) {
-                alert('Detalles del Ticket:\n\n' + descripcion);
+                Swal.fire({
+                    title: 'Detalles del Ticket',
+                    text: descripcion,
+                    icon: 'info',
+                    confirmButtonText: 'Cerrar',
+                    confirmButtonColor: '#3b82f6', // Un azul que combine con el dashboard
+                    customClass: {
+                        popup: 'rounded-xl' // Para bordes suaves
+                    }
+                });
             }
 
             function toggleTicketStatus(id, currentStatus) {
