@@ -1318,6 +1318,44 @@ app.delete('/api/tasks/:id', verifyToken, async (req, res) => {
     }
 });
 
+// 11. Sistema de Soporte y Tickets
+app.post('/api/support/ticket', verifyToken, async (req, res) => {
+    const { asunto, descripcion } = req.body;
+
+    if (!asunto || !descripcion) {
+        return res.status(400).json({ error: "El asunto y la descripción son obligatorios." });
+    }
+
+    try {
+        const { data, error } = await supabase
+            .from('tickets')
+            .insert([
+                {
+                    profesor_id: req.user.id,
+                    asunto: asunto,
+                    descripcion: descripcion,
+                    estado: 'Abierto' // Opcional, dependiendo de los defaults en Supabase
+                }
+            ])
+            .select();
+
+        if (error) {
+            console.error("Supabase Insert Error:", error);
+            throw error;
+        }
+
+        res.status(201).json({
+            success: true,
+            mensaje: 'Ticket enviado correctamente',
+            ticket: data[0]
+        });
+
+    } catch (error) {
+        console.error("Error al crear ticket:", error.message);
+        res.status(500).json({ success: false, error: "Error interno al enviar el ticket." });
+    }
+});
+
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`Servidor corriendo en puerto ${PORT}`);
 });
