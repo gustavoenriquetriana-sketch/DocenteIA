@@ -1325,13 +1325,13 @@ app.get('/api/support/tickets', verifyToken, async (req, res) => {
             .from('tickets')
             .select(`
                 id,
-                created_at,
+                creado_en,
                 profesor_id,
                 asunto,
                 descripcion,
                 estado
             `)
-            .order('created_at', { ascending: false });
+            .order('creado_en', { ascending: false });
 
         if (error) {
             console.error("Supabase Select Error:", error);

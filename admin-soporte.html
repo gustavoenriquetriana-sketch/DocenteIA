@@ -130,7 +130,7 @@
                 const tr = document.createElement('tr');
                 tr.className = "hover:bg-slate-50 transition group";
 
-                const date = new Date(ticket.created_at).toLocaleDateString('es-VE', {
+                const date = new Date(ticket.creado_en).toLocaleDateString('es-VE', {
                     day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit'
                 });
 
