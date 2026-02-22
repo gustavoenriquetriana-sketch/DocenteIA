@@ -501,16 +501,23 @@
 
                     <div class="bg-white p-6 md:p-8 rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
                         <div
-                            class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 md:mb-10 gap-4">
-                            <h3 class="font-bold text-lg text-slate-800">Rendimiento Académico</h3>
+                            class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4 border-b border-slate-100 pb-6">
+                            <div class="flex items-center gap-3">
+                                <h3 class="font-bold text-lg text-slate-800">Rendimiento Académico</h3>
+                                <div
+                                    class="px-2.5 py-1 bg-blue-100 text-blue-700 font-bold text-xs rounded-lg border border-blue-200 flex items-center gap-1 shadow-sm">
+                                    <i class="fa-solid fa-star text-[10px]"></i> 16.5 pts
+                                </div>
+                            </div>
                             <select onchange="updateChart(this.value)"
                                 class="bg-slate-50 border border-slate-200 text-sm rounded-lg px-4 py-2 font-semibold text-slate-700 cursor-pointer outline-none focus:ring-2 focus:ring-blue-500 transition w-full md:w-auto">
                                 <option value="notas">Promedio General</option>
                                 <option value="asistencia">Asistencia (%)</option>
                             </select>
-                            <div id="chart-bars-container" class="w-full flex flex-col gap-4 py-2 relative">
-                                <!-- Bars will be injected dynamically -->
-                            </div>
+                        </div>
+                        <div id="chart-bars-container"
+                            class="w-full flex flex-col gap-4 py-4 relative min-h-[250px] justify-center">
+                            <!-- Bars will be injected dynamically -->
                         </div>
                     </div>
 
@@ -2057,10 +2064,10 @@
                                 <span class="text-xs font-bold text-slate-600 truncate block" title="${label}">${label}</span>
                             </div>
                             <!-- Bar Container -->
-                            <div class="flex-1 flex items-center h-8 relative cursor-pointer group/bar">
+                            <div class="flex-1 flex items-center h-10 relative cursor-pointer group/bar">
                                 <!-- The Bar itself -->
-                                <div id="bar-${i + 1}" class="h-full rounded-r-lg bar-transition hover:opacity-80 flex items-center shadow-sm"
-                                    style="width: 0%; background-color: #3b82f6; transition: width 1s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.5s;">
+                                <div id="bar-${i + 1}" class="h-full rounded-r-lg bar-transition hover:opacity-90 flex items-center shadow-sm"
+                                    style="width: 0%; transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);">
                                 </div>
                                 <!-- Floating Value Next to Bar -->
                                 <span id="val-${i + 1}" class="text-xs font-bold ml-2 opacity-0 group-hover/bar:opacity-100 transition-opacity text-slate-700"></span>
@@ -2085,7 +2092,10 @@
                     asistencia: data.asistencia.map(a => a + '%')
                 };
 
-                const colors = { notas: '#3b82f6', asistencia: '#16a34a' };
+                const gradients = {
+                    notas: 'linear-gradient(90deg, #2563eb 0%, #60a5fa 100%)', // Blue gradient
+                    asistencia: 'linear-gradient(90deg, #16a34a 0%, #4ade80 100%)' // Green gradient
+                };
 
                 if (!data[type]) type = 'notas';
 
@@ -2100,7 +2110,7 @@
                         setTimeout(() => {
                             bar.style.animation = 'none'; // Clear old classes/animations
                             bar.style.width = finalWidth;
-                            bar.style.backgroundColor = colors[type];
+                            bar.style.backgroundImage = gradients[type];
                             val.innerText = labels[type][i - 1];
                         }, i * 150);
                     }
