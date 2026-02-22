@@ -499,9 +499,9 @@
                         </div>
                     </div>
 
-                    <div class="bg-white p-6 md:p-8 rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-                        <div
-                            class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4 border-b border-slate-100 pb-6">
+                    <div
+                        class="bg-white p-6 md:p-8 rounded-2xl border border-slate-200 shadow-sm overflow-hidden flex flex-col">
+                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
                             <div class="flex items-center gap-3">
                                 <h3 class="font-bold text-lg text-slate-800">Rendimiento Académico</h3>
                                 <div
@@ -516,465 +516,465 @@
                             </select>
                         </div>
                         <div id="chart-bars-container"
-                            class="w-full flex flex-col gap-4 py-4 relative min-h-[250px] justify-center">
+                            class="w-full flex-1 flex flex-col gap-4 py-2 relative min-h-[250px] justify-center">
                             <!-- Bars will be injected dynamically -->
                         </div>
                     </div>
+                </div> <!-- CRITICAL FIX: Closes view-resumen -->
 
-                    <div id="view-redactor" class="max-w-5xl mx-auto force-hidden fade-in">
-                        <div class="mb-6">
-                            <h1 class="text-2xl font-bold text-slate-800 flex items-center gap-2">Redactor IA <span
-                                    class="text-2xl">✨</span></h1>
-                            <p class="text-slate-500 mt-1">Genera correos y comunicados formales en segundos.</p>
-                        </div>
+
+                <div id="view-redactor" class="max-w-5xl mx-auto force-hidden fade-in">
+                    <div class="mb-6">
+                        <h1 class="text-2xl font-bold text-slate-800 flex items-center gap-2">Redactor IA <span
+                                class="text-2xl">✨</span></h1>
+                        <p class="text-slate-500 mt-1">Genera correos y comunicados formales en segundos.</p>
+                    </div>
+                    <div
+                        class="bg-white rounded-2xl shadow-sm border border-slate-200 flex flex-col md:flex-row h-auto md:h-[580px] overflow-hidden">
                         <div
-                            class="bg-white rounded-2xl shadow-sm border border-slate-200 flex flex-col md:flex-row h-auto md:h-[580px] overflow-hidden">
-                            <div
-                                class="w-full md:w-1/2 p-6 md:p-8 border-b md:border-b-0 md:border-r border-slate-100 flex flex-col bg-slate-50/50">
-                                <label class="text-xs font-bold text-slate-700 uppercase mb-3 flex items-center gap-2">
-                                    <div
-                                        class="w-6 h-6 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center shadow-sm">
-                                        <i class="fa-solid fa-pen-nib text-[10px]"></i>
-                                    </div>Tu Instrucción
-                                </label>
-                                <textarea id="prompt"
-                                    class="flex-1 w-full p-4 rounded-xl bg-white border border-slate-300 shadow-sm resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm transition-all placeholder-slate-400 leading-relaxed hover:border-slate-400 h-40 md:h-auto"
-                                    placeholder="Ej: Escribe un correo formal a los alumnos informando sobre el cambio de horario..."></textarea>
-                                <div class="mt-5 flex gap-3">
-                                    <button
-                                        class="flex-1 px-3 py-2.5 bg-blue-50 text-blue-700 text-xs font-bold rounded-xl hover:bg-blue-100 transition flex items-center justify-center gap-2 border border-blue-100 active:scale-95"><i
-                                            class="fa-solid fa-user-tie"></i> Formal</button>
-                                    <button
-                                        class="flex-1 px-3 py-2.5 bg-orange-50 text-orange-700 text-xs font-bold rounded-xl hover:bg-orange-100 transition flex items-center justify-center gap-2 border border-orange-100 active:scale-95"><i
-                                            class="fa-solid fa-stopwatch"></i> Urgente</button>
-                                </div>
-                                <button onclick="runAI()"
-                                    class="mt-5 w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-3.5 rounded-xl font-bold shadow-lg shadow-blue-600/20 hover:from-blue-700 hover:to-indigo-700 transition-all active:scale-[0.98] flex items-center justify-center gap-2 group relative overflow-hidden"><i
-                                        class="fa-solid fa-wand-magic-sparkles relative z-10"></i> <span
-                                        class="relative z-10">Generar Borrador</span></button>
+                            class="w-full md:w-1/2 p-6 md:p-8 border-b md:border-b-0 md:border-r border-slate-100 flex flex-col bg-slate-50/50">
+                            <label class="text-xs font-bold text-slate-700 uppercase mb-3 flex items-center gap-2">
+                                <div
+                                    class="w-6 h-6 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center shadow-sm">
+                                    <i class="fa-solid fa-pen-nib text-[10px]"></i>
+                                </div>Tu Instrucción
+                            </label>
+                            <textarea id="prompt"
+                                class="flex-1 w-full p-4 rounded-xl bg-white border border-slate-300 shadow-sm resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm transition-all placeholder-slate-400 leading-relaxed hover:border-slate-400 h-40 md:h-auto"
+                                placeholder="Ej: Escribe un correo formal a los alumnos informando sobre el cambio de horario..."></textarea>
+                            <div class="mt-5 flex gap-3">
+                                <button
+                                    class="flex-1 px-3 py-2.5 bg-blue-50 text-blue-700 text-xs font-bold rounded-xl hover:bg-blue-100 transition flex items-center justify-center gap-2 border border-blue-100 active:scale-95"><i
+                                        class="fa-solid fa-user-tie"></i> Formal</button>
+                                <button
+                                    class="flex-1 px-3 py-2.5 bg-orange-50 text-orange-700 text-xs font-bold rounded-xl hover:bg-orange-100 transition flex items-center justify-center gap-2 border border-orange-100 active:scale-95"><i
+                                        class="fa-solid fa-stopwatch"></i> Urgente</button>
                             </div>
-                            <div class="w-full md:w-1/2 p-6 md:p-8 bg-slate-50/50 flex flex-col h-[400px] md:h-auto">
-                                <label class="text-xs font-bold text-slate-400 uppercase mb-3 flex items-center gap-2">
-                                    <div
-                                        class="w-6 h-6 rounded-full bg-slate-200 text-slate-500 flex items-center justify-center">
-                                        <i class="fa-solid fa-file-lines text-[10px]"></i>
-                                    </div>Resultado
-                                </label>
-                                <div id="output"
-                                    class="flex-1 bg-white border border-slate-200 rounded-xl p-6 text-sm text-slate-700 leading-relaxed overflow-y-auto shadow-sm italic relative">
-                                    <div
-                                        class="absolute inset-0 flex flex-col items-center justify-center text-slate-300 pointer-events-none">
-                                        <i class="fa-regular fa-paper-plane text-4xl mb-2"></i>
-                                        <p>El texto aparecerá aquí</p>
+                            <button onclick="runAI()"
+                                class="mt-5 w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-3.5 rounded-xl font-bold shadow-lg shadow-blue-600/20 hover:from-blue-700 hover:to-indigo-700 transition-all active:scale-[0.98] flex items-center justify-center gap-2 group relative overflow-hidden"><i
+                                    class="fa-solid fa-wand-magic-sparkles relative z-10"></i> <span
+                                    class="relative z-10">Generar Borrador</span></button>
+                        </div>
+                        <div class="w-full md:w-1/2 p-6 md:p-8 bg-slate-50/50 flex flex-col h-[400px] md:h-auto">
+                            <label class="text-xs font-bold text-slate-400 uppercase mb-3 flex items-center gap-2">
+                                <div
+                                    class="w-6 h-6 rounded-full bg-slate-200 text-slate-500 flex items-center justify-center">
+                                    <i class="fa-solid fa-file-lines text-[10px]"></i>
+                                </div>Resultado
+                            </label>
+                            <div id="output"
+                                class="flex-1 bg-white border border-slate-200 rounded-xl p-6 text-sm text-slate-700 leading-relaxed overflow-y-auto shadow-sm italic relative">
+                                <div
+                                    class="absolute inset-0 flex flex-col items-center justify-center text-slate-300 pointer-events-none">
+                                    <i class="fa-regular fa-paper-plane text-4xl mb-2"></i>
+                                    <p>El texto aparecerá aquí</p>
+                                </div>
+                            </div>
+                            <div class="mt-4 flex justify-end gap-3">
+                                <button onclick="sendAnnouncement()"
+                                    class="bg-blue-50 text-blue-600 px-4 py-2 rounded-xl text-xs font-bold hover:bg-blue-100 transition flex items-center gap-2 border border-blue-100 shadow-sm active:scale-95">
+                                    Enviar a todos
+                                </button>
+                                <button onclick="copyToClipboard()"
+                                    class="text-slate-600 hover:text-blue-600 text-xs font-bold hover:underline flex items-center gap-1 active:text-blue-800 transition"><i
+                                        class="fa-regular fa-copy"></i> Copiar texto</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="view-estudiantes" class="max-w-6xl mx-auto force-hidden fade-in">
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-6 gap-4">
+                        <div>
+                            <h1 class="text-2xl font-bold text-slate-800">Base de Datos Estudiantes</h1>
+                            <p class="text-slate-500 text-sm mt-1">UNEXPO</p>
+                        </div>
+                        <div class="flex gap-2 w-full md:w-auto">
+                            <button onclick="openModal('modal-nuevo-estudiante')"
+                                class="w-full md:w-auto bg-blue-600 text-white px-4 py-2.5 rounded-xl text-sm font-bold hover:bg-blue-700 transition flex items-center justify-center gap-2 shadow-sm hover:shadow-md hover:-translate-y-0.5"><i
+                                    class="fa-solid fa-plus"></i><span>Nuevo Estudiante</span></button>
+                            <button onclick="exportarPDF()" id="btn-exportar"
+                                class="w-full md:w-auto bg-white border border-slate-300 text-slate-700 px-4 py-2.5 rounded-xl text-sm font-bold hover:bg-slate-50 transition flex items-center justify-center gap-2 shadow-sm hover:shadow-md"><i
+                                    class="fa-solid fa-file-pdf text-red-500"></i><span>Exportar
+                                    Lista</span></button>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left min-w-[600px]">
+                                <thead
+                                    class="bg-slate-50 border-b border-slate-200 text-xs uppercase text-slate-500 font-bold tracking-wider">
+                                    <tr>
+                                        <th class="p-5">Nombre</th>
+                                        <th class="p-5">Materia</th>
+                                        <th class="p-5">Nota</th>
+                                        <th class="p-5">Estado</th>
+                                        <th class="p-5">Acción</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="students-table-body" class="text-sm divide-y divide-slate-100">
+                                    <!-- Students will be loaded here via API -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="view-agenda" class="max-w-6xl mx-auto h-full pb-6 force-hidden flex flex-col fade-in">
+                    <div class="flex flex-col md:flex-row justify-between items-center mb-6 flex-shrink-0 gap-4">
+                        <h1 class="text-2xl font-bold text-slate-800 flex items-center gap-2"><span
+                                id="calendar-month">Enero</span> <span id="calendar-year"
+                                class="text-slate-400">2026</span></h1>
+                        <div
+                            class="flex bg-white rounded-lg border border-slate-300 p-1 shadow-sm w-full md:w-auto justify-center">
+                            <button onclick="changeMonth(-1)"
+                                class="px-3 py-1.5 hover:bg-slate-50 rounded text-slate-600 transition"><i
+                                    class="fa-solid fa-chevron-left"></i></button>
+                            <button onclick="goToToday()"
+                                class="px-4 py-1.5 hover:bg-slate-50 rounded text-slate-800 font-bold text-sm transition flex-1 md:flex-none text-center">Hoy</button>
+                            <button onclick="changeMonth(1)"
+                                class="px-3 py-1.5 hover:bg-slate-50 rounded text-slate-600 transition"><i
+                                    class="fa-solid fa-chevron-right"></i></button>
+                        </div>
+                    </div>
+                    <div
+                        class="bg-white rounded-xl border border-slate-200 shadow-sm flex-1 flex flex-col overflow-hidden min-h-[400px]">
+                        <div
+                            class="grid grid-cols-7 border-b border-slate-200 bg-slate-50 text-center py-3 text-xs font-bold text-slate-500 uppercase flex-shrink-0 tracking-wider">
+                            <div>D</div>
+                            <div>L</div>
+                            <div>M</div>
+                            <div>M</div>
+                            <div>J</div>
+                            <div>V</div>
+                            <div>S</div>
+                        </div>
+                        <div id="calendar-grid" class="flex-1 grid grid-cols-7 grid-rows-6 bg-slate-100 gap-px">
+                        </div>
+                    </div>
+                </div>
+
+                <div id="view-examenes" class="max-w-5xl mx-auto force-hidden fade-in">
+                    <h1 class="text-2xl font-bold text-slate-800 mb-6 flex items-center gap-3">
+                        <i class="fa-solid fa-wand-magic-sparkles text-purple-600"></i> Generador de Exámenes
+                    </h1>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        <!-- Configuration Card -->
+                        <div class="lg:col-span-1">
+                            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm sticky top-6">
+                                <h3 class="font-bold text-slate-700 mb-4 text-sm uppercase tracking-wide">
+                                    Configuración
+                                </h3>
+                                <div class="space-y-4">
+                                    <div>
+                                        <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Tema
+                                            del
+                                            Examen</label>
+                                        <input type="text" id="exam-topic"
+                                            placeholder="Ej: Historia de Venezuela, Derivadas..."
+                                            class="w-full p-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-purple-500 transition">
                                     </div>
-                                </div>
-                                <div class="mt-4 flex justify-end gap-3">
-                                    <button onclick="sendAnnouncement()"
-                                        class="bg-blue-50 text-blue-600 px-4 py-2 rounded-xl text-xs font-bold hover:bg-blue-100 transition flex items-center gap-2 border border-blue-100 shadow-sm active:scale-95">
-                                        Enviar a todos
-                                    </button>
-                                    <button onclick="copyToClipboard()"
-                                        class="text-slate-600 hover:text-blue-600 text-xs font-bold hover:underline flex items-center gap-1 active:text-blue-800 transition"><i
-                                            class="fa-regular fa-copy"></i> Copiar texto</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
 
-                    <div id="view-estudiantes" class="max-w-6xl mx-auto force-hidden fade-in">
-                        <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-6 gap-4">
-                            <div>
-                                <h1 class="text-2xl font-bold text-slate-800">Base de Datos Estudiantes</h1>
-                                <p class="text-slate-500 text-sm mt-1">UNEXPO</p>
-                            </div>
-                            <div class="flex gap-2 w-full md:w-auto">
-                                <button onclick="openModal('modal-nuevo-estudiante')"
-                                    class="w-full md:w-auto bg-blue-600 text-white px-4 py-2.5 rounded-xl text-sm font-bold hover:bg-blue-700 transition flex items-center justify-center gap-2 shadow-sm hover:shadow-md hover:-translate-y-0.5"><i
-                                        class="fa-solid fa-plus"></i><span>Nuevo Estudiante</span></button>
-                                <button onclick="exportarPDF()" id="btn-exportar"
-                                    class="w-full md:w-auto bg-white border border-slate-300 text-slate-700 px-4 py-2.5 rounded-xl text-sm font-bold hover:bg-slate-50 transition flex items-center justify-center gap-2 shadow-sm hover:shadow-md"><i
-                                        class="fa-solid fa-file-pdf text-red-500"></i><span>Exportar
-                                        Lista</span></button>
-                            </div>
-                        </div>
-                        <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-                            <div class="overflow-x-auto">
-                                <table class="w-full text-left min-w-[600px]">
-                                    <thead
-                                        class="bg-slate-50 border-b border-slate-200 text-xs uppercase text-slate-500 font-bold tracking-wider">
-                                        <tr>
-                                            <th class="p-5">Nombre</th>
-                                            <th class="p-5">Materia</th>
-                                            <th class="p-5">Nota</th>
-                                            <th class="p-5">Estado</th>
-                                            <th class="p-5">Acción</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="students-table-body" class="text-sm divide-y divide-slate-100">
-                                        <!-- Students will be loaded here via API -->
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
+                                    <div>
+                                        <label
+                                            class="block text-xs font-bold text-slate-500 uppercase mb-2">Dificultad</label>
+                                        <select id="exam-difficulty"
+                                            class="w-full p-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-purple-500 bg-white">
+                                            <option value="Básico">Básico</option>
+                                            <option value="Intermedio" selected>Intermedio</option>
+                                            <option value="Avanzado">Avanzado</option>
+                                        </select>
+                                    </div>
 
-                    <div id="view-agenda" class="max-w-6xl mx-auto h-full pb-6 force-hidden flex flex-col fade-in">
-                        <div class="flex flex-col md:flex-row justify-between items-center mb-6 flex-shrink-0 gap-4">
-                            <h1 class="text-2xl font-bold text-slate-800 flex items-center gap-2"><span
-                                    id="calendar-month">Enero</span> <span id="calendar-year"
-                                    class="text-slate-400">2026</span></h1>
-                            <div
-                                class="flex bg-white rounded-lg border border-slate-300 p-1 shadow-sm w-full md:w-auto justify-center">
-                                <button onclick="changeMonth(-1)"
-                                    class="px-3 py-1.5 hover:bg-slate-50 rounded text-slate-600 transition"><i
-                                        class="fa-solid fa-chevron-left"></i></button>
-                                <button onclick="goToToday()"
-                                    class="px-4 py-1.5 hover:bg-slate-50 rounded text-slate-800 font-bold text-sm transition flex-1 md:flex-none text-center">Hoy</button>
-                                <button onclick="changeMonth(1)"
-                                    class="px-3 py-1.5 hover:bg-slate-50 rounded text-slate-600 transition"><i
-                                        class="fa-solid fa-chevron-right"></i></button>
-                            </div>
-                        </div>
-                        <div
-                            class="bg-white rounded-xl border border-slate-200 shadow-sm flex-1 flex flex-col overflow-hidden min-h-[400px]">
-                            <div
-                                class="grid grid-cols-7 border-b border-slate-200 bg-slate-50 text-center py-3 text-xs font-bold text-slate-500 uppercase flex-shrink-0 tracking-wider">
-                                <div>D</div>
-                                <div>L</div>
-                                <div>M</div>
-                                <div>M</div>
-                                <div>J</div>
-                                <div>V</div>
-                                <div>S</div>
-                            </div>
-                            <div id="calendar-grid" class="flex-1 grid grid-cols-7 grid-rows-6 bg-slate-100 gap-px">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div id="view-examenes" class="max-w-5xl mx-auto force-hidden fade-in">
-                        <h1 class="text-2xl font-bold text-slate-800 mb-6 flex items-center gap-3">
-                            <i class="fa-solid fa-wand-magic-sparkles text-purple-600"></i> Generador de Exámenes
-                        </h1>
-
-                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                            <!-- Configuration Card -->
-                            <div class="lg:col-span-1">
-                                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm sticky top-6">
-                                    <h3 class="font-bold text-slate-700 mb-4 text-sm uppercase tracking-wide">
-                                        Configuración
-                                    </h3>
-                                    <div class="space-y-4">
-                                        <div>
-                                            <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Tema
-                                                del
-                                                Examen</label>
-                                            <input type="text" id="exam-topic"
-                                                placeholder="Ej: Historia de Venezuela, Derivadas..."
-                                                class="w-full p-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-purple-500 transition">
-                                        </div>
-
+                                    <div class="grid grid-cols-2 gap-4">
                                         <div>
                                             <label
-                                                class="block text-xs font-bold text-slate-500 uppercase mb-2">Dificultad</label>
-                                            <select id="exam-difficulty"
+                                                class="block text-xs font-bold text-slate-500 uppercase mb-2">Preguntas</label>
+                                            <input type="number" id="exam-count" value="5" min="1" max="10"
+                                                class="w-full p-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-purple-500">
+                                        </div>
+                                        <div>
+                                            <label
+                                                class="block text-xs font-bold text-slate-500 uppercase mb-2">Tipo</label>
+                                            <select id="exam-type"
                                                 class="w-full p-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-purple-500 bg-white">
-                                                <option value="Básico">Básico</option>
-                                                <option value="Intermedio" selected>Intermedio</option>
-                                                <option value="Avanzado">Avanzado</option>
+                                                <option value="desarrollo">📝 Desarrollo y Análisis</option>
+                                                <option value="casos">💼 Casos Prácticos</option>
+                                                <option value="problemas">🔢 Resolución de Problemas</option>
                                             </select>
                                         </div>
+                                    </div>
 
-                                        <div class="grid grid-cols-2 gap-4">
-                                            <div>
-                                                <label
-                                                    class="block text-xs font-bold text-slate-500 uppercase mb-2">Preguntas</label>
-                                                <input type="number" id="exam-count" value="5" min="1" max="10"
-                                                    class="w-full p-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-purple-500">
-                                            </div>
-                                            <div>
-                                                <label
-                                                    class="block text-xs font-bold text-slate-500 uppercase mb-2">Tipo</label>
-                                                <select id="exam-type"
-                                                    class="w-full p-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-purple-500 bg-white">
-                                                    <option value="desarrollo">📝 Desarrollo y Análisis</option>
-                                                    <option value="casos">💼 Casos Prácticos</option>
-                                                    <option value="problemas">🔢 Resolución de Problemas</option>
-                                                </select>
-                                            </div>
-                                        </div>
+                                    <button onclick="generateExam()" id="btn-generate-exam"
+                                        class="w-full bg-slate-900 text-white py-3 rounded-xl font-bold text-sm hover:bg-purple-600 transition shadow-lg flex items-center justify-center gap-2 mt-2">
+                                        <i class="fa-solid fa-bolt"></i> Generar con IA
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
 
-                                        <button onclick="generateExam()" id="btn-generate-exam"
-                                            class="w-full bg-slate-900 text-white py-3 rounded-xl font-bold text-sm hover:bg-purple-600 transition shadow-lg flex items-center justify-center gap-2 mt-2">
-                                            <i class="fa-solid fa-bolt"></i> Generar con IA
+                        <!-- Results Area -->
+                        <div class="lg:col-span-2">
+                            <div id="exam-loading"
+                                class="hidden flex flex-col items-center justify-center py-20 bg-white rounded-2xl border border-slate-200 border-dashed">
+                                <div
+                                    class="w-12 h-12 border-4 border-purple-200 border-t-purple-600 rounded-full animate-spin mb-4">
+                                </div>
+                                <p class="text-slate-500 font-medium animate-pulse">Diseñando evaluación...</p>
+                            </div>
+
+                            <div id="exam-empty"
+                                class="flex flex-col items-center justify-center py-20 bg-slate-50 rounded-2xl border border-slate-200 border-dashed text-center px-6">
+                                <div
+                                    class="w-16 h-16 bg-purple-50 rounded-full flex items-center justify-center text-purple-300 mb-4">
+                                    <i class="fa-solid fa-file-pen text-2xl"></i>
+                                </div>
+                                <h3 class="text-slate-900 font-bold mb-1">Sin Examen Generado</h3>
+                                <p class="text-slate-500 text-sm max-w-xs">Configura los parámetros a la izquierda y
+                                    deja que la IA cree tu evaluación en segundos.</p>
+                            </div>
+
+                            <div id="exam-results" class="space-y-6 hidden">
+                                <!-- Results will be injected here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <div id="section-planning">
+                    <!-- STRICT ISOLATION WRAPPER -->
+                    <div id="planning-content-container" class="hidden w-full">
+                        <!-- Planificación Académica desde PDF -->
+                        <div id="view-planificacion" class="max-w-5xl mx-auto fade-in">
+                            <div class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm">
+
+                                <div class="flex items-center gap-3 mb-6">
+                                    <div class="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center">
+                                        <i class="fa-solid fa-file-pdf text-blue-600 text-xl"></i>
+                                    </div>
+                                    <div>
+                                        <h2 class="text-xl font-bold text-slate-800">Asistente de Análisis
+                                            Documental
+                                        </h2>
+                                        <p class="text-sm text-slate-500">Sube el PDF del programa de materia
+                                            (syllabus)
+                                            y
+                                            genera automáticamente una planificación o cualquier análisis que
+                                            necesites
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <!-- File Upload Area -->
+                                <div
+                                    class="mb-6 p-6 border-2 border-dashed border-slate-300 rounded-xl hover:border-blue-400 transition bg-slate-50">
+                                    <div class="text-center">
+                                        <i class="fa-solid fa-cloud-arrow-up text-4xl text-slate-400 mb-3"></i>
+                                        <label for="syllabus-file" class="block">
+                                            <span
+                                                class="text-sm font-bold text-slate-700 cursor-pointer hover:text-blue-600">Selecciona
+                                                el archivo PDF del programa</span>
+                                            <input type="file" id="syllabus-file" accept=".pdf" class="hidden"
+                                                onchange="handleFileSelect(event)">
+                                        </label>
+                                        <p id="file-name" class="text-xs text-slate-500 mt-2"></p>
+                                    </div>
+                                </div>
+
+                                <!-- Custom Instruction Textarea -->
+                                <div class="mb-6">
+                                    <label for="planning-prompt" class="block text-sm font-bold text-slate-700 mb-2">
+                                        <i class="fa-solid fa-pen-to-square text-blue-600"></i> ¿Qué quieres hacer
+                                        con
+                                        este
+                                        PDF?
+                                    </label>
+                                    <textarea id="planning-prompt" rows="4"
+                                        class="w-full p-4 border-2 border-slate-300 rounded-xl text-sm focus:outline-none focus:border-blue-500 transition resize-none"
+                                        placeholder="Hola, soy tu Asistente DocenteAI. Pregúntame sobre planificación, evaluaciones o estrategias..."></textarea>
+
+                                </div>
+
+                                <!-- Generate Button -->
+                                <button id="btn-generate-planning" onclick="uploadSyllabus()" disabled
+                                    class="w-full py-4 bg-blue-600 text-white rounded-xl font-bold text-sm hover:bg-blue-700 shadow-md transition disabled:bg-slate-300 disabled:cursor-not-allowed flex items-center justify-center gap-2">
+                                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                                    <span id="btn-text">Generar Planificación con IA</span>
+                                </button>
+
+                                <!-- Loading State -->
+                                <div id="planning-loading" class="hidden mt-6 text-center py-8">
+                                    <i class="fa-solid fa-spinner fa-spin text-4xl text-blue-600 mb-3"></i>
+                                    <p class="text-sm font-bold text-slate-700">Analizando el programa y generando
+                                        planificación...</p>
+                                    <p class="text-xs text-slate-500 mt-1">Esto puede tomar hasta 30 segundos</p>
+                                </div>
+
+                                <!-- Results Container -->
+                                <div id="planning-results" class="hidden mt-6">
+                                    <div class="flex justify-between items-center mb-4">
+                                        <h3 class="font-bold text-lg text-slate-800">Resultados del Análisis</h3>
+                                        <button onclick="downloadPlanningPDF()"
+                                            class="px-4 py-2 bg-red-500 text-white rounded-lg text-sm font-bold hover:bg-red-600 shadow-sm transition flex items-center gap-2">
+                                            <i class="fa-solid fa-file-pdf"></i> Descargar PDF
                                         </button>
                                     </div>
-                                </div>
-                            </div>
-
-                            <!-- Results Area -->
-                            <div class="lg:col-span-2">
-                                <div id="exam-loading"
-                                    class="hidden flex flex-col items-center justify-center py-20 bg-white rounded-2xl border border-slate-200 border-dashed">
-                                    <div
-                                        class="w-12 h-12 border-4 border-purple-200 border-t-purple-600 rounded-full animate-spin mb-4">
-                                    </div>
-                                    <p class="text-slate-500 font-medium animate-pulse">Diseñando evaluación...</p>
-                                </div>
-
-                                <div id="exam-empty"
-                                    class="flex flex-col items-center justify-center py-20 bg-slate-50 rounded-2xl border border-slate-200 border-dashed text-center px-6">
-                                    <div
-                                        class="w-16 h-16 bg-purple-50 rounded-full flex items-center justify-center text-purple-300 mb-4">
-                                        <i class="fa-solid fa-file-pen text-2xl"></i>
-                                    </div>
-                                    <h3 class="text-slate-900 font-bold mb-1">Sin Examen Generado</h3>
-                                    <p class="text-slate-500 text-sm max-w-xs">Configura los parámetros a la izquierda y
-                                        deja que la IA cree tu evaluación en segundos.</p>
-                                </div>
-
-                                <div id="exam-results" class="space-y-6 hidden">
-                                    <!-- Results will be injected here -->
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-
-
-                    <div id="section-planning">
-                        <!-- STRICT ISOLATION WRAPPER -->
-                        <div id="planning-content-container" class="hidden w-full">
-                            <!-- Planificación Académica desde PDF -->
-                            <div id="view-planificacion" class="max-w-5xl mx-auto fade-in">
-                                <div class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm">
-
-                                    <div class="flex items-center gap-3 mb-6">
-                                        <div class="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center">
-                                            <i class="fa-solid fa-file-pdf text-blue-600 text-xl"></i>
-                                        </div>
-                                        <div>
-                                            <h2 class="text-xl font-bold text-slate-800">Asistente de Análisis
-                                                Documental
-                                            </h2>
-                                            <p class="text-sm text-slate-500">Sube el PDF del programa de materia
-                                                (syllabus)
-                                                y
-                                                genera automáticamente una planificación o cualquier análisis que
-                                                necesites
-                                            </p>
-                                        </div>
-                                    </div>
-
-                                    <!-- File Upload Area -->
-                                    <div
-                                        class="mb-6 p-6 border-2 border-dashed border-slate-300 rounded-xl hover:border-blue-400 transition bg-slate-50">
-                                        <div class="text-center">
-                                            <i class="fa-solid fa-cloud-arrow-up text-4xl text-slate-400 mb-3"></i>
-                                            <label for="syllabus-file" class="block">
-                                                <span
-                                                    class="text-sm font-bold text-slate-700 cursor-pointer hover:text-blue-600">Selecciona
-                                                    el archivo PDF del programa</span>
-                                                <input type="file" id="syllabus-file" accept=".pdf" class="hidden"
-                                                    onchange="handleFileSelect(event)">
-                                            </label>
-                                            <p id="file-name" class="text-xs text-slate-500 mt-2"></p>
-                                        </div>
-                                    </div>
-
-                                    <!-- Custom Instruction Textarea -->
-                                    <div class="mb-6">
-                                        <label for="planning-prompt"
-                                            class="block text-sm font-bold text-slate-700 mb-2">
-                                            <i class="fa-solid fa-pen-to-square text-blue-600"></i> ¿Qué quieres hacer
-                                            con
-                                            este
-                                            PDF?
-                                        </label>
-                                        <textarea id="planning-prompt" rows="4"
-                                            class="w-full p-4 border-2 border-slate-300 rounded-xl text-sm focus:outline-none focus:border-blue-500 transition resize-none"
-                                            placeholder="Hola, soy tu Asistente DocenteAI. Pregúntame sobre planificación, evaluaciones o estrategias..."></textarea>
-
-                                    </div>
-
-                                    <!-- Generate Button -->
-                                    <button id="btn-generate-planning" onclick="uploadSyllabus()" disabled
-                                        class="w-full py-4 bg-blue-600 text-white rounded-xl font-bold text-sm hover:bg-blue-700 shadow-md transition disabled:bg-slate-300 disabled:cursor-not-allowed flex items-center justify-center gap-2">
-                                        <i class="fa-solid fa-wand-magic-sparkles"></i>
-                                        <span id="btn-text">Generar Planificación con IA</span>
-                                    </button>
-
-                                    <!-- Loading State -->
-                                    <div id="planning-loading" class="hidden mt-6 text-center py-8">
-                                        <i class="fa-solid fa-spinner fa-spin text-4xl text-blue-600 mb-3"></i>
-                                        <p class="text-sm font-bold text-slate-700">Analizando el programa y generando
-                                            planificación...</p>
-                                        <p class="text-xs text-slate-500 mt-1">Esto puede tomar hasta 30 segundos</p>
-                                    </div>
-
-                                    <!-- Results Container -->
-                                    <div id="planning-results" class="hidden mt-6">
-                                        <div class="flex justify-between items-center mb-4">
-                                            <h3 class="font-bold text-lg text-slate-800">Resultados del Análisis</h3>
-                                            <button onclick="downloadPlanningPDF()"
-                                                class="px-4 py-2 bg-red-500 text-white rounded-lg text-sm font-bold hover:bg-red-600 shadow-sm transition flex items-center gap-2">
-                                                <i class="fa-solid fa-file-pdf"></i> Descargar PDF
-                                            </button>
-                                        </div>
-                                        <div id="planning-content"
-                                            class="overflow-x-auto rounded-xl border border-slate-200 bg-white p-6">
-                                            <!-- HTML content will be injected here -->
-                                        </div>
+                                    <div id="planning-content"
+                                        class="overflow-x-auto rounded-xl border border-slate-200 bg-white p-6">
+                                        <!-- HTML content will be injected here -->
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-
-                    <div id="view-configuracion" class="max-w-5xl mx-auto force-hidden fade-in">
-                        <h1 class="text-2xl font-bold text-slate-800 mb-6">Configuración y Soporte</h1>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div id="tour-profile-card"
-                                class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-                                <div class="flex items-center gap-4 mb-6">
-                                    <div
-                                        class="w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold text-2xl shadow-md">
-                                        GT</div>
-                                    <div>
-                                        <h3 id="profile-name-card" class="font-bold text-lg text-slate-800">Gustavo
-                                            Triana
-                                        </h3>
-                                        <p class="text-slate-500 text-sm">Profesor Ingeniería Mecatrónica</p>
-                                    </div>
-                                </div>
-                                <div class="space-y-3">
-                                    <div id="email-container">
-                                        <label class="text-xs font-bold text-slate-400 uppercase">Correo
-                                            Institucional</label>
-                                        <div class="flex justify-between items-center border-b border-slate-100 py-2">
-                                            <span id="email-text"
-                                                class="text-sm font-medium text-slate-700 truncate mr-2">gustavo.triana@unexpo.edu.ve</span>
-                                            <button onclick="editField('email')"
-                                                class="text-blue-600 text-xs font-bold hover:text-blue-800">Editar</button>
-                                        </div>
-                                    </div>
-                                    <div id="pass-container">
-                                        <label class="text-xs font-bold text-slate-400 uppercase">Contraseña</label>
-                                        <div class="flex justify-between items-center border-b border-slate-100 py-2">
-                                            <span id="pass-text"
-                                                class="text-sm font-medium text-slate-700">••••••••••••</span>
-                                            <button onclick="editField('pass')"
-                                                class="text-blue-600 text-xs font-bold hover:text-blue-800">Cambiar</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div
-                                class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm relative overflow-hidden">
-                                <div
-                                    class="absolute top-0 right-0 bg-green-100 text-green-700 text-[10px] font-bold px-3 py-1 rounded-bl-xl uppercase tracking-wide">
-                                    Activo</div>
-                                <h3 class="font-bold text-lg text-slate-800 mb-2 flex items-center gap-2"><i
-                                        class="fa-solid fa-crown text-yellow-500"></i> Plan Premium</h3>
-                                <p class="text-3xl font-extrabold text-slate-900 mb-1">$3.99 <span
-                                        class="text-sm text-slate-400 font-normal">/mes</span></p>
-                                <p class="text-xs text-slate-500 mb-6">Próximo cobro: 28 de Febrero, 2026</p>
-                                <div class="space-y-2 mb-6">
-                                    <div class="flex items-center gap-2 text-xs text-slate-600"><i
-                                            class="fa-solid fa-check text-green-500"></i> Redactor IA Ilimitado</div>
-                                    <div class="flex items-center gap-2 text-xs text-slate-600"><i
-                                            class="fa-solid fa-check text-green-500"></i> Agenda Sincronizada</div>
-                                    <div class="flex items-center gap-2 text-xs text-slate-600"><i
-                                            class="fa-solid fa-check text-green-500"></i> Soporte Prioritario</div>
-                                </div>
-                                <button onclick="toggleSubscriptionModal()"
-                                    class="w-full py-2.5 rounded-xl border border-slate-300 text-slate-700 font-bold text-sm hover:bg-slate-50 transition">Gestionar
-                                    Suscripción</button>
-                            </div>
-
-                            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-                                <h3 class="font-bold text-md text-slate-800 mb-4 flex items-center gap-2"><i
-                                        class="fa-solid fa-robot text-blue-500"></i> Automatización</h3>
-                                <div class="space-y-4">
-                                    <div class="flex items-center justify-between">
-                                        <div>
-                                            <p class="text-sm font-bold text-slate-700">Recordatorios de Clase</p>
-                                            <p class="text-xs text-slate-500">Enviar alerta 1 hora antes</p>
-                                        </div>
-                                        <div
-                                            class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
-                                            <input type="checkbox" name="toggle" id="toggle1"
-                                                onchange="guardarConfiguracionAutomatizacion()"
-                                                class="toggle-checkbox absolute block w-5 h-5 rounded-full bg-white border-4 appearance-none cursor-pointer border-slate-300 checked:right-0 checked:border-blue-600 transition-all duration-300">
-                                            <label for="toggle1"
-                                                class="toggle-label block overflow-hidden h-5 rounded-full bg-slate-300 cursor-pointer transition-colors duration-300"></label>
-                                        </div>
-                                    </div>
-                                    <div class="flex items-center justify-between">
-                                        <div>
-                                            <p class="text-sm font-bold text-slate-700">Resumen Semanal</p>
-                                            <p class="text-xs text-slate-500">Recibir reporte por correo</p>
-                                        </div>
-                                        <div
-                                            class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
-                                            <input type="checkbox" name="toggle" id="toggle2"
-                                                onchange="guardarConfiguracionAutomatizacion()"
-                                                class="toggle-checkbox absolute block w-5 h-5 rounded-full bg-white border-4 appearance-none cursor-pointer border-slate-300 checked:right-0 checked:border-blue-600 transition-all duration-300">
-                                            <label for="toggle2"
-                                                class="toggle-label block overflow-hidden h-5 rounded-full bg-slate-300 cursor-pointer transition-colors duration-300"></label>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Panel de Gestión de Materias -->
-                            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-                                <h3 class="font-bold text-md text-slate-800 mb-4 flex items-center gap-2"><i
-                                        class="fa-solid fa-book text-emerald-500"></i> Gestión de Materias</h3>
-                                <p class="text-xs text-slate-500 mb-4">Administra las asignaturas que dictas.</p>
-
-                                <div class="flex gap-2 mb-4">
-                                    <input type="text" id="newSubjectName" placeholder="Nueva materia (ej. Física II)"
-                                        class="flex-1 p-2.5 border border-slate-300 rounded-xl text-sm focus:outline-none focus:border-emerald-500 transition">
-                                    <button onclick="agregarMateria()"
-                                        class="px-4 py-2.5 bg-emerald-600 text-white rounded-xl text-sm font-bold hover:bg-emerald-700 transition flex items-center gap-2 shadow-sm">
-                                        <i class="fa-solid fa-plus"></i> <span class="hidden md:inline">Añadir</span>
-                                    </button>
-                                </div>
-
-                                <ul id="subjectsList" class="space-y-2 max-h-40 overflow-y-auto pr-2">
-                                    <!-- Las materias cargadas dinámicamente aparecerán aquí -->
-                                    <li
-                                        class="text-xs text-slate-400 text-center py-2 italic border border-dashed border-slate-200 rounded-lg">
-                                        Cargando materias...</li>
-                                </ul>
-                            </div>
-
-                            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-                                <h3 class="font-bold text-md text-slate-800 mb-4 flex items-center gap-2"><i
-                                        class="fa-solid fa-headset text-purple-500"></i> Soporte Técnico</h3>
-                                <p class="text-xs text-slate-500 mb-4">¿Tienes problemas? Nuestro equipo responde en
-                                    menos
-                                    de 2 horas.</p>
-                                <div class="flex gap-3">
-                                    <button onclick="toggleSupportChat()"
-                                        class="flex-1 py-2.5 bg-slate-900 text-white rounded-xl text-sm font-bold hover:bg-slate-800 transition flex items-center justify-center gap-2"><i
-                                            class="fa-regular fa-comments"></i> Chat</button>
-                                    <button onclick="toggleTicketModal()"
-                                        class="flex-1 py-2.5 border border-slate-300 text-slate-700 rounded-xl text-sm font-bold hover:bg-slate-50 transition flex items-center justify-center gap-2"><i
-                                            class="fa-regular fa-envelope"></i> Ticket</button>
-                                    <button onclick="toggleHistoryModal(); loadSupportHistory()"
-                                        class="w-10 py-2.5 border border-slate-300 text-slate-500 rounded-xl text-sm font-bold hover:text-blue-600 hover:border-blue-600 transition flex items-center justify-center"
-                                        title="Historial"><i class="fa-solid fa-clock-rotate-left"></i></button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-
-
                 </div>
+
+                <div id="view-configuracion" class="max-w-5xl mx-auto force-hidden fade-in">
+                    <h1 class="text-2xl font-bold text-slate-800 mb-6">Configuración y Soporte</h1>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div id="tour-profile-card" class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                            <div class="flex items-center gap-4 mb-6">
+                                <div
+                                    class="w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold text-2xl shadow-md">
+                                    GT</div>
+                                <div>
+                                    <h3 id="profile-name-card" class="font-bold text-lg text-slate-800">Gustavo
+                                        Triana
+                                    </h3>
+                                    <p class="text-slate-500 text-sm">Profesor Ingeniería Mecatrónica</p>
+                                </div>
+                            </div>
+                            <div class="space-y-3">
+                                <div id="email-container">
+                                    <label class="text-xs font-bold text-slate-400 uppercase">Correo
+                                        Institucional</label>
+                                    <div class="flex justify-between items-center border-b border-slate-100 py-2">
+                                        <span id="email-text"
+                                            class="text-sm font-medium text-slate-700 truncate mr-2">gustavo.triana@unexpo.edu.ve</span>
+                                        <button onclick="editField('email')"
+                                            class="text-blue-600 text-xs font-bold hover:text-blue-800">Editar</button>
+                                    </div>
+                                </div>
+                                <div id="pass-container">
+                                    <label class="text-xs font-bold text-slate-400 uppercase">Contraseña</label>
+                                    <div class="flex justify-between items-center border-b border-slate-100 py-2">
+                                        <span id="pass-text"
+                                            class="text-sm font-medium text-slate-700">••••••••••••</span>
+                                        <button onclick="editField('pass')"
+                                            class="text-blue-600 text-xs font-bold hover:text-blue-800">Cambiar</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div
+                            class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm relative overflow-hidden">
+                            <div
+                                class="absolute top-0 right-0 bg-green-100 text-green-700 text-[10px] font-bold px-3 py-1 rounded-bl-xl uppercase tracking-wide">
+                                Activo</div>
+                            <h3 class="font-bold text-lg text-slate-800 mb-2 flex items-center gap-2"><i
+                                    class="fa-solid fa-crown text-yellow-500"></i> Plan Premium</h3>
+                            <p class="text-3xl font-extrabold text-slate-900 mb-1">$3.99 <span
+                                    class="text-sm text-slate-400 font-normal">/mes</span></p>
+                            <p class="text-xs text-slate-500 mb-6">Próximo cobro: 28 de Febrero, 2026</p>
+                            <div class="space-y-2 mb-6">
+                                <div class="flex items-center gap-2 text-xs text-slate-600"><i
+                                        class="fa-solid fa-check text-green-500"></i> Redactor IA Ilimitado</div>
+                                <div class="flex items-center gap-2 text-xs text-slate-600"><i
+                                        class="fa-solid fa-check text-green-500"></i> Agenda Sincronizada</div>
+                                <div class="flex items-center gap-2 text-xs text-slate-600"><i
+                                        class="fa-solid fa-check text-green-500"></i> Soporte Prioritario</div>
+                            </div>
+                            <button onclick="toggleSubscriptionModal()"
+                                class="w-full py-2.5 rounded-xl border border-slate-300 text-slate-700 font-bold text-sm hover:bg-slate-50 transition">Gestionar
+                                Suscripción</button>
+                        </div>
+
+                        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                            <h3 class="font-bold text-md text-slate-800 mb-4 flex items-center gap-2"><i
+                                    class="fa-solid fa-robot text-blue-500"></i> Automatización</h3>
+                            <div class="space-y-4">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="text-sm font-bold text-slate-700">Recordatorios de Clase</p>
+                                        <p class="text-xs text-slate-500">Enviar alerta 1 hora antes</p>
+                                    </div>
+                                    <div
+                                        class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
+                                        <input type="checkbox" name="toggle" id="toggle1"
+                                            onchange="guardarConfiguracionAutomatizacion()"
+                                            class="toggle-checkbox absolute block w-5 h-5 rounded-full bg-white border-4 appearance-none cursor-pointer border-slate-300 checked:right-0 checked:border-blue-600 transition-all duration-300">
+                                        <label for="toggle1"
+                                            class="toggle-label block overflow-hidden h-5 rounded-full bg-slate-300 cursor-pointer transition-colors duration-300"></label>
+                                    </div>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="text-sm font-bold text-slate-700">Resumen Semanal</p>
+                                        <p class="text-xs text-slate-500">Recibir reporte por correo</p>
+                                    </div>
+                                    <div
+                                        class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
+                                        <input type="checkbox" name="toggle" id="toggle2"
+                                            onchange="guardarConfiguracionAutomatizacion()"
+                                            class="toggle-checkbox absolute block w-5 h-5 rounded-full bg-white border-4 appearance-none cursor-pointer border-slate-300 checked:right-0 checked:border-blue-600 transition-all duration-300">
+                                        <label for="toggle2"
+                                            class="toggle-label block overflow-hidden h-5 rounded-full bg-slate-300 cursor-pointer transition-colors duration-300"></label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Panel de Gestión de Materias -->
+                        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                            <h3 class="font-bold text-md text-slate-800 mb-4 flex items-center gap-2"><i
+                                    class="fa-solid fa-book text-emerald-500"></i> Gestión de Materias</h3>
+                            <p class="text-xs text-slate-500 mb-4">Administra las asignaturas que dictas.</p>
+
+                            <div class="flex gap-2 mb-4">
+                                <input type="text" id="newSubjectName" placeholder="Nueva materia (ej. Física II)"
+                                    class="flex-1 p-2.5 border border-slate-300 rounded-xl text-sm focus:outline-none focus:border-emerald-500 transition">
+                                <button onclick="agregarMateria()"
+                                    class="px-4 py-2.5 bg-emerald-600 text-white rounded-xl text-sm font-bold hover:bg-emerald-700 transition flex items-center gap-2 shadow-sm">
+                                    <i class="fa-solid fa-plus"></i> <span class="hidden md:inline">Añadir</span>
+                                </button>
+                            </div>
+
+                            <ul id="subjectsList" class="space-y-2 max-h-40 overflow-y-auto pr-2">
+                                <!-- Las materias cargadas dinámicamente aparecerán aquí -->
+                                <li
+                                    class="text-xs text-slate-400 text-center py-2 italic border border-dashed border-slate-200 rounded-lg">
+                                    Cargando materias...</li>
+                            </ul>
+                        </div>
+
+                        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                            <h3 class="font-bold text-md text-slate-800 mb-4 flex items-center gap-2"><i
+                                    class="fa-solid fa-headset text-purple-500"></i> Soporte Técnico</h3>
+                            <p class="text-xs text-slate-500 mb-4">¿Tienes problemas? Nuestro equipo responde en
+                                menos
+                                de 2 horas.</p>
+                            <div class="flex gap-3">
+                                <button onclick="toggleSupportChat()"
+                                    class="flex-1 py-2.5 bg-slate-900 text-white rounded-xl text-sm font-bold hover:bg-slate-800 transition flex items-center justify-center gap-2"><i
+                                        class="fa-regular fa-comments"></i> Chat</button>
+                                <button onclick="toggleTicketModal()"
+                                    class="flex-1 py-2.5 border border-slate-300 text-slate-700 rounded-xl text-sm font-bold hover:bg-slate-50 transition flex items-center justify-center gap-2"><i
+                                        class="fa-regular fa-envelope"></i> Ticket</button>
+                                <button onclick="toggleHistoryModal(); loadSupportHistory()"
+                                    class="w-10 py-2.5 border border-slate-300 text-slate-500 rounded-xl text-sm font-bold hover:text-blue-600 hover:border-blue-600 transition flex items-center justify-center"
+                                    title="Historial"><i class="fa-solid fa-clock-rotate-left"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+            </div>
         </main>
 
         <button id="tour-assistant" onclick="toggleSupportChat()"
