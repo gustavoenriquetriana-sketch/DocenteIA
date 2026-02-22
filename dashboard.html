@@ -3059,10 +3059,10 @@
                 btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Enviando...';
                 btn.disabled = true;
 
-                fetch('/api/support/ticket', {
+                authFetch('/api/support/ticket', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ userName, userEmail, subject, description })
+                    // authFetch ya inyecta el Content-Type y el Authorization
+                    body: JSON.stringify({ asunto: subject, descripcion: description })
                 })
                     .then(res => res.json())
                     .then(data => {
