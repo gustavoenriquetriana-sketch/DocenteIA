@@ -3106,7 +3106,7 @@
                 loader.classList.remove('hidden');
                 empty.classList.add('hidden');
 
-                fetch('/api/support/history')
+                authFetch('/api/support/my-tickets')
                     .then(res => res.json())
                     .then(data => {
                         loader.classList.add('hidden');
@@ -3118,18 +3118,18 @@
                         data.tickets.forEach(ticket => {
                             const tr = document.createElement('tr');
                             tr.className = "hover:bg-slate-50 transition border-b border-slate-50 last:border-0";
-                            const date = new Date(ticket.created_at).toLocaleDateString('es-VE', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
-                            const statusColor = ticket.status === 'Resuelto' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700';
+                            const date = new Date(ticket.creado_en).toLocaleDateString('es-VE', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+
+                            const estadoActual = ticket.estado || 'Abierto';
+                            const statusColor = estadoActual === 'Resuelto' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700';
 
                             tr.innerHTML = `
-                                <td class="p-4 font-mono text-xs text-slate-500">${ticket.id_ticket}</td>
+                                <td class="p-4 font-mono text-xs text-slate-500">${ticket.id}</td>
                                 <td class="p-4 text-slate-600 text-xs">${date}</td>
-                                <td class="p-4 font-bold text-slate-800 text-sm truncate max-w-[150px]">${ticket.subject}</td>
-                                <td class="p-4"><span class="px-2 py-1 rounded-full text-[10px] font-bold uppercase ${statusColor}">${ticket.status}</span></td>
+                                <td class="p-4 font-bold text-slate-800 text-sm truncate max-w-[150px]" title="${ticket.asunto}">${ticket.asunto}</td>
+                                <td class="p-4"><span class="px-2 py-1 rounded-full text-[10px] font-bold uppercase ${statusColor}">${estadoActual}</span></td>
                                 <td class="p-4 text-right">
-                                    <button onclick="toggleTicketStatus('${ticket.id_ticket}', '${ticket.status}')" class="text-xs font-bold text-blue-600 hover:text-blue-800">
-                                        ${ticket.status === 'Pendiente' ? 'Resolver' : 'Reabrir'}
-                                    </button>
+                                    <span class="text-xs text-slate-400">Ver Detalles</span>
                                 </td>
                             `;
                             tbody.appendChild(tr);

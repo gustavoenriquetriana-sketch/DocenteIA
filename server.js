@@ -1414,6 +1414,26 @@ app.put('/api/support/ticket/:id/status', verifyToken, async (req, res) => {
     }
 });
 
+app.get('/api/support/my-tickets', verifyToken, async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('tickets')
+            .select('*')
+            .eq('profesor_id', req.user.id)
+            .order('creado_en', { ascending: false });
+
+        if (error) {
+            console.error("Supabase Select Error:", error);
+            throw error;
+        }
+
+        res.status(200).json({ success: true, tickets: data });
+    } catch (error) {
+        console.error("Error fetching user tickets:", error.message);
+        res.status(500).json({ success: false, error: "Error interno al obtener tu historial de tickets." });
+    }
+});
+
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`Servidor corriendo en puerto ${PORT}`);
 });
