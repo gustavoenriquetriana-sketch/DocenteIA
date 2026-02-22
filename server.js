@@ -1319,6 +1319,32 @@ app.delete('/api/tasks/:id', verifyToken, async (req, res) => {
 });
 
 // 11. Sistema de Soporte y Tickets
+app.get('/api/support/tickets', verifyToken, async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('tickets')
+            .select(`
+                id,
+                created_at,
+                profesor_id,
+                asunto,
+                descripcion,
+                estado
+            `)
+            .order('created_at', { ascending: false });
+
+        if (error) {
+            console.error("Supabase Select Error:", error);
+            throw error;
+        }
+
+        res.status(200).json({ success: true, tickets: data });
+    } catch (error) {
+        console.error("Error fetching tickets:", error.message);
+        res.status(500).json({ success: false, error: "Error interno al obtener los tickets." });
+    }
+});
+
 app.post('/api/support/ticket', verifyToken, async (req, res) => {
     const { asunto, descripcion } = req.body;
 
@@ -1353,6 +1379,38 @@ app.post('/api/support/ticket', verifyToken, async (req, res) => {
     } catch (error) {
         console.error("Error al crear ticket:", error.message);
         res.status(500).json({ success: false, error: "Error interno al enviar el ticket." });
+    }
+});
+
+app.put('/api/support/ticket/:id/status', verifyToken, async (req, res) => {
+    const { id } = req.params;
+    const { estado } = req.body;
+
+    if (!estado) {
+        return res.status(400).json({ error: "El nuevo estado es obligatorio." });
+    }
+
+    try {
+        const { data, error } = await supabase
+            .from('tickets')
+            .update({ estado: estado })
+            .eq('id', id)
+            .select();
+
+        if (error) {
+            console.error("Supabase Update Error:", error);
+            throw error;
+        }
+
+        res.status(200).json({
+            success: true,
+            mensaje: 'Estado del ticket actualizado',
+            ticket: data[0]
+        });
+
+    } catch (error) {
+        console.error("Error al actualizar estado del ticket:", error.message);
+        res.status(500).json({ success: false, error: "Error interno al actualizar el ticket." });
     }
 });
 
