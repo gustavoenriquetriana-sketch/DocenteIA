@@ -1050,7 +1050,6 @@
                     <table class="w-full text-left border-collapse">
                         <thead class="bg-slate-50 text-xs font-bold text-slate-500 uppercase sticky top-0">
                             <tr>
-                                <th class="p-4 border-b border-slate-200">ID</th>
                                 <th class="p-4 border-b border-slate-200">Fecha</th>
                                 <th class="p-4 border-b border-slate-200">Asunto</th>
                                 <th class="p-4 border-b border-slate-200">Estado</th>
@@ -3124,12 +3123,11 @@
                             const statusColor = estadoActual === 'Resuelto' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700';
 
                             tr.innerHTML = `
-                                <td class="p-4 font-mono text-xs text-slate-500">${ticket.id}</td>
                                 <td class="p-4 text-slate-600 text-xs">${date}</td>
                                 <td class="p-4 font-bold text-slate-800 text-sm truncate max-w-[150px]" title="${ticket.asunto}">${ticket.asunto}</td>
                                 <td class="p-4"><span class="px-2 py-1 rounded-full text-[10px] font-bold uppercase ${statusColor}">${estadoActual}</span></td>
                                 <td class="p-4 text-right">
-                                    <span class="text-xs text-slate-400">Ver Detalles</span>
+                                    <a href="#" onclick="mostrarDetalleTicket('${(ticket.descripcion || '').replace(/'/g, "\\'").replace(/\\n/g, '\\\\n').replace(/\n/g, '\\n')}'); return false;" class="text-xs font-bold text-indigo-600 hover:text-indigo-800 transition">Ver Detalles</a>
                                 </td>
                             `;
                             tbody.appendChild(tr);
@@ -3141,6 +3139,10 @@
                         empty.innerText = 'Error al cargar historial.';
                         empty.classList.remove('hidden');
                     });
+            }
+
+            function mostrarDetalleTicket(descripcion) {
+                alert('Detalles del Ticket:\n\n' + descripcion);
             }
 
             function toggleTicketStatus(id, currentStatus) {
