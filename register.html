@@ -344,11 +344,14 @@
                                 localStorage.setItem('user_institution', result.user.institucion);
                                 localStorage.setItem('user_email', result.user.email);
 
-                                // Guardar token JWT real
+                                // Guardar token JWT real y notificar a la consola
                                 localStorage.setItem('docenteai_token', result.token);
+                                console.log('Token guardado con éxito:', result.token);
 
-                                // Redirigir
-                                window.location.href = 'dashboard.html';
+                                // Redirección con retraso para asegurar escritura en localStorage
+                                setTimeout(() => {
+                                    window.location.href = 'dashboard.html';
+                                }, 500);
                             } else {
                                 alert('Error: ' + (result.error || 'No se pudo completar el registro'));
                                 btn.innerHTML = originalContent;

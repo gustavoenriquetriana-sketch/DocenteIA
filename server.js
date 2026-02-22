@@ -402,9 +402,11 @@ app.post('/api/auth/register', async (req, res) => {
             success: true,
             message: 'Registro exitoso. Serás redirigido al dashboard.',
             token,
+            nombre: nombre, // root level for backward compatibility
             user: {
                 id: insertedUser.id,
                 email,
+                name: nombre, // Used by some parts of the frontend
                 nombre,
                 institucion,
                 departamento,
