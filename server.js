@@ -1434,6 +1434,56 @@ app.get('/api/support/my-tickets', verifyToken, async (req, res) => {
     }
 });
 
+// GET user automation settings
+app.get('/api/settings/automation', verifyToken, async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('user_settings')
+            .select('recordatorios_clase, resumen_semanal')
+            .eq('profesor_id', req.user.id)
+            .single();
+
+        if (error && error.code !== 'PGRST116') { // Ignore "No rows found" error
+            throw error;
+        }
+
+        if (!data) {
+            return res.status(200).json({ success: true, recordatorios_clase: false, resumen_semanal: false });
+        }
+
+        res.status(200).json({ success: true, ...data });
+    } catch (error) {
+        console.error("Error fetching automation settings:", error.message);
+        res.status(500).json({ success: false, error: "Error interno al obtener configuración." });
+    }
+});
+
+// POST upsert user automation settings
+app.post('/api/settings/automation', verifyToken, async (req, res) => {
+    const { recordatorios_clase, resumen_semanal } = req.body;
+
+    // Convert string to boolean if necessary
+    const isRemindersOn = recordatorios_clase === true || recordatorios_clase === 'true';
+    const isSummaryOn = resumen_semanal === true || resumen_semanal === 'true';
+
+    try {
+        const { error } = await supabase
+            .from('user_settings')
+            .upsert({
+                profesor_id: req.user.id,
+                recordatorios_clase: isRemindersOn,
+                resumen_semanal: isSummaryOn
+            }, { onConflict: 'profesor_id' }); // Ensures it updates if exists, inserts if not
+
+        if (error) throw error;
+
+        res.status(200).json({ success: true, mensaje: "Configuración guardada" });
+    } catch (error) {
+        console.error("Error saving automation settings:", error.message);
+        res.status(500).json({ success: false, error: "Error interno al guardar configuración." });
+    }
+});
+
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`Servidor corriendo en puerto ${PORT}`);
 });

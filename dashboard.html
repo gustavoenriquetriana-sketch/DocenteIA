@@ -894,7 +894,7 @@
                                     <div
                                         class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
                                         <input type="checkbox" name="toggle" id="toggle1"
-                                            onchange="saveSettings('reminders', this.checked)"
+                                            onchange="guardarConfiguracionAutomatizacion()"
                                             class="toggle-checkbox absolute block w-5 h-5 rounded-full bg-white border-4 appearance-none cursor-pointer border-slate-300 checked:right-0 checked:border-blue-600 transition-all duration-300">
                                         <label for="toggle1"
                                             class="toggle-label block overflow-hidden h-5 rounded-full bg-slate-300 cursor-pointer transition-colors duration-300"></label>
@@ -908,7 +908,7 @@
                                     <div
                                         class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
                                         <input type="checkbox" name="toggle" id="toggle2"
-                                            onchange="saveSettings('summary', this.checked)"
+                                            onchange="guardarConfiguracionAutomatizacion()"
                                             class="toggle-checkbox absolute block w-5 h-5 rounded-full bg-white border-4 appearance-none cursor-pointer border-slate-300 checked:right-0 checked:border-blue-600 transition-all duration-300">
                                         <label for="toggle2"
                                             class="toggle-label block overflow-hidden h-5 rounded-full bg-slate-300 cursor-pointer transition-colors duration-300"></label>
@@ -3866,6 +3866,9 @@
                     if (cardDisplay) cardDisplay.innerText = cardLast4;
                 }
 
+                // Cargar configuracion automatizacion
+                cargarConfiguracionAutomatizacion();
+
                 // Auto-start Driver.js tour
                 setTimeout(() => {
                     if (!localStorage.getItem('docenteai_tour_seen')) {
@@ -3873,6 +3876,47 @@
                     }
                 }, 1000);
             });
+
+            async function cargarConfiguracionAutomatizacion() {
+                try {
+                    const response = await authFetch('/api/settings/automation');
+                    const data = await response.json();
+
+                    if (data.success) {
+                        const toggle1 = document.getElementById('toggle1');
+                        const toggle2 = document.getElementById('toggle2');
+                        if (toggle1) toggle1.checked = data.recordatorios_clase;
+                        if (toggle2) toggle2.checked = data.resumen_semanal;
+                    }
+                } catch (error) {
+                    console.error('Error cargando configuración:', error);
+                }
+            }
+
+            async function guardarConfiguracionAutomatizacion() {
+                const isRemindersOn = document.getElementById('toggle1')?.checked || false;
+                const isSummaryOn = document.getElementById('toggle2')?.checked || false;
+
+                try {
+                    const response = await authFetch('/api/settings/automation', {
+                        method: 'POST',
+                        body: JSON.stringify({
+                            recordatorios_clase: isRemindersOn,
+                            resumen_semanal: isSummaryOn
+                        })
+                    });
+                    const data = await response.json();
+
+                    if (data.success) {
+                        showToast('Configuración guardada', 'success');
+                    } else {
+                        showToast('Error al guardar', 'error');
+                    }
+                } catch (error) {
+                    console.error('Error guardando configuración:', error);
+                    showToast('Error de conexión', 'error');
+                }
+            }
         </script>
 </body>
 
