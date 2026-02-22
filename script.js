@@ -533,7 +533,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // 7. ONBOARDING TOUR (Driver.js)
-function iniciarTutorial() {
+window.iniciarTutorial = function () {
     // Close support chat if open
     const chat = document.getElementById('modal-support-chat');
     if (chat && typeof chat.classList !== 'undefined') {
