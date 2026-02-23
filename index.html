@@ -903,33 +903,142 @@
         </div>
     </section>
 
-    <section class="bg-slate-950 py-24 px-4 relative overflow-hidden">
-        <div class="absolute inset-0 bg-blue-900/20 mix-blend-overlay pointer-events-none"></div>
-        <div
-            class="max-w-5xl mx-auto bg-slate-900/60 backdrop-blur-xl rounded-[2.5rem] p-14 border border-slate-800/80 flex flex-col md:flex-row items-center justify-between gap-10 relative overflow-hidden shadow-2xl">
-            <div class="relative z-10">
+    <!-- PREGUNTAS FRECUENTES (FAQ) -->
+    <section id="faq" class="py-24 bg-slate-50 relative border-t border-slate-200/50">
+        <div class="max-w-4xl mx-auto px-4">
+            <div class="text-center mb-16">
                 <span
-                    class="bg-blue-500/20 text-blue-300 text-[10px] font-bold px-3 py-1 rounded-full uppercase border border-blue-500/30 mb-4 inline-block backdrop-blur-sm">Hiring</span>
-                <h3 class="text-3xl md:text-4xl font-bold text-white mb-4">¿Te apasiona la IA y la Educación?</h3>
-                <p class="text-slate-400 text-base font-medium max-w-md leading-relaxed">Estamos buscando talento
-                    excepcional para escalar nuestro impacto en Venezuela.</p>
+                    class="bg-blue-100 text-blue-700 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider mb-4 inline-block shadow-sm">FAQ</span>
+                <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-4">Preguntas Frecuentes</h2>
+                <p class="text-slate-500 text-sm font-medium">Todo lo que necesitas saber antes de dar el salto.</p>
             </div>
-            <button onclick="openModal('modal-vacantes')"
-                class="relative z-10 bg-white border border-white/50 text-slate-900 px-8 py-4 rounded-xl font-bold text-sm hover:bg-blue-50 transition whitespace-nowrap shadow-lg hover:shadow-xl hover:-translate-y-0.5 flex items-center gap-2">Ver
-                Vacantes <i class="fa-solid fa-arrow-right"></i></button>
-            <div
-                class="absolute top-0 right-0 w-96 h-96 bg-blue-600 rounded-full blur-[150px] opacity-25 pointer-events-none -mr-20 -mt-20 animate-pulse">
+
+            <div class="space-y-4">
+                <!-- FAQ 1 -->
+                <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden group">
+                    <details class="p-6 cursor-pointer">
+                        <summary
+                            class="font-bold text-slate-800 flex justify-between items-center list-none user-select-none">
+                            <span>¿Cómo se protege la privacidad de mis alumnos?</span>
+                            <span class="text-blue-600 group-open:rotate-180 transition-transform duration-300">
+                                <i
+                                    class="fa-solid fa-chevron-down border border-blue-100 bg-blue-50 p-2 rounded-full text-xs"></i>
+                            </span>
+                        </summary>
+                        <div
+                            class="mt-4 text-sm text-slate-600 leading-relaxed font-medium pl-2 border-l-2 border-blue-100">
+                            La seguridad es nuestra prioridad. Todos los datos académicos están encriptados con
+                            estándares bancarios. La IA solo procesa información anonimizada para generar reportes y no
+                            entrenamos modelos públicos con tus datos.
+                        </div>
+                    </details>
+                </div>
+
+                <!-- FAQ 2 -->
+                <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden group">
+                    <details class="p-6 cursor-pointer">
+                        <summary
+                            class="font-bold text-slate-800 flex justify-between items-center list-none user-select-none">
+                            <span>¿Puedo exportar actas en el formato de la UNEXPO?</span>
+                            <span class="text-blue-600 group-open:rotate-180 transition-transform duration-300">
+                                <i
+                                    class="fa-solid fa-chevron-down border border-blue-100 bg-blue-50 p-2 rounded-full text-xs"></i>
+                            </span>
+                        </summary>
+                        <div
+                            class="mt-4 text-sm text-slate-600 leading-relaxed font-medium pl-2 border-l-2 border-blue-100">
+                            ¡Sí! DocenteAI está pre-configurado con las plantillas oficiales de Control de Estudios /
+                            DACE. Solo haces clic en "Exportar a PDF" y obtienes el documento listo para firmar y
+                            entregar.
+                        </div>
+                    </details>
+                </div>
+
+                <!-- FAQ 3 -->
+                <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden group">
+                    <details class="p-6 cursor-pointer">
+                        <summary
+                            class="font-bold text-slate-800 flex justify-between items-center list-none user-select-none">
+                            <span>Doy clases en diferentes universidades, ¿sirve para mí?</span>
+                            <span class="text-blue-600 group-open:rotate-180 transition-transform duration-300">
+                                <i
+                                    class="fa-solid fa-chevron-down border border-blue-100 bg-blue-50 p-2 rounded-full text-xs"></i>
+                            </span>
+                        </summary>
+                        <div
+                            class="mt-4 text-sm text-slate-600 leading-relaxed font-medium pl-2 border-l-2 border-blue-100">
+                            Totalmente. Puedes crear múltiples "Espacios de Trabajo" dentro de tu misma cuenta para
+                            separar las secciones, alumnos institucionales y formatos de evaluación de cada casa de
+                            estudio.
+                        </div>
+                    </details>
+                </div>
+
+                <!-- FAQ 4 -->
+                <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden group">
+                    <details class="p-6 cursor-pointer">
+                        <summary
+                            class="font-bold text-slate-800 flex justify-between items-center list-none user-select-none">
+                            <span>¿Necesito instalar algún programa en mi computadora?</span>
+                            <span class="text-blue-600 group-open:rotate-180 transition-transform duration-300">
+                                <i
+                                    class="fa-solid fa-chevron-down border border-blue-100 bg-blue-50 p-2 rounded-full text-xs"></i>
+                            </span>
+                        </summary>
+                        <div
+                            class="mt-4 text-sm text-slate-600 leading-relaxed font-medium pl-2 border-l-2 border-blue-100">
+                            No. DocenteAI es una aplicación 100% basada en la nube. Puedes acceder a ella desde
+                            cualquier lugar: tu oficina, el salón de clases o tu casa, usando tu navegador web favorito
+                            o tu teléfono móvil.
+                        </div>
+                    </details>
+                </div>
             </div>
+        </div>
+        <!-- Decorative element -->
+        <div
+            class="absolute bottom-0 right-0 w-64 h-64 bg-slate-200/50 rounded-full blur-[80px] -z-10 translate-x-1/2 translate-y-1/2 pointer-events-none">
         </div>
     </section>
 
-    <section id="mapa"
-        class="w-full h-96 grayscale hover:grayscale-0 transition-all duration-700 border-t border-white/20 relative z-10 scroll-mt-20">
-        <iframe
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3923.367683938927!2d-66.61750002417757!3d10.471600089660233!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8c2b00dc9e205bb9%3A0x89e27c02c4c3e3e2!2sUNEXPO%20Guarenas!5e0!3m2!1ses!2sve!4v1709240000000!5m2!1ses!2sve"
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3923.367683938927!2d-66.61750002417757!3d10.471600089660233!2m3!1f0!2f1!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8c2b00dc9e205bb9%3A0x89e27c02c4c3e3e2!2sUNEXPO%20Guarenas!5e0!3m2!1ses!2sve!4v1709240000000!5m2!1ses!2sve"
-            width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"
-            referrerpolicy="no-referrer-when-downgrade"></iframe>
+    <!-- FINAL CTA BLOCK -->
+    <section class="bg-white py-24 relative overflow-hidden">
+        <div class="max-w-5xl mx-auto px-4 relative z-10">
+            <div
+                class="bg-gradient-to-br from-blue-900 via-slate-900 to-indigo-950 rounded-[3rem] p-10 md:p-16 text-center shadow-2xl relative overflow-hidden ring-1 ring-white/10">
+                <!-- Glowing Orbs -->
+                <div
+                    class="absolute top-0 right-0 w-64 h-64 bg-blue-500 rounded-full blur-[100px] opacity-40 -mr-20 -mt-20 animate-pulse pointer-events-none">
+                </div>
+                <div class="absolute bottom-0 left-0 w-64 h-64 bg-purple-500 rounded-full blur-[100px] opacity-30 -ml-20 -mb-20 animate-pulse pointer-events-none"
+                    style="animation-delay: 2s"></div>
+
+                <i
+                    class="fa-solid fa-rocket text-5xl text-blue-400 mb-8 drop-shadow-[0_0_15px_rgba(96,165,250,0.5)]"></i>
+                <h2 class="text-4xl md:text-5xl font-extrabold text-white mb-6 tracking-tight relative z-10">
+                    ¿Listo para recuperar tu fin de semana?
+                </h2>
+                <p
+                    class="text-blue-100 text-lg md:text-xl font-medium max-w-2xl mx-auto mb-10 leading-relaxed relative z-10">
+                    Únete a cientos de docentes en Venezuela que ya automatizan su trabajo administrativo y dedican más
+                    tiempo a lo que de verdad importa: enseñar.
+                </p>
+                <div class="flex flex-col sm:flex-row justify-center gap-4 relative z-10">
+                    <button onclick="window.location.href='register.html'"
+                        class="bg-white text-slate-900 px-8 py-4 rounded-full font-bold text-sm shadow-[0_0_20px_rgba(255,255,255,0.3)] hover:shadow-[0_0_30px_rgba(255,255,255,0.5)] transition transform hover:-translate-y-1 flex items-center justify-center gap-2">
+                        Crear cuenta gratis <i class="fa-solid fa-arrow-right text-blue-600"></i>
+                    </button>
+                    <a href="#demo"
+                        class="bg-white/10 backdrop-blur-md text-white border border-white/20 px-8 py-4 rounded-full font-bold text-sm hover:bg-white/20 transition flex items-center justify-center gap-2">
+                        Ver demostración
+                    </a>
+                </div>
+                <p class="text-blue-300 text-xs mt-8 font-medium relative z-10 flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-shield-halved"></i> 14 días de prueba en planes premium. No se requiere
+                    tarjeta.
+                </p>
+            </div>
+        </div>
     </section>
 
     <footer class="bg-slate-950 text-slate-300 pt-24 pb-12 border-t border-white/5 relative z-10 overflow-hidden">
@@ -980,9 +1089,6 @@
                             class="flex items-center gap-3 hover:text-white transition group"><i
                                 class="fa-solid fa-envelope text-slate-500 group-hover:text-blue-400 transition"></i>
                             soporte@docenteai.ve</a></li>
-                    <li><a href="#mapa" class="flex items-center gap-3 hover:text-white transition group"><i
-                                class="fa-solid fa-location-dot text-slate-500 group-hover:text-blue-400 transition"></i>
-                            Guarenas, VE</a></li>
                     <li>
                         <div class="flex gap-4 mt-2">
                             <a href="#"
@@ -1235,92 +1341,7 @@
         </div>
     </div>
 
-    <div id="modal-vacantes" class="fixed inset-0 z-[60] hidden overflow-y-auto">
-        <div class="absolute inset-0 bg-slate-950/60 backdrop-blur-md transition-opacity duration-300"
-            onclick="closeModal('modal-vacantes')"></div>
-        <div class="relative flex min-h-screen items-center justify-center p-4">
-            <div
-                class="bg-white/90 backdrop-blur-2xl rounded-[2rem] shadow-2xl w-full max-w-md overflow-hidden transform transition-all scale-100 relative animate-fade-in-up border border-white/60">
-                <div class="bg-slate-900 p-8 text-white flex justify-between items-center relative overflow-hidden">
-                    <div
-                        class="absolute top-0 right-0 w-64 h-64 bg-blue-800 rounded-full blur-[100px] -mr-20 -mt-20 pointer-events-none opacity-40 animate-pulse">
-                    </div>
-                    <h3 class="text-xl font-bold relative z-10" id="vacancies-title">Vacantes Disponibles</h3><button
-                        onclick="closeModal('modal-vacantes')"
-                        class="text-slate-400 hover:text-white transition relative z-10 bg-white/10 w-8 h-8 rounded-full flex items-center justify-center hover:bg-white/20"><i
-                            class="fa-solid fa-xmark text-sm"></i></button>
-                </div>
-
-                <!-- VIEW 1: LIST -->
-                <div id="vacancies-list" class="p-6 md:p-8 space-y-5 bg-slate-50/50 backdrop-blur-md">
-                    <div onclick="openApplicationForm('Ingeniero(a) de IA y Backend')"
-                        class="border border-slate-200/80 bg-white/80 rounded-2xl p-6 hover:bg-blue-50/50 transition cursor-pointer group shadow-sm hover:border-blue-200 hover:shadow-md backdrop-blur-sm">
-                        <h4 class="font-bold text-slate-900 group-hover:text-blue-700 transition">Ingeniero(a) de IA y
-                            Backend</h4>
-                        <p class="text-xs text-slate-500 mt-2 mb-4 font-medium leading-relaxed">Especialista en Machine
-                            Learning y arquitectura de software.</p><span
-                            class="bg-blue-100/80 text-blue-700 text-[10px] font-bold px-3 py-1.5 rounded-full uppercase tracking-wider border border-blue-200/50">Tiempo
-                            Completo</span>
-                    </div>
-                    <div onclick="openApplicationForm('Especialista en Marketing B2B')"
-                        class="border border-slate-200/80 bg-white/80 rounded-2xl p-6 hover:bg-orange-50/50 transition cursor-pointer group shadow-sm hover:border-orange-200 hover:shadow-md backdrop-blur-sm">
-                        <h4 class="font-bold text-slate-900 group-hover:text-orange-700 transition">Especialista en
-                            Marketing B2B</h4>
-                        <p class="text-xs text-slate-500 mt-2 mb-4 font-medium leading-relaxed">Orientado a Growth
-                            Hacking y negociación institucional.</p><span
-                            class="bg-orange-100/80 text-orange-700 text-[10px] font-bold px-3 py-1.5 rounded-full uppercase tracking-wider border border-orange-200/50">Híbrido</span>
-                    </div>
-                    <button onclick="openApplicationForm('Candidatura Espontánea')"
-                        class="w-full py-4 bg-slate-200 text-slate-700 font-bold rounded-xl hover:bg-slate-300 transition mt-2 text-sm">Otra
-                        Vacante</button>
-                </div>
-
-                <!-- VIEW 2: FORM -->
-                <div id="application-form-view" class="hidden p-6 md:p-8 space-y-5 bg-slate-50/50 backdrop-blur-md">
-                    <p class="text-sm text-slate-500 mb-4">Postulando a: <strong id="app-vacancy-title"
-                            class="text-blue-700"></strong></p>
-                    <input type="hidden" id="app-hidden-title">
-
-                    <div><label class="block text-xs font-bold text-slate-700 uppercase mb-2">Nombre Completo</label>
-                        <input type="text" id="app-name" class="w-full p-3 border border-slate-200 rounded-xl text-sm">
-                    </div>
-
-                    <div><label class="block text-xs font-bold text-slate-700 uppercase mb-2">Correo Electrónico</label>
-                        <input type="email" id="app-email"
-                            class="w-full p-3 border border-slate-200 rounded-xl text-sm">
-                    </div>
-
-                    <div><label class="block text-xs font-bold text-slate-700 uppercase mb-2">LinkedIn / GitHub <span
-                                class="text-red-500">*</span></label>
-                        <input type="text" id="app-link" placeholder="https://..."
-                            class="w-full p-3 border border-slate-200 rounded-xl text-sm">
-                    </div>
-
-                    <div class="flex gap-3 pt-4">
-                        <button onclick="showVacanciesList()"
-                            class="flex-1 py-3 border border-slate-300 rounded-xl text-slate-600 font-bold text-sm">Volver</button>
-                        <button onclick="submitApplication()"
-                            class="flex-1 py-3 bg-blue-900 text-white rounded-xl font-bold text-sm shadow-lg hover:bg-blue-800">Enviar
-                            Solicitud</button>
-                    </div>
-                </div>
-
-                <!-- VIEW 3: SIMULATOR -->
-                <div id="analysis-view" class="hidden p-12 text-center bg-slate-50/50 backdrop-blur-md">
-                    <div class="mb-6">
-                        <i class="fa-solid fa-microchip text-4xl text-blue-600 animate-pulse"></i>
-                    </div>
-                    <h3 class="text-lg font-bold text-slate-800 mb-2">Analizando perfil...</h3>
-                    <p class="text-xs text-slate-500">Comparando stack tecnológico y experiencia</p>
-
-                    <div class="w-full bg-slate-200 rounded-full h-2.5 mt-6 overflow-hidden">
-                        <div class="bg-blue-600 h-2.5 rounded-full animate-[progress_2s_ease-in-out_forwards]"
-                            style="width: 0%"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    <!-- Modales eliminados (Vacantes) para limpiar el DOM -->
 
     <!-- Scripts -->
     <script>
