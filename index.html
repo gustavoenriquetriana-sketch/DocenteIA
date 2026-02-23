@@ -422,90 +422,31 @@
                     modernos.</p>
             </div>
 
-            <div class="relative group cursor-pointer" onclick="window.location.href='register.html'">
+            <div class="relative group">
                 <!-- Browser Chrome -->
                 <div
-                    class="bg-slate-900 rounded-t-2xl p-4 flex items-center gap-4 border-b border-white/10 shadow-2xl relative z-10">
+                    class="bg-slate-900 rounded-t-2xl p-4 flex items-center gap-4 border-b border-white/10 shadow-2xl relative z-10 w-full">
                     <div class="flex gap-2">
                         <div class="w-3 h-3 rounded-full bg-red-500"></div>
                         <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
                         <div class="w-3 h-3 rounded-full bg-green-500"></div>
                     </div>
                     <div
-                        class="bg-slate-800 rounded-lg px-4 py-1.5 text-xs text-slate-400 font-mono flex-1 text-center border border-white/5">
-                        <i class="fa-solid fa-lock text-[10px] mr-2"></i>app.docenteai.ve/dashboard
+                        class="bg-slate-800 rounded-lg px-4 py-1.5 text-xs text-slate-400 font-mono flex-1 text-center border border-white/5 h-6">
+                        <!-- URL text removed as requested -->
                     </div>
                 </div>
 
-                <!-- Screen Content (Mockup CSS) -->
+                <!-- Screen Content (Interactive Iframe) -->
                 <div
-                    class="bg-slate-50 border-x border-b border-slate-200 rounded-b-2xl shadow-2xl overflow-hidden relative min-h-[500px]">
-                    <!-- Sidebar Mockup -->
-                    <div
-                        class="absolute left-0 top-0 bottom-0 w-64 bg-white border-r border-slate-200 hidden md:block p-6">
-                        <div class="flex items-center gap-2 mb-8 text-slate-900 font-bold">
-                            <div
-                                class="w-6 h-6 bg-blue-900 rounded flex items-center justify-center text-white text-xs">
-                                <i class="fa-solid fa-graduation-cap"></i>
-                            </div> DocenteAI
-                        </div>
-                        <div class="space-y-4">
-                            <div
-                                class="flex items-center gap-3 text-blue-600 bg-blue-50 px-3 py-2 rounded-lg font-medium text-sm">
-                                <i class="fa-solid fa-house"></i> Inicio
-                            </div>
-                            <div class="flex items-center gap-3 text-slate-500 px-3 py-2 font-medium text-sm"><i
-                                    class="fa-solid fa-users"></i> Estudiantes</div>
-                            <div class="flex items-center gap-3 text-slate-500 px-3 py-2 font-medium text-sm"><i
-                                    class="fa-solid fa-calendar"></i> Agenda</div>
-                        </div>
-                    </div>
-
-                    <!-- Main Content Mockup -->
-                    <div class="p-8 md:pl-72">
-                        <div class="flex justify-between items-center mb-8">
-                            <div>
-                                <h3 class="font-bold text-xl text-slate-800">Panel de Control</h3>
-                                <p class="text-xs text-slate-500">Bienvenido, Profesor Gustavo</p>
-                            </div>
-                            <div
-                                class="w-10 h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center">
-                                <i class="fa-regular fa-bell"></i>
-                            </div>
-                        </div>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                            <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
-                                <div class="text-slate-400 text-xs font-bold uppercase mb-2">Total Estudiantes</div>
-                                <div class="text-3xl font-bold text-slate-800">145</div>
-                            </div>
-                            <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
-                                <div class="text-slate-400 text-xs font-bold uppercase mb-2">Promedio General</div>
-                                <div class="text-3xl font-bold text-green-600">16.4</div>
-                            </div>
-                            <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
-                                <div class="text-slate-400 text-xs font-bold uppercase mb-2">Próxima Clase</div>
-                                <div class="text-lg font-bold text-slate-800 truncate">Mecatrónica III - 2:00 PM</div>
-                            </div>
-                        </div>
-                        <div
-                            class="bg-white border border-slate-200 rounded-xl h-64 flex items-center justify-center text-slate-400 italic text-sm">
-                            <i class="fa-solid fa-chart-line mr-2"></i> Gráfico de Rendimiento Semestral
-                        </div>
-                    </div>
-
-                    <!-- Overlay CTA -->
-                    <div
-                        class="absolute inset-0 bg-slate-900/50 backdrop-blur-[2px] flex items-center justify-center opacity-0 group-hover:opacity-100 transition duration-300">
-                        <button
-                            class="bg-blue-600 text-white px-8 py-4 rounded-full font-bold shadow-2xl hover:bg-blue-500 transition transform hover:scale-105 flex items-center gap-3">
-                            <i class="fa-solid fa-rocket"></i> Ver Demo Interactiva
-                        </button>
-                    </div>
+                    class="bg-slate-50 border-x border-b border-slate-200 rounded-b-2xl shadow-2xl overflow-hidden relative h-[600px] w-full">
+                    <iframe src="https://docenteia-production.up.railway.app/" class="w-full h-full border-none"
+                        title="DocenteAI Demo Interactiva"></iframe>
                 </div>
             </div>
 
-            <p class="text-center text-xs text-slate-400 mt-8 font-medium">Haz clic en la imagen para probar la versión
-                demo sin registro.</p>
+            <p class="text-center text-xs text-slate-400 mt-8 font-medium">Interactúa directamente con la plataforma
+                aquí arriba sin necesidad de registro.</p>
         </div>
     </section>
 
@@ -1033,10 +974,6 @@
                         Ver demostración
                     </a>
                 </div>
-                <p class="text-blue-300 text-xs mt-8 font-medium relative z-10 flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-shield-halved"></i> 14 días de prueba en planes premium. No se requiere
-                    tarjeta.
-                </p>
             </div>
         </div>
     </section>
