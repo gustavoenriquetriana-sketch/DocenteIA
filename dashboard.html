@@ -168,6 +168,12 @@
             font-weight: bold;
         }
 
+        /* Classes para mejorar saltos de página e impresión */
+        #planning-content .page-break-avoid {
+            page-break-inside: avoid;
+            break-inside: avoid;
+        }
+
         #planning-content h4 {
             font-size: 1.0625rem;
             color: #64748b;
@@ -244,6 +250,8 @@
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
             border-radius: 0.5rem;
             overflow: hidden;
+            page-break-inside: avoid;
+            break-inside: avoid;
         }
 
         #planning-content th {
@@ -2198,9 +2206,9 @@
                         // Table Body
                         doc.setFont('helvetica', 'normal');
                         studentsList.forEach(s => {
-                            if (yPos > 275) {
+                            if (yPos > pageHeight - 25) { // Adjusted from 275 to keep dynamic bottom margin
                                 doc.addPage();
-                                yPos = 20;
+                                yPos = 25; // Proper top margin on new pages
                             }
                             const name = s.name.length > 25 ? s.name.substring(0, 22) + '...' : s.name;
                             const subject = s.subject.length > 20 ? s.subject.substring(0, 17) + '...' : s.subject;
@@ -2745,11 +2753,11 @@
 
                     weeks.forEach(week => {
                         html += `
-                        < tr class="hover:bg-slate-50 transition" >
-                                <td class="p-3 font-bold text-blue-600 whitespace-nowrap">Semana ${week.week}</td>
-                                <td class="p-3 font-bold text-slate-800">${week.topic}</td>
-                                <td class="p-3">${week.objectives}</td>
-                                <td class="p-3 italic text-slate-500">${week.bibliography}</td>
+                        <tr class="hover:bg-slate-50 transition page-break-avoid" >
+                                <td class="p-4 font-bold text-blue-600 whitespace-nowrap">Semana ${week.week}</td>
+                                <td class="p-4 font-bold text-slate-800">${week.topic}</td>
+                                <td class="p-4">${week.objectives}</td>
+                                <td class="p-4 italic text-slate-500">${week.bibliography}</td>
                             </tr >
                         `;
                     });
@@ -2798,9 +2806,9 @@
                         // Weeks Loop
                         const weeks = currentPlanningData.planning || [];
                         weeks.forEach(week => {
-                            if (y > pageHeight - 60) {
+                            if (y > pageHeight - 35) { // Leave enough bottom space
                                 doc.addPage();
-                                y = 20;
+                                y = 25; // Reset Y with a clear top margin to avoid edge overlap
                             }
                             // Week header
                             doc.setFontSize(12);
@@ -2840,8 +2848,19 @@
 
                         doc.setFontSize(10);
                         doc.setTextColor(0, 0, 0);
+
+                        // Break long text into pages
+                        const lineHeight = 5;
                         const splitText = doc.splitTextToSize(textContent, 170);
-                        doc.text(splitText, margin, y);
+
+                        for (let i = 0; i < splitText.length; i++) {
+                            if (y > pageHeight - 30) {
+                                doc.addPage();
+                                y = 25; // Good top margin for continued text
+                            }
+                            doc.text(splitText[i], margin, y);
+                            y += lineHeight;
+                        }
                     }
 
                     // Footer
