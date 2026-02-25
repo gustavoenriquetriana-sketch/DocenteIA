@@ -2786,12 +2786,14 @@
                     const margin = 20;
                     let y = 50;
 
+                    const userNameLocal = localStorage.getItem('usuarioNombre') || localStorage.getItem('user_name') || localStorage.getItem('userName') || 'Docente';
+
                     // CASE A: Syllabus (Structured)
                     if (currentPlanningData.type === 'syllabus' || currentPlanningData.planning) {
 
                         doc.setFontSize(10);
                         doc.setFont(undefined, 'normal');
-                        doc.text('16 Semanas - Generado con DocenteAI', 105, 32, { align: 'center' });
+                        doc.text(`Elaborado por: Prof. ${userNameLocal}`, 105, 32, { align: 'center' });
 
                         // Weeks Loop
                         const weeks = currentPlanningData.planning || [];
@@ -2829,7 +2831,7 @@
                     else if (currentPlanningData.type === 'content' || currentPlanningData.html) {
                         doc.setFontSize(10);
                         doc.setFont(undefined, 'normal');
-                        doc.text('Reporte Personalizado - Generado con DocenteAI', 105, 32, { align: 'center' });
+                        doc.text(`Análisis Documental - Prof. ${userNameLocal}`, 105, 32, { align: 'center' });
 
                         // Strip HTML tags for basic text dump
                         const tmp = document.createElement("DIV");
