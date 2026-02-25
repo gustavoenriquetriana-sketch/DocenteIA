@@ -781,9 +781,9 @@
                             </div> Redactor IA
                         </li>
                     </ul>
-                    <button id="btn-comprar-pro"
-                        class="w-full bg-white/50 border border-slate-300/50 text-slate-800 py-4 rounded-xl font-bold text-sm hover:bg-blue-600 hover:text-white hover:border-blue-600 transition shadow-sm backdrop-blur-sm">Comenzar
-                        Ahora</button>
+                    <a id="btn-comprar-pro" href="https://buy.stripe.com/test_7sY4gB73Y9Uy4Ig7r908g00" target="_blank"
+                        class="block text-center w-full bg-slate-900 border border-slate-700 text-white py-4 rounded-xl font-bold text-sm hover:bg-black hover:border-slate-900 transition shadow-xl transform hover:-translate-y-1 mt-6">Comenzar
+                        Ahora</a>
                 </div>
                 <div
                     class="bg-gradient-to-br from-blue-900/95 to-blue-800/95 backdrop-blur-xl rounded-3xl p-8 border border-white/10 shadow-2xl text-white transform md:scale-105 z-10 relative overflow-hidden">
@@ -1187,22 +1187,22 @@
                             <div><label
                                     class="block text-xs font-bold text-slate-700 uppercase mb-2 tracking-wider">Nombre</label><input
                                     type="text" id="lead-name" required placeholder="Tu nombre"
-                                    class="w-full p-4 border border-slate-200/80 bg-white/80 rounded-xl focus:outline-none focus:border-blue-900 focus:ring-2 focus:ring-blue-900/10 transition text-sm font-medium shadow-sm backdrop-blur-sm">
+                                    class="w-full p-4 border border-slate-200/80 bg-white/80 rounded-xl focus:outline-none focus:border-blue-900 focus:ring-2 focus:ring-900/10 transition text-sm font-medium shadow-sm backdrop-blur-sm">
                             </div>
                             <div><label
                                     class="block text-xs font-bold text-slate-700 uppercase mb-2 tracking-wider">Cargo</label><input
                                     type="text" id="lead-role" required placeholder="Ej: Decano"
-                                    class="w-full p-4 border border-slate-200/80 bg-white/80 rounded-xl focus:outline-none focus:border-blue-900 focus:ring-2 focus:ring-blue-900/10 transition text-sm font-medium shadow-sm backdrop-blur-sm">
+                                    class="w-full p-4 border border-slate-200/80 bg-white/80 rounded-xl focus:outline-none focus:border-blue-900 focus:ring-2 focus:ring-900/10 transition text-sm font-medium shadow-sm backdrop-blur-sm">
                             </div>
                         </div>
                         <div><label
                                 class="block text-xs font-bold text-slate-700 uppercase mb-2 tracking-wider">Institución</label><input
                                 type="text" id="lead-institution" required placeholder="Ej: UNEXPO Guarenas"
-                                class="w-full p-4 border border-slate-200/80 bg-white/80 rounded-xl focus:outline-none focus:border-blue-900 focus:ring-2 focus:ring-blue-900/10 transition text-sm font-medium shadow-sm backdrop-blur-sm">
+                                class="w-full p-4 border border-slate-200/80 bg-white/80 rounded-xl focus:outline-none focus:border-blue-900 focus:ring-2 focus:ring-900/10 transition text-sm font-medium shadow-sm backdrop-blur-sm">
                         </div>
                         <div><label class="block text-xs font-bold text-slate-700 uppercase mb-2 tracking-wider">Nº
                                 Docentes</label><select id="lead-size" required
-                                class="w-full p-4 border border-slate-200/80 bg-white/80 rounded-xl focus:outline-none focus:border-blue-900 focus:ring-2 focus:ring-blue-900/10 transition text-sm font-medium shadow-sm appearance-none backdrop-blur-sm">
+                                class="w-full p-4 border border-slate-200/80 bg-white/80 rounded-xl focus:outline-none focus:border-blue-900 focus:ring-2 focus:ring-900/10 transition text-sm font-medium shadow-sm appearance-none backdrop-blur-sm">
                                 <option value="" disabled selected>Selecciona cantidad</option>
                                 <option value="10-50">10 - 50 Docentes</option>
                                 <option value="51-200">51 - 200 Docentes</option>
@@ -1241,40 +1241,6 @@
 
     <!-- Main Script -->
     <script src="script.js?v=4"></script>
-
-    <!-- Script oficial de Stripe -->
-    <script src="https://js.stripe.com/v3/"></script>
-
-    <script>
-        // PON TU pk_test_ AQUI
-        const stripe = Stripe('pk_test_51T4Ut6R8fPXINnmW91jiSDCcNeTuGD45aq3tiE3EhtnSf5dxfMAp6aTlI2VYlpbcIs3NggyNlRntprj6pv0vTuMo00lnWxLMX6');
-
-        // Detectamos el botón por el ID que le pusiste
-        const btnComprarPro = document.getElementById('btn-comprar-pro');
-
-        if (btnComprarPro) {
-            btnComprarPro.addEventListener('click', () => {
-                // Cambiamos el texto para que el usuario sepa que está cargando
-                btnComprarPro.innerText = 'Procesando...';
-                btnComprarPro.disabled = true;
-
-                // Redirigimos al Checkout de Stripe
-                stripe.redirectToCheckout({
-                    lineItems: [{ price: 'price_1T4VaAR8fPXINnmWnFvPIvKC', quantity: 1 }],
-                    mode: 'subscription',
-                    successUrl: window.location.href, // Redirige a la misma página en caso de éxito
-                    cancelUrl: window.location.href   // Redirige a la misma página si cancela
-                }).then((result) => {
-                    // Si hay un error en la redirección (ej. error de red), lo mostramos
-                    if (result.error) {
-                        alert(result.error.message);
-                        btnComprarPro.innerText = 'Comenzar Ahora';
-                        btnComprarPro.disabled = false;
-                    }
-                });
-            });
-        }
-    </script>
 </body>
 
 </html>
