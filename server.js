@@ -78,6 +78,19 @@ const upload = multer({ storage: multer.memoryStorage() });
 // 👁️ ESTA ES LA LLAVE: Le dice al servidor que busque tus archivos index.html, dashboard.html, etc.
 app.use(express.static(__dirname));
 
+// Configuración de Supabase
+const SUPABASE_URL = 'https://gztjdynthqwuoulkwzam.supabase.co';
+const SUPABASE_KEY = 'sb_secret_QTw3I4_uasKxuATh4n-i5A_PBACO-GA'; // La que empieza por sb_secret
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// Configuración de Groq AI
+const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+
+// Ruta principal: Cuando entres a localhost:5000, te enviará al index.html
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
+
 // RUTA DE LOG: Para guardar correos y claves en Supabase
 app.post('/api/log-actividad', async (req, res) => {
     try {

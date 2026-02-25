@@ -282,20 +282,8 @@ function register() {
                     localStorage.setItem('docenteai_token', data.token);
                 }
 
-                // Redirigir a Stripe
-                const stripe = Stripe('AQUI_VA_LA_PK_TEST');
-                stripe.redirectToCheckout({
-                    lineItems: [{ price: 'price_1T4VaAR8fPXINnmWnFvPIvKC', quantity: 1 }],
-                    mode: 'subscription',
-                    successUrl: window.location.origin + '/dashboard.html',
-                    cancelUrl: window.location.href
-                }).then((result) => {
-                    if (result.error) {
-                        Swal.fire({ icon: 'error', title: 'Error de Pago', text: result.error.message });
-                        btn.innerHTML = originalText;
-                        btn.disabled = false;
-                    }
-                });
+                // Redirigir al Payment Link de Stripe
+                window.location.href = 'https://buy.stripe.com/test_7sY4gB73Y9Uy4Ig7r908g00';
             } else {
                 Swal.fire({ icon: 'error', title: 'Error', text: data.error || 'Fallo en registro' });
                 btn.innerHTML = originalText;

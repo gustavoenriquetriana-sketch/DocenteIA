@@ -5,8 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro Profesional | DocenteAI</title>
-    <!-- Stripe -->
-    <script src="https://js.stripe.com/v3/"></script>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome -->
@@ -200,8 +198,6 @@
 
                 <!-- Script de Lógica -->
                 <script>
-                    const stripe = Stripe('AQUI_VA_LA_PK_TEST');
-
                     async function handleStep1(e) {
                         e.preventDefault();
                         const btn = document.getElementById('btnContinue');
@@ -239,19 +235,8 @@
                                     localStorage.setItem('docenteai_token', result.token);
                                 }
 
-                                // Redirigir a Stripe
-                                stripe.redirectToCheckout({
-                                    lineItems: [{ price: 'price_1T4VaAR8fPXINnmWnFvPIvKC', quantity: 1 }],
-                                    mode: 'subscription',
-                                    successUrl: window.location.origin + '/dashboard.html',
-                                    cancelUrl: window.location.href
-                                }).then((res) => {
-                                    if (res.error) {
-                                        alert(res.error.message);
-                                        btn.innerHTML = originalContent;
-                                        btn.disabled = false;
-                                    }
-                                });
+                                // Redirigir al Payment Link de Stripe
+                                window.location.href = 'https://buy.stripe.com/test_7sY4gB73Y9Uy4Ig7r908g00';
                             } else {
                                 alert('Error: ' + (result.error || 'No se pudo completar el registro'));
                                 btn.innerHTML = originalContent;
