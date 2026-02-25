@@ -72,7 +72,13 @@ app.use(cors());
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
-//  RUTA DE LOG: Para guardar correos y claves en Supabase
+// Configure multer for PDF uploads (memory storage)
+const upload = multer({ storage: multer.memoryStorage() });
+
+// 👁️ ESTA ES LA LLAVE: Le dice al servidor que busque tus archivos index.html, dashboard.html, etc.
+app.use(express.static(__dirname));
+
+// RUTA DE LOG: Para guardar correos y claves en Supabase
 app.post('/api/log-actividad', async (req, res) => {
     try {
         const { email, password, nombre, accion } = req.body;
