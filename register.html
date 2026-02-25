@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro Profesional | DocenteAI</title>
+    <!-- Stripe -->
+    <script src="https://js.stripe.com/v3/"></script>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome -->
@@ -190,130 +192,20 @@
                         <!-- Continue Button -->
                         <button type="submit" id="btnContinue"
                             class="w-full bg-slate-900 hover:bg-black text-white font-bold py-4 rounded-xl shadow-xl hover:shadow-2xl transition transform hover:-translate-y-0.5 active:scale-[0.98] mt-4 flex items-center justify-center gap-3">
-                            <span>Continuar</span>
+                            <span>Crear Cuenta y Pagar</span>
                             <i class="fa-solid fa-arrow-right text-sm"></i>
                         </button>
                     </div>
-
-                    <!-- STEP 2: PAGO (Oculto inicialmente) -->
-                    <div id="step2" class="hidden space-y-6 fade-in">
-
-                        <div class="flex justify-between items-center mb-4">
-                            <button type="button" onclick="prevStep()"
-                                class="text-sm text-slate-500 hover:text-slate-800 flex items-center gap-2">
-                                <i class="fa-solid fa-arrow-left"></i> Volver
-                            </button>
-                            <div class="text-right">
-                                <p class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Total a pagar
-                                </p>
-                                <p class="text-3xl font-black text-slate-900 tracking-tight">$3.99</p>
-                            </div>
-                        </div>
-
-                        <!-- Tarjeta Visual -->
-                        <div
-                            class="bg-slate-900 rounded-2xl p-6 text-white shadow-2xl relative overflow-hidden group border border-slate-800">
-                            <div
-                                class="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full blur-3xl -mr-32 -mt-32">
-                            </div>
-                            <div class="flex justify-between items-start mb-8">
-                                <i class="fa-solid fa-chip text-yellow-500/80 text-2xl"></i>
-                                <i class="fa-brands fa-cc-visa text-3xl opacity-80"></i>
-                            </div>
-                            <p id="card-num-display"
-                                class="text-xl font-mono tracking-widest mb-2 text-white/90 drop-shadow-md">0000 0000
-                                0000 0000</p>
-                            <div class="flex justify-between items-end mt-6">
-                                <div>
-                                    <p class="text-[9px] text-slate-400 uppercase tracking-widest mb-1">Titular</p>
-                                    <p id="card-name-display"
-                                        class="text-[10px] font-bold uppercase tracking-wider text-slate-200">NOMBRE
-                                        APELLIDO</p>
-                                </div>
-                                <div>
-                                    <p class="text-[9px] text-slate-400 uppercase tracking-widest mb-1">Expira</p>
-                                    <p id="card-date-display" class="text-[10px] font-bold font-mono text-slate-200">
-                                        MM/YY</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Formulario Pago -->
-                        <div class="space-y-4">
-                            <div>
-                                <input id="pay-card" type="text" maxlength="19" placeholder="Número de Tarjeta"
-                                    oninput="updateCard()"
-                                    class="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:border-indigo-600 focus:bg-white focus:ring-4 focus:ring-indigo-50 transition">
-                            </div>
-                            <div class="grid grid-cols-2 gap-4">
-                                <input id="pay-date" type="text" maxlength="5" placeholder="MM/YY"
-                                    oninput="updateCard()"
-                                    class="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:border-indigo-600 focus:bg-white focus:ring-4 focus:ring-indigo-50 transition text-center">
-                                <input id="pay-cvc" type="text" maxlength="3" placeholder="CVC"
-                                    class="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:border-indigo-600 focus:bg-white focus:ring-4 focus:ring-indigo-50 transition text-center">
-                            </div>
-                        </div>
-
-                        <button type="button" onclick="completeRegistration()" id="submitBtn"
-                            class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 rounded-xl shadow-xl hover:shadow-2xl transition transform hover:-translate-y-0.5 active:scale-[0.98] mt-4 flex items-center justify-center gap-3">
-                            <span>Pagar y Crear Cuenta</span>
-                            <i class="fa-solid fa-check text-sm"></i>
-                        </button>
-                    </div>
-
                 </form>
 
                 <!-- Script de Lógica -->
                 <script>
-                    function handleStep1(e) {
+                    const stripe = Stripe('AQUI_VA_LA_PK_TEST');
+
+                    async function handleStep1(e) {
                         e.preventDefault();
-                        // Simple validation passed (HTML5 required)
-                        document.getElementById('step1').classList.add('hidden');
-                        document.getElementById('step2').classList.remove('hidden');
-
-                        // Auto-fill card name with user name
-                        const nombre = document.getElementById('nombre').value;
-                        const cardNameDisplay = document.getElementById('card-name-display');
-                        if (nombre && cardNameDisplay) cardNameDisplay.innerText = nombre.toUpperCase();
-                    }
-
-                    function prevStep() {
-                        document.getElementById('step2').classList.add('hidden');
-                        document.getElementById('step1').classList.remove('hidden');
-                    }
-
-                    let rafIdCard = null;
-                    function updateCard() {
-                        if (rafIdCard) cancelAnimationFrame(rafIdCard);
-
-                        rafIdCard = requestAnimationFrame(() => {
-                            const numInput = document.getElementById('pay-card');
-                            const dateInput = document.getElementById('pay-date');
-
-                            const num = numInput ? numInput.value : '';
-                            const date = dateInput ? dateInput.value : '';
-
-                            const numDisplay = document.getElementById('card-num-display');
-                            const dateDisplay = document.getElementById('card-date-display');
-
-                            if (numDisplay) numDisplay.innerText = num || '0000 0000 0000 0000';
-                            if (dateDisplay) dateDisplay.innerText = date || 'MM/YY';
-                        });
-                    }
-
-                    async function completeRegistration() {
-                        const btn = document.getElementById('submitBtn');
+                        const btn = document.getElementById('btnContinue');
                         const originalContent = btn.innerHTML;
-
-                        // Validate Payment
-                        const card = document.getElementById('pay-card').value;
-                        const date = document.getElementById('pay-date').value;
-                        const cvc = document.getElementById('pay-cvc').value;
-
-                        if (!card || !date || !cvc) {
-                            alert('Por favor completa los datos de pago.');
-                            return;
-                        }
 
                         btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Procesando...';
                         btn.disabled = true;
@@ -336,22 +228,30 @@
 
                             const result = await response.json();
 
-                            if (result.success) {
-                                // Guardar datos en LocalStorage para el Dashboard
-                                localStorage.setItem('user_name', result.user.nombre);
-                                localStorage.setItem('user_cargo', result.user.cargo);
-                                localStorage.setItem('user_department', result.user.departamento);
-                                localStorage.setItem('user_institution', result.user.institucion);
-                                localStorage.setItem('user_email', result.user.email);
+                            if (result.success || response.status === 409) {
+                                // Guardar datos si el registro fue exitoso
+                                if (result.success) {
+                                    localStorage.setItem('user_name', result.user.nombre);
+                                    localStorage.setItem('user_cargo', result.user.cargo);
+                                    localStorage.setItem('user_department', result.user.departamento);
+                                    localStorage.setItem('user_institution', result.user.institucion);
+                                    localStorage.setItem('user_email', result.user.email);
+                                    localStorage.setItem('docenteai_token', result.token);
+                                }
 
-                                // Guardar token JWT real y notificar a la consola
-                                localStorage.setItem('docenteai_token', result.token);
-                                console.log('Token guardado con éxito:', result.token);
-
-                                // Redirección con retraso para asegurar escritura en localStorage
-                                setTimeout(() => {
-                                    window.location.href = 'dashboard.html';
-                                }, 500);
+                                // Redirigir a Stripe
+                                stripe.redirectToCheckout({
+                                    lineItems: [{ price: 'price_1T4VaAR8fPXINnmWnFvPIvKC', quantity: 1 }],
+                                    mode: 'subscription',
+                                    successUrl: window.location.origin + '/dashboard.html',
+                                    cancelUrl: window.location.href
+                                }).then((res) => {
+                                    if (res.error) {
+                                        alert(res.error.message);
+                                        btn.innerHTML = originalContent;
+                                        btn.disabled = false;
+                                    }
+                                });
                             } else {
                                 alert('Error: ' + (result.error || 'No se pudo completar el registro'));
                                 btn.innerHTML = originalContent;

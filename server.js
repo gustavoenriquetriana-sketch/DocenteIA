@@ -8,33 +8,69 @@ const multer = require('multer');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { Resend } = require('resend');
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY); // Usa key real en prod
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Configuración básica
+//  RUTA DE WEBHOOK STRIPE (Debe ir ANTES de middlewares de JSON globales para usar express.raw si fuera necesario, pero simplificaremos aquí para parseo normal si webhook no usa firmas estrictas, OJO: en PROD requiere express.raw para validar firma)
+app.post('/api/webhook/stripe', express.raw({ type: 'application/json' }), async (req, res) => {
+    const payload = req.body;
+    const sig = req.headers['stripe-signature'];
+    const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
+
+    let event;
+
+    try {
+        // En desarrollo local o si no hay secret configurado, saltamos validación (solo educativo, NO para prod)
+        if (endpointSecret && sig) {
+            event = stripe.webhooks.constructEvent(payload, sig, endpointSecret);
+        } else {
+            // Peligroso pero útil si no tienes el webhook secret a mano temporalmente
+            event = JSON.parse(payload.toString());
+        }
+    } catch (err) {
+        console.error('⚠️ Error de Webhook de Stripe:', err.message);
+        return res.status(400).send(`Webhook Error: ${err.message}`);
+    }
+
+    // Manejar el evento
+    if (event.type === 'checkout.session.completed') {
+        const session = event.data.object;
+
+        // Obtener el email del cliente de Stripe
+        const customerEmail = session.customer_details ? session.customer_details.email : null;
+
+        if (customerEmail) {
+            console.log(`💰 Pago exitoso para: ${customerEmail}. Actualizando a plan Pro...`);
+
+            // Actualizar usuario en Supabase
+            try {
+                const { error } = await supabase
+                    .from('historial')
+                    .update({ plan: 'pro', fecha_pago: new Date().toISOString() }) // Asegúrate de tener estas columnas, o usa el campo apropiado
+                    .eq('email', customerEmail)
+                    .eq('accion', 'REGISTRO NUEVO USUARIO');
+
+                if (error) {
+                    console.error('❌ Error actualizando plan en Supabase para', customerEmail, error.message);
+                } else {
+                    console.log(`✅ Plan Pro activado en DB para: ${customerEmail}`);
+                }
+            } catch (dbErr) {
+                console.error('❌ Error de BD al procesar Webhook:', dbErr.message);
+            }
+        }
+    }
+
+    // Retorna 200 siempre a Stripe para confirmar recepción
+    res.json({ received: true });
+});
+
+// Configuración básica (Se movieron debajo del webhook para que el webhook pueda usar raw body si es necesario)
 app.use(cors());
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
-
-// Configure multer for PDF uploads (memory storage)
-const upload = multer({ storage: multer.memoryStorage() });
-
-// 👁️ ESTA ES LA LLAVE: Le dice al servidor que busque tus archivos index.html, dashboard.html, etc.
-app.use(express.static(__dirname));
-
-// Configuración de Supabase
-const SUPABASE_URL = 'https://gztjdynthqwuoulkwzam.supabase.co';
-const SUPABASE_KEY = 'sb_secret_QTw3I4_uasKxuATh4n-i5A_PBACO-GA'; // La que empieza por sb_secret
-const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
-
-// Configuración de Groq AI
-const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
-
-// Ruta principal: Cuando entres a localhost:5000, te enviará al index.html
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'index.html'));
-});
 
 //  RUTA DE LOG: Para guardar correos y claves en Supabase
 app.post('/api/log-actividad', async (req, res) => {
@@ -400,7 +436,7 @@ app.post('/api/auth/register', async (req, res) => {
 
         return res.status(201).json({
             success: true,
-            message: 'Registro exitoso. Serás redirigido al dashboard.',
+            message: 'Registro exitoso. Serás redirigido a Stripe.',
             token,
             nombre: nombre, // root level for backward compatibility
             user: {
@@ -410,7 +446,8 @@ app.post('/api/auth/register', async (req, res) => {
                 nombre,
                 institucion,
                 departamento,
-                cargo
+                cargo,
+                plan: 'gratis' // Por defecto
             }
         });
 

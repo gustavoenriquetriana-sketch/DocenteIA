@@ -107,14 +107,7 @@ function verVacantes() {
 
 function switchToRegister() {
     closeModal('modal-login');
-    openModal('modal-pago');
-
-    // Add event listeners for live card updates if not already there
-    // We can just rely on onchange="updateCard()" in HTML, or add input listener here
-    ['pay-card', 'pay-date', 'pay-name'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.addEventListener('input', updateCard);
-    });
+    openModal('modal-register');
 }
 
 function switchToLogin() {
@@ -251,101 +244,69 @@ function resetRecoveryModal() {
 }
 
 
-// LÓGICA TARJETA (Optimizada con requestAnimationFrame)
-let rafIdCard = null;
-function updateCard() {
-    if (rafIdCard) cancelAnimationFrame(rafIdCard);
+// FUNCIONES DE REGISTRO UNIFICADO Y STRIPE REDIRECT
 
-    rafIdCard = requestAnimationFrame(() => {
-        const numInput = document.getElementById('pay-card');
-        const dateInput = document.getElementById('pay-date');
-        const nameInput = document.getElementById('pay-name');
+function register() {
+    const nombre = document.getElementById('reg-name').value;
+    const email = document.getElementById('reg-email').value;
+    const pass = document.getElementById('reg-pass').value;
+    const passConfirm = document.getElementById('reg-pass-confirm').value;
 
-        const num = numInput ? numInput.value : '';
-        const date = dateInput ? dateInput.value : '';
-        const name = nameInput ? nameInput.value : '';
-
-        const numDisplay = document.getElementById('card-num-display');
-        const dateDisplay = document.getElementById('card-date-display');
-        const nameDisplay = document.getElementById('card-name-display');
-
-        if (numDisplay) numDisplay.innerText = num || '0000 0000 0000 0000';
-        if (dateDisplay) dateDisplay.innerText = date || 'MM/YY';
-        if (nameDisplay) nameDisplay.innerText = name || 'NOMBRE APELLIDO';
-    });
-}
-
-function procesarPago() {
-    // Safety check with Optional Chaining/Nullish Coalescing
-    const nombre = document.getElementById('pay-name')?.value || '';
-    const email = document.getElementById('pay-email')?.value || '';
-    const pass = document.getElementById('pay-password')?.value || '';
-    const card = document.getElementById('pay-card')?.value || '';
-    const date = document.getElementById('pay-date')?.value || '';
-    const cvc = document.getElementById('pay-cvc')?.value || '';
-
-    console.log('Procesando pago:', { nombre, email, cardLast4: card.slice(-4) });
-
-    if (!nombre || !email || !pass || !card || !date || !cvc) {
-        Swal.fire({ icon: 'warning', title: 'Faltan Datos', text: 'Por favor completa todos los campos para continuar.' });
+    if (!nombre || !email || !pass || !passConfirm) {
+        Swal.fire({ icon: 'warning', title: 'Faltan Datos', text: 'Por favor completa todos los campos.' });
         return;
     }
 
-    // Button handling requires finding the button within the modal context or by ID if it had one.
-    // Since it has onclick="procesarPago()", we can find it via event or simple query selector context
-    // But since we are inside the function, let's grab it by specific selector
-    const btn = document.querySelector('#modal-pago button[onclick="procesarPago()"]');
-    const originalText = btn ? btn.innerHTML : "Pagar y Activar Cuenta";
-
-    if (btn) {
-        btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Procesando...';
-        btn.classList.add('opacity-75', 'cursor-not-allowed');
-        btn.disabled = true;
+    if (pass !== passConfirm) {
+        Swal.fire({ icon: 'warning', title: 'Error', text: 'Las contraseñas no coinciden.' });
+        return;
     }
 
-    const delay = new Promise(resolve => setTimeout(resolve, 1500));
-    delay.then(() => {
-        fetch('/api/auth/register', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                nombre: nombre,
-                email: email,
-                password: pass
-            })
-        })
-            .then(async res => {
-                const data = await res.json();
-                if (res.status === 409) {
-                    Swal.fire({ icon: 'warning', title: 'Email ya registrado', text: data.error });
-                    if (btn) { btn.innerHTML = originalText; btn.classList.remove('opacity-75', 'cursor-not-allowed'); btn.disabled = false; }
-                    return;
-                }
-                if (res.ok && data.success) {
-                    if (btn) {
-                        btn.innerHTML = '<i class="fa-solid fa-check"></i> ¡Bienvenido!';
-                        btn.classList.replace('bg-slate-900', 'bg-green-600');
-                    }
+    const btn = document.getElementById('btn-register');
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Procesando...';
+    btn.disabled = true;
+
+    fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ nombre: nombre, email: email, password: pass })
+    })
+        .then(async res => {
+            const data = await res.json();
+
+            if (data.success || res.status === 409) {
+                if (data.success) {
                     localStorage.setItem('userEmail', email);
                     localStorage.setItem('userName', nombre);
-                    Swal.fire({
-                        icon: 'success',
-                        title: '¡Registro Exitoso!',
-                        text: 'Tu cuenta fue creada. Ahora inicia sesión.',
-                        timer: 2500,
-                        showConfirmButton: false
-                    });
-                    setTimeout(() => { closeModal('modal-pago'); openModal('modal-login'); }, 2500);
-                } else {
-                    Swal.fire({ icon: 'error', title: 'Error', text: data.error || 'Fallo en registro' });
-                    if (btn) { btn.innerHTML = originalText; btn.classList.remove('opacity-75', 'cursor-not-allowed'); btn.disabled = false; }
+                    localStorage.setItem('docenteai_token', data.token);
                 }
-            })
-            .catch(() => {
-                Swal.fire({ icon: 'error', title: 'Error', text: 'Error de conexión con el servidor.' });
-                if (btn) { btn.innerHTML = originalText; btn.classList.remove('opacity-75', 'cursor-not-allowed'); btn.disabled = false; }
-            });
-    });
+
+                // Redirigir a Stripe
+                const stripe = Stripe('AQUI_VA_LA_PK_TEST');
+                stripe.redirectToCheckout({
+                    lineItems: [{ price: 'price_1T4VaAR8fPXINnmWnFvPIvKC', quantity: 1 }],
+                    mode: 'subscription',
+                    successUrl: window.location.origin + '/dashboard.html',
+                    cancelUrl: window.location.href
+                }).then((result) => {
+                    if (result.error) {
+                        Swal.fire({ icon: 'error', title: 'Error de Pago', text: result.error.message });
+                        btn.innerHTML = originalText;
+                        btn.disabled = false;
+                    }
+                });
+            } else {
+                Swal.fire({ icon: 'error', title: 'Error', text: data.error || 'Fallo en registro' });
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
+        })
+        .catch(() => {
+            Swal.fire({ icon: 'error', title: 'Error', text: 'Error de conexión con el servidor.' });
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+        });
 }
 
 // 🔑 HELPER: Manejo global de errores de autenticación

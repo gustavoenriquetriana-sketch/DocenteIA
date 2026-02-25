@@ -62,6 +62,7 @@
             transform: translateZ(0);
         }
     </style>
+    <script src="https://js.stripe.com/v3/"></script>
 </head>
 
 <body class="bg-transparent text-slate-800 relative selection:bg-blue-100 selection:text-blue-900">
@@ -780,7 +781,7 @@
                             </div> Redactor IA
                         </li>
                     </ul>
-                    <button onclick="window.location.href='register.html'"
+                    <button id="btn-comprar-pro"
                         class="w-full bg-white/50 border border-slate-300/50 text-slate-800 py-4 rounded-xl font-bold text-sm hover:bg-blue-600 hover:text-white hover:border-blue-600 transition shadow-sm backdrop-blur-sm">Comenzar
                         Ahora</button>
                 </div>
@@ -1162,119 +1163,6 @@
         </div>
     </div>
 
-    <div id="modal-pago" class="fixed inset-0 z-[60] hidden overflow-y-auto">
-        <div class="absolute inset-0 bg-slate-950/80 backdrop-blur-xl transition-opacity duration-300"
-            onclick="closeModal('modal-pago')"></div>
-        <div class="relative flex min-h-screen items-center justify-center p-4">
-            <div
-                class="bg-white rounded-3xl shadow-2xl w-full max-w-5xl overflow-hidden transform transition-all scale-100 relative flex flex-col md:flex-row shadow-slate-900/50 animate-fade-in-up">
-
-                <!-- Sección 1: Datos Personales (Izquierda) -->
-                <div class="p-8 md:p-12 md:w-5/12 bg-slate-50 border-r border-slate-200">
-                    <div class="mb-10">
-                        <span
-                            class="bg-blue-100 text-blue-700 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider mb-4 inline-block">Paso
-                            1</span>
-                        <h3 class="text-2xl font-bold text-slate-900 mb-2">Crear Cuenta</h3>
-                        <p class="text-slate-500 text-sm font-medium">Tus datos para acceder a la plataforma.</p>
-                    </div>
-
-                    <div class="space-y-6">
-                        <div>
-                            <label class="block text-xs font-bold text-slate-700 uppercase mb-2 tracking-wider">Nombre
-                                Completo</label>
-                            <input id="pay-name" type="text" placeholder="Ej: Gustavo Triana"
-                                class="w-full p-4 border border-slate-300 bg-white rounded-xl focus:outline-none focus:border-blue-600 focus:ring-4 focus:ring-blue-100 transition text-sm font-bold text-slate-800 placeholder:font-normal shadow-sm">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold text-slate-700 uppercase mb-2 tracking-wider">Correo
-                                Institucional</label>
-                            <input id="pay-email" type="email" placeholder="profesor@unexpo.edu.ve"
-                                class="w-full p-4 border border-slate-300 bg-white rounded-xl focus:outline-none focus:border-blue-600 focus:ring-4 focus:ring-blue-100 transition text-sm font-bold text-slate-800 placeholder:font-normal shadow-sm">
-                        </div>
-                        <div>
-                            <label
-                                class="block text-xs font-bold text-slate-700 uppercase mb-2 tracking-wider">Contraseña</label>
-                            <input id="pay-password" type="password" placeholder="••••••••"
-                                class="w-full p-4 border border-slate-300 bg-white rounded-xl focus:outline-none focus:border-blue-600 focus:ring-4 focus:ring-blue-100 transition text-sm font-bold text-slate-800 placeholder:font-normal shadow-sm">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Sección 2: Pago (Derecha) -->
-                <div class="p-8 md:p-12 md:w-7/12 bg-white flex flex-col justify-between relative">
-                    <div>
-                        <div class="flex justify-between items-center mb-10">
-                            <div>
-                                <span
-                                    class="bg-indigo-100 text-indigo-700 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider mb-2 inline-block">Paso
-                                    2</span>
-                                <h3 class="text-2xl font-bold text-slate-900">Pago Seguro</h3>
-                            </div>
-                            <div class="text-right">
-                                <p class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Total a pagar
-                                </p>
-                                <p class="text-4xl font-black text-slate-900 tracking-tight">$3.99</p>
-                            </div>
-                        </div>
-
-                        <!-- Tarjeta Visual -->
-                        <div
-                            class="bg-slate-900 rounded-2xl p-8 text-white mb-8 shadow-2xl relative overflow-hidden group border border-slate-800">
-                            <div
-                                class="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full blur-3xl -mr-32 -mt-32">
-                            </div>
-                            <div class="flex justify-between items-start mb-10">
-                                <i class="fa-solid fa-chip text-yellow-500/80 text-3xl"></i>
-                                <i class="fa-brands fa-cc-visa text-4xl opacity-80"></i>
-                            </div>
-                            <p id="card-num-display"
-                                class="text-2xl font-mono tracking-widest mb-2 text-white/90 drop-shadow-md">0000 0000
-                                0000 0000</p>
-                            <div class="flex justify-between items-end mt-8">
-                                <div>
-                                    <p class="text-[9px] text-slate-400 uppercase tracking-widest mb-1">Titular</p>
-                                    <p id="card-name-display"
-                                        class="text-xs font-bold uppercase tracking-wider text-slate-200">NOMBRE
-                                        APELLIDO</p>
-                                </div>
-                                <div>
-                                    <p class="text-[9px] text-slate-400 uppercase tracking-widest mb-1">Expira</p>
-                                    <p id="card-date-display" class="text-xs font-bold font-mono text-slate-200">MM/YY
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="space-y-4">
-                            <div>
-                                <input id="pay-card" type="text" maxlength="19" placeholder="Número de Tarjeta"
-                                    onchange="updateCard()"
-                                    class="w-full p-4 border border-slate-200 bg-slate-50 rounded-xl text-sm font-bold focus:outline-none focus:border-indigo-500 focus:bg-white transition focus:ring-4 focus:ring-indigo-50 placeholder:font-normal">
-                            </div>
-                            <div class="grid grid-cols-2 gap-4">
-                                <input id="pay-date" type="text" maxlength="5" placeholder="MM/YY"
-                                    onchange="updateCard()"
-                                    class="w-full p-4 border border-slate-200 bg-slate-50 rounded-xl text-sm font-bold focus:outline-none focus:border-indigo-500 focus:bg-white transition text-center focus:ring-4 focus:ring-indigo-50 placeholder:font-normal">
-                                <input id="pay-cvc" type="text" maxlength="3" placeholder="CVC"
-                                    class="w-full p-4 border border-slate-200 bg-slate-50 rounded-xl text-sm font-bold focus:outline-none focus:border-indigo-500 focus:bg-white transition text-center focus:ring-4 focus:ring-indigo-50 placeholder:font-normal">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="mt-8 border-t border-slate-100 pt-6 flex flex-col gap-4">
-                        <button onclick="procesarPago()"
-                            class="w-full py-4 bg-slate-900 text-white font-bold rounded-xl shadow-xl hover:bg-black transition flex items-center justify-center gap-3 text-sm transform active:scale-[0.99] border border-slate-800">
-                            <i class="fa-solid fa-lock text-emerald-400"></i> Pagar y Activar Cuenta
-                        </button>
-                        <button onclick="closeModal('modal-pago')"
-                            class="text-slate-400 hover:text-slate-600 text-xs font-bold transition text-center">Cancelar
-                            Operación</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <div id="modal-ventas" class="fixed inset-0 z-[60] hidden overflow-y-auto">
         <div class="absolute inset-0 bg-slate-950/60 backdrop-blur-md transition-opacity duration-300"
@@ -1353,6 +1241,40 @@
 
     <!-- Main Script -->
     <script src="script.js?v=4"></script>
+
+    <!-- Script oficial de Stripe -->
+    <script src="https://js.stripe.com/v3/"></script>
+
+    <script>
+        // PON TU pk_test_ AQUI
+        const stripe = Stripe('pk_test_51T4Ut6R8fPXINnmW91jiSDCcNeTuGD45aq3tiE3EhtnSf5dxfMAp6aTlI2VYlpbcIs3NggyNlRntprj6pv0vTuMo00lnWxLMX6');
+
+        // Detectamos el botón por el ID que le pusiste
+        const btnComprarPro = document.getElementById('btn-comprar-pro');
+
+        if (btnComprarPro) {
+            btnComprarPro.addEventListener('click', () => {
+                // Cambiamos el texto para que el usuario sepa que está cargando
+                btnComprarPro.innerText = 'Procesando...';
+                btnComprarPro.disabled = true;
+
+                // Redirigimos al Checkout de Stripe
+                stripe.redirectToCheckout({
+                    lineItems: [{ price: 'price_1T4VaAR8fPXINnmWnFvPIvKC', quantity: 1 }],
+                    mode: 'subscription',
+                    successUrl: window.location.href, // Redirige a la misma página en caso de éxito
+                    cancelUrl: window.location.href   // Redirige a la misma página si cancela
+                }).then((result) => {
+                    // Si hay un error en la redirección (ej. error de red), lo mostramos
+                    if (result.error) {
+                        alert(result.error.message);
+                        btnComprarPro.innerText = 'Comenzar Ahora';
+                        btnComprarPro.disabled = false;
+                    }
+                });
+            });
+        }
+    </script>
 </body>
 
 </html>
