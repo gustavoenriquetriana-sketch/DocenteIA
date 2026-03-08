@@ -358,6 +358,8 @@ function login() {
                 localStorage.setItem('userName', data.user.name);
                 localStorage.setItem('usuarioNombre', data.nombre || data.user.name || 'Usuario');
                 localStorage.setItem('userId', data.user.id);
+                localStorage.setItem('userInstitucion', data.user.universidad || '');
+                localStorage.setItem('userCargo', data.user.cargo || '');
                 window.location.href = 'dashboard.html';
             } else {
                 Swal.fire({ icon: 'error', title: 'Error de Acceso', text: data.error || 'Credenciales incorrectas.' });
@@ -405,7 +407,7 @@ function generarBorrador() {
                 <p>"Estimados estudiantes,</p><br>
                 <p>Espero que estén bien. Les escribo para informarles sobre: <strong>${input}</strong>.</p><br>
                 <p>Quedo atento a sus dudas.</p>
-                <p>Atentamente,<br>Prof. UNEXPO"</p>
+                <p>Atentamente,<br>Docente UNEXPO"</p>
             `;
         }, 1000);
     }

@@ -183,7 +183,9 @@ app.post('/api/auth/login', async (req, res) => {
                 id: usuario.id,
                 email: usuario.email,
                 name: usuario.nombre,
-                nombre: usuario.nombre
+                nombre: usuario.nombre,
+                universidad: usuario.universidad || '',
+                cargo: usuario.cargo || ''
             }
         });
 
@@ -879,7 +881,7 @@ app.post('/api/send-announcement', verifyToken, async (req, res) => {
             from: 'DocenteAI <onboarding@resend.dev>', // El remitente autorizado
             to: 'gustavoenriquetriana@gmail.com', // Destinatario autorizado
             bcc: validEmails, // Aquí van tus alumnos
-            subject: `Nuevo comunicado del profesor ${nombreProfesor}`,
+            subject: `Nuevo comunicado de Docente ${nombreProfesor}`,
             html: `<p>${message.replace(/\n/g, '<br>')}</p>`,
             text: message
         });

@@ -383,12 +383,14 @@
                 <div id="sidebar-profile"
                     class="flex items-center justify-between p-3 rounded-xl bg-slate-800 border border-slate-700 hover:border-slate-600 transition group cursor-pointer">
                     <div class="flex items-center gap-3">
-                        <div
+                        <div id="user-avatar"
                             class="w-9 h-9 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center font-bold text-xs shadow-inner">
-                            GT</div>
+                            ?</div>
                         <div class="overflow-hidden">
                             <p id="user-display-name"
                                 class="text-sm font-bold truncate group-hover:text-white transition">Usuario</p>
+                            <p id="user-institution-subtitle" class="text-[10px] text-slate-400 truncate font-medium">
+                            </p>
                         </div>
                     </div>
                     <button onclick="openModal('modal-logout')" class="text-slate-500 hover:text-red-400 transition"
@@ -3863,6 +3865,20 @@
                         let shortName = parts[0];
                         if (parts.length > 1) shortName += ` ${parts[parts.length - 1]}`;
                         sidebarName.innerText = shortName;
+
+                        // Update Initials in profile circle (Sidebar)
+                        const sidebarAvatar = document.getElementById('user-avatar');
+                        if (sidebarAvatar) {
+                            const initials = (parts[0][0] + (parts.length > 1 ? parts[parts.length - 1][0] : '')).toUpperCase();
+                            sidebarAvatar.innerText = initials;
+                        }
+                    }
+
+                    // Update Sidebar Subtitle (Institution)
+                    const userInst = localStorage.getItem('userInstitucion');
+                    const sidebarSubtitle = document.getElementById('user-institution-subtitle');
+                    if (sidebarSubtitle) {
+                        sidebarSubtitle.innerText = userInst ? `Docente ${userInst}` : 'Docente';
                     }
 
                     // Update Config Card (Full Name)
