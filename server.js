@@ -79,8 +79,8 @@ const upload = multer({ storage: multer.memoryStorage() });
 app.use(express.static(__dirname));
 
 // Configuración de Supabase
-const SUPABASE_URL = 'https://gztjdynthqwuoulkwzam.supabase.co';
-const SUPABASE_KEY = 'sb_secret_QTw3I4_uasKxuATh4n-i5A_PBACO-GA'; // La que empieza por sb_secret
+const SUPABASE_URL = process.env.SUPABASE_URL;
+const SUPABASE_KEY = process.env.SUPABASE_KEY;
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 // Configuración de Groq AI
