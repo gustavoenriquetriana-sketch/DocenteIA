@@ -89,6 +89,7 @@
     </main>
 
     <script>
+        const API_BASE_URL = 'https://docenteia-1.onrender.com';
         let allTickets = [];
         let currentFilter = 'all';
 
@@ -98,7 +99,7 @@
             document.getElementById('empty-state').classList.add('hidden');
 
             const token = localStorage.getItem('docenteai_token');
-            fetch('/api/support/tickets', {
+            fetch(`${API_BASE_URL}/api/support/tickets`, {
                 headers: { 'Authorization': 'Bearer ' + token }
             })
                 .then(res => res.json())
@@ -198,14 +199,16 @@
             }
 
             try {
-                const response = await fetch(`/api/support/ticket/${encodeURIComponent(ticketId)}/status`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': 'Bearer ' + token
-                    },
-                    body: JSON.stringify({ estado: nuevoEstado })
-                });
+               // In a real scenario, this fetches from the backend
+            // Let's assume we fetch from our new supbase integration api
+            const response = await fetch(`/api/support/ticket/${encodeURIComponent(ticketId)}/status`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + token
+                },
+                body: JSON.stringify({ estado: nuevoEstado })
+            });
 
                 const data = await response.json();
 

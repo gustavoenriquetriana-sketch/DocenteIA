@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel Docente - UNEXPO</title>
+    <!-- Add Global URL -->
+    <script>const API_BASE_URL = 'https://docenteia-1.onrender.com';</script>
     <link rel="icon"
         href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎓</text></svg>">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/driver.js@1.0.1/dist/driver.css" />
@@ -1130,9 +1132,7 @@
                         class="bg-gradient-to-r from-slate-800 to-slate-900 rounded-xl p-8 text-white mb-8 shadow-lg relative overflow-hidden group">
                         <div class="absolute top-0 right-0 p-6 opacity-20"><i class="fa-brands fa-cc-visa text-6xl"></i>
                         </div>
-                        <p class="text-xs text-slate-400 uppercase tracking-widest mb-3 font-bold">Método Principal</p>
-                        <p
-                            class="text-3xl font-mono-card tracking-widest mb-8 text-slate-100 shadow-black drop-shadow-md">
+                        <p class="text-3xl font-mono-card tracking-widest mb-8 text-slate-100 shadow-black drop-shadow-md">
                             •••• •••• •••• <span id="current-card-digits">4242</span></p>
                         <div class="flex justify-between text-sm text-slate-300 font-bold uppercase"><span>Gustavo
                                 Triana</span><span>EXP 12/28</span></div>
@@ -1664,7 +1664,7 @@
 
 
             function fetchTasks() {
-                authFetch('/api/tasks')
+                authFetch(`${API_BASE_URL}/api/tasks`)
                     .then(async res => {
                         if (handleAuthError(res.status)) return;
                         const data = await res.json();
@@ -1675,7 +1675,7 @@
             }
 
             function fetchStudents() {
-                authFetch('/api/students')
+                authFetch(`${API_BASE_URL}/api/students`)
                     .then(async res => {
                         if (handleAuthError(res.status)) return;
                         const data = await res.json();
@@ -1717,7 +1717,7 @@
             loadSettings();
 
             function loadSettings() {
-                authFetch('/api/settings')
+                authFetch(`${API_BASE_URL}/api/settings`)
                     .then(async res => {
                         if (handleAuthError(res.status)) return;
                         const data = await res.json();
@@ -1755,7 +1755,7 @@
                 const reminders = document.getElementById('toggle1').checked;
                 const summary = document.getElementById('toggle2').checked;
 
-                authFetch('/api/settings', {
+                authFetch(`${API_BASE_URL}/api/settings`, {
                     method: 'POST',
                     body: JSON.stringify({ reminders, summary })
                 })
@@ -1883,7 +1883,7 @@
 
                 try {
                     const userName = localStorage.getItem('userNombre') || localStorage.getItem('userName') || 'Docente';
-                    const res = await authFetch('/api/send-announcement', {
+                    const res = await authFetch(`${API_BASE_URL}/api/send-announcement`, {
                         method: 'POST',
                         body: JSON.stringify({ message, profesor: userName })
                     });
@@ -1911,7 +1911,7 @@
 
             async function cargarRadarClases() {
                 try {
-                    const res = await authFetch('/api/stats/clases-hoy');
+                    const res = await authFetch(`${API_BASE_URL}/api/stats/clases-hoy`);
                     if (!res || handleAuthError(res.status)) return;
 
                     const result = await res.json();
@@ -1929,7 +1929,7 @@
 
             async function cargarPendientesCalificar() {
                 try {
-                    const res = await authFetch('/api/stats/por-calificar');
+                    const res = await authFetch(`${API_BASE_URL}/api/stats/por-calificar`);
                     if (!res || handleAuthError(res.status)) return;
 
                     const result = await res.json();
@@ -1947,7 +1947,7 @@
 
             async function cargarTiempoAhorrado() {
                 try {
-                    const res = await authFetch('/api/stats/tiempo-ahorrado');
+                    const res = await authFetch(`${API_BASE_URL}/api/stats/tiempo-ahorrado`);
                     if (!res || handleAuthError(res.status)) return;
 
                     const result = await res.json();
@@ -1965,7 +1965,7 @@
 
             async function cargarMaterias() {
                 try {
-                    const res = await authFetch('/api/materias');
+                    const res = await authFetch(`${API_BASE_URL}/api/materias`);
                     if (!res || handleAuthError(res.status)) return;
 
                     const result = await res.json();
@@ -2014,7 +2014,7 @@
                 }
 
                 try {
-                    const res = await authFetch('/api/materias', {
+                    const res = await authFetch(`${API_BASE_URL}/api/materias`, {
                         method: 'POST',
                         body: JSON.stringify({ nombre })
                     });
@@ -2043,7 +2043,7 @@
 
             async function cargarGraficoRendimiento() {
                 try {
-                    const res = await authFetch('/api/stats/rendimiento');
+                    const res = await authFetch(`${API_BASE_URL}/api/stats/rendimiento`);
                     if (!res || handleAuthError(res.status)) return;
 
                     const result = await res.json();
@@ -2143,7 +2143,7 @@
                 const date = document.getElementById('task-date').value;
                 const type = document.getElementById('task-type').value;
                 if (title && date) {
-                    authFetch('/api/tasks', {
+                    authFetch(`${API_BASE_URL}/api/tasks`, {
                         method: 'POST',
                         body: JSON.stringify({ title, date, type })
                     })
@@ -2253,7 +2253,7 @@
                 btn.innerText = 'Guardando...';
                 btn.disabled = true;
 
-                authFetch('/api/students', {
+                authFetch(`${API_BASE_URL}/api/students`, {
                     method: 'POST',
                     body: JSON.stringify({ name, email, subject, grade: 0 })
                 })
@@ -2314,7 +2314,7 @@
                 loading.classList.remove('hidden');
                 empty.classList.add('hidden');
 
-                authFetch('/api/evaluaciones/' + studentId)
+                authFetch(`${API_BASE_URL}/api/evaluaciones/${studentId}`)
                     .then(async res => {
                         if (handleAuthError(res.status)) return;
                         const data = await res.json();
@@ -2374,7 +2374,7 @@
                 btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Guardando...';
                 btn.disabled = true;
 
-                authFetch('/api/evaluaciones', {
+                authFetch(`${API_BASE_URL}/api/evaluaciones`, {
                     method: 'POST',
                     body: JSON.stringify({
                         estudiante_id: currentEvalStudentId,
@@ -2419,7 +2419,7 @@
                 const originalHTML = btn ? btn.innerHTML : '';
                 if (btn) { btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Guardando...'; btn.disabled = true; }
 
-                authFetch('/api/students/' + currentEditId, {
+                authFetch(`${API_BASE_URL}/api/students/${currentEditId}`, {
                     method: 'PUT',
                     body: JSON.stringify({ email, status })
                 })
@@ -2461,7 +2461,7 @@
                 if (!result.isConfirmed) return;
 
                 try {
-                    const res = await authFetch('/api/students/' + id, { method: 'DELETE' });
+                    const res = await authFetch(`${API_BASE_URL}/api/students/${id}`, { method: 'DELETE' });
 
                     if (handleAuthError(res.status)) return;
 
@@ -2549,7 +2549,7 @@
                 btn.disabled = true;
 
                 try {
-                    const res = await authFetch('/api/user/password', {
+                    const res = await authFetch(`${API_BASE_URL}/api/user/password`, {
                         method: 'PUT',
                         body: JSON.stringify({ passwordActual: currentPassword, nuevaPassword: newPassword })
                     });
@@ -2591,7 +2591,7 @@
 
                 out.innerHTML = '<div class="flex h-full items-center justify-center text-blue-600"><i class="fa-solid fa-circle-notch fa-spin text-2xl"></i></div>';
 
-                authFetch('/api/ai/generate', {
+                authFetch(`${API_BASE_URL}/api/ai/generate`, {
                     method: 'POST',
                     body: JSON.stringify({ prompt: input, userName })
                 })
@@ -2642,7 +2642,7 @@
                     formData.append('syllabus', file);
                     formData.append('instruction', instruction);
 
-                    const response = await authFetch('/api/generate-planning', {
+                    const response = await authFetch(`${API_BASE_URL}/api/generate-planning`, {
                         method: 'POST',
                         body: formData
                     });
@@ -3099,7 +3099,7 @@
                 btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Enviando...';
                 btn.disabled = true;
 
-                authFetch('/api/support/ticket', {
+                authFetch(`${API_BASE_URL}/api/support/ticket`, {
                     method: 'POST',
                     // authFetch ya inyecta el Content-Type y el Authorization
                     body: JSON.stringify({ asunto: subject, descripcion: description })
@@ -3146,7 +3146,7 @@
                 loader.classList.remove('hidden');
                 empty.classList.add('hidden');
 
-                authFetch('/api/support/my-tickets')
+                authFetch(`${API_BASE_URL}/api/support/my-tickets`)
                     .then(res => res.json())
                     .then(data => {
                         loader.classList.add('hidden');
@@ -3197,7 +3197,7 @@
 
             function toggleTicketStatus(id, currentStatus) {
                 const newStatus = currentStatus === 'Pendiente' ? 'Resuelto' : 'Pendiente';
-                fetch(`/api/support/ticket/${id}`, {
+                fetch(`${API_BASE_URL}/api/support/ticket/${id}`, {
                     method: 'PATCH',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ status: newStatus })
@@ -3236,7 +3236,7 @@
                 empty.classList.add('hidden');
                 results.classList.add('hidden');
 
-                authFetch('/api/generate-exam', {
+                authFetch(`${API_BASE_URL}/api/generate-exam`, {
                     method: 'POST',
                     body: JSON.stringify({ topic, difficulty, numQuestions, type })
                 })
