@@ -676,7 +676,9 @@ REGLAS:
 1. Lee la instrucción del usuario con cuidado
 2. Analiza SOLO el texto del PDF proporcionado
 3. Para tablas usa: <table class='w-full border border-collapse'><thead><tr><th class='border p-2'>...</th></tr></thead><tbody>...</tbody></table>
-4. NO inventes datos que no estén en el PDF`;
+4. NO inventes datos que no estén en el PDF
+REGLA 1: Solo puedes usar los temas, capítulos y títulos EXACTOS que aparecen en el texto proporcionado. PROHIBIDO inventar números de capítulos.
+REGLA 2: Distribuye el contenido real del documento a lo largo de las semanas de forma lógica. No uses relleno genérico como 'Semana de revisión' a menos que ya hayas agotado el contenido técnico del PDF.`;
 
         const userPrompt = `Instrucción: "${instruction}"\n\nTexto del PDF:\n${finalText}${extractionNote}\n\nGenera la respuesta JSON adecuada.`;
 

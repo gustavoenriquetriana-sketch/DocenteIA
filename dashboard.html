@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 
 <head>
@@ -2803,7 +2803,7 @@
 
                         doc.setFontSize(10);
                         doc.setFont(undefined, 'normal');
-                        doc.text(`Elaborado por: Prof. ${userNameLocal}`, 105, 32, { align: 'center' });
+                        doc.text(`Elaborado por: Docente ${userNameLocal}`, 105, 32, { align: 'center' });
 
                         // Weeks Loop
                         const weeks = currentPlanningData.planning || [];
@@ -2841,7 +2841,7 @@
                     else if (currentPlanningData.type === 'content' || currentPlanningData.html) {
                         doc.setFontSize(10);
                         doc.setFont(undefined, 'normal');
-                        doc.text(`Análisis Documental - Prof. ${userNameLocal}`, 105, 32, { align: 'center' });
+                        doc.text(`Análisis Documental - Docente ${userNameLocal}`, 105, 32, { align: 'center' });
 
                         // Strip HTML tags for basic text dump
                         const tmp = document.createElement("DIV");
@@ -3499,7 +3499,7 @@
                         doc.setFont('times', 'bolditalic');
                         doc.setFontSize(12);
                         doc.setTextColor(30, 58, 138);
-                        doc.text(`Prof. ${userName}`, margin, pageHeight - 12);
+                        doc.text(`Docente ${userName}`, margin, pageHeight - 12);
                         doc.setDrawColor(30, 58, 138);
                         doc.line(margin, pageHeight - 10, margin + 60, pageHeight - 10);
                         doc.setFont('helvetica', 'normal');
