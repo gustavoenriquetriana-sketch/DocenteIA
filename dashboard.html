@@ -3934,7 +3934,7 @@
 
             async function cargarConfiguracionAutomatizacion() {
                 try {
-                    const response = await authFetch('/api/settings/automation');
+                    const response = await authFetch(`${API_BASE_URL}/api/settings/automation`);
                     const data = await response.json();
 
                     if (data.success) {
@@ -3953,7 +3953,7 @@
                 const isSummaryOn = document.getElementById('toggle2')?.checked || false;
 
                 try {
-                    const response = await authFetch('/api/settings/automation', {
+                    const response = await authFetch(`${API_BASE_URL}/api/settings/automation`, {
                         method: 'POST',
                         body: JSON.stringify({
                             recordatorios_clase: isRemindersOn,
