@@ -89,7 +89,6 @@
     </main>
 
     <script>
-        const API_BASE_URL = 'https://docenteia-1.onrender.com';
         let allTickets = [];
         let currentFilter = 'all';
 
@@ -99,7 +98,7 @@
             document.getElementById('empty-state').classList.add('hidden');
 
             const token = localStorage.getItem('docenteai_token');
-            fetch(`${API_BASE_URL}/api/support/tickets`, {
+            fetch(`/api/support/tickets`, {
                 headers: { 'Authorization': 'Bearer ' + token }
             })
                 .then(res => res.json())

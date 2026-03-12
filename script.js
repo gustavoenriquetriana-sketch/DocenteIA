@@ -1,5 +1,4 @@
 // script.js
-const API_BASE_URL = 'https://docenteia-1.onrender.com';
 
 // 1. CALCULADORA DE AHORRO
 const hoursInput = document.getElementById('input-hours');
@@ -149,7 +148,7 @@ function sendRecoveryEmail() {
     btn.disabled = true;
 
     // Real API call to Nodemailer endpoint
-    fetch(`${API_BASE_URL}/api/auth/forgot-password`, {
+    fetch(`/api/auth/forgot-password`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email })
@@ -205,7 +204,7 @@ function resetPassword() {
     btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Guardando...';
     btn.disabled = true;
 
-    fetch(`${API_BASE_URL}/api/auth/reset-password`, {
+    fetch(`/api/auth/reset-password`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, code, newPassword })
@@ -268,7 +267,7 @@ function register() {
     btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Procesando...';
     btn.disabled = true;
 
-    fetch(`${API_BASE_URL}/api/auth/register`, {
+    fetch(`/api/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ nombre: nombre, email: email, password: pass })
@@ -337,7 +336,7 @@ function login() {
     btn.innerText = "Verificando...";
     btn.classList.add('opacity-75', 'cursor-not-allowed');
 
-    fetch(`${API_BASE_URL}/api/auth/login`, {
+    fetch(`/api/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
@@ -443,7 +442,7 @@ document.addEventListener('DOMContentLoaded', () => {
             btnDemo.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Enviando...';
             btnDemo.disabled = true;
 
-            fetch(`${API_BASE_URL}/api/leads`, {
+            fetch(`/api/leads`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ name, role, institution, size })
