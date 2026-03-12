@@ -3412,7 +3412,7 @@
                 }
 
                 // Get user name from localStorage
-                const userName = localStorage.getItem('userName') || 'Profesor';
+                const userName = localStorage.getItem('usuarioNombre') || localStorage.getItem('user_name') || localStorage.getItem('userName') || 'Docente';
 
                 // PDF Configuration
                 const pageWidth = 210;
@@ -3499,7 +3499,7 @@
                         doc.setFont('times', 'bolditalic');
                         doc.setFontSize(12);
                         doc.setTextColor(30, 58, 138);
-                        doc.text(`Docente ${userName}`, margin, pageHeight - 12);
+                        doc.text(`Docente ${userName.replace(/^Docente\s+/i, '')}`, margin, pageHeight - 12);
                         doc.setDrawColor(30, 58, 138);
                         doc.line(margin, pageHeight - 10, margin + 60, pageHeight - 10);
                         doc.setFont('helvetica', 'normal');
