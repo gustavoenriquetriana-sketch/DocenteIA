@@ -628,7 +628,8 @@ app.post('/api/generate-planning', upload.single('syllabus'), verifyToken, async
 
         console.log(`📊 PDF: ${data.numpages} páginas, ${data.text.length} caracteres`);
 
-        let finalText = data.text.substring(0, 300000);
+        const MAX_CHARS = 20000;
+        let finalText = data.text.substring(0, MAX_CHARS);
         let extractionNote = '';
 
         // Detectar páginas específicas
@@ -641,17 +642,17 @@ app.post('/api/generate-planning', upload.single('syllabus'), verifyToken, async
             const endChar = Math.floor(endPage * charsPerPage);
             let extractedPages = data.text.substring(startChar, Math.min(endChar, data.text.length));
 
-            if (extractedPages.length > 300000) {
-                finalText = extractedPages.substring(0, 300000);
-                extractionNote = `\n[NOTA: Páginas ${startPage}-${endPage} truncadas a 300k caracteres]`;
+            if (extractedPages.length > MAX_CHARS) {
+                finalText = extractedPages.substring(0, MAX_CHARS);
+                extractionNote = `\n\n[NOTA: El texto ha sido truncado por límites de sistema para páginas ${startPage}-${endPage}. Úsalo como referencia junto al índice]`;
             } else {
                 finalText = extractedPages;
                 extractionNote = startPage === endPage
                     ? `\n[NOTA: Página ${startPage} extraída]`
                     : `\n[NOTA: Páginas ${startPage}-${endPage} extraídas]`;
             }
-        } else if (data.text.length > 300000) {
-            extractionNote = '\n[NOTA: Documento extenso. Se analizaron los primeros 300k caracteres]';
+        } else if (data.text.length > MAX_CHARS) {
+            extractionNote = '\n\n[NOTA: El texto ha sido truncado por límites de sistema. Busca el ÍNDICE o CONTENIDO al inicio para elaborar el plan]';
         }
 
         console.log(`📤 Enviando ${finalText.length} caracteres a Groq`);
@@ -680,7 +681,8 @@ REGLAS:
 REGLA 1: Solo puedes usar los temas, capítulos y títulos EXACTOS que aparecen en el texto proporcionado. PROHIBIDO inventar números de capítulos.
 REGLA 2: Distribuye el contenido real del documento a lo largo de las semanas de forma lógica. No uses relleno genérico como 'Semana de revisión' a menos que ya hayas agotado el contenido técnico del PDF.
 REGLA 3: PROHIBIDO INVENTAR NÚMEROS DE PÁGINA. Si vas a citar, extrae el número de página real donde aparece el tema. Si no estás seguro de la página, cita solo el Título del Tema, pero NUNCA inventes números.
-REGLA 4: Debes analizar la totalidad del documento subido. Es OBLIGATORIO que el plan de 16 semanas abarque desde el primer tema hasta el ÚLTIMO tema del documento. No cortes el temario por la mitad para rellenar las semanas, condensa los temas iniciales si es necesario para asegurar que los temas finales (ej. Criptografía, IA, etc.) se incluyan en las últimas semanas del plan.`;
+REGLA 4: Debes analizar la totalidad del documento subido. Es OBLIGATORIO que el plan de 16 semanas abarque desde el primer tema hasta el ÚLTIMO tema del documento. No cortes el temario por la mitad para rellenar las semanas, condensa los temas iniciales si es necesario para asegurar que los temas finales (ej. Criptografía, IA, etc.) se incluyan en las últimas semanas del plan.
+REGLA 5: Es posible que recibas el texto truncado. Si es así, busca la sección de ÍNDICE o CONTENIDO al principio del documento y basa estrictamente tu plan de 16 semanas en esos temas listados, abarcando desde el primer hasta el último tema del índice.`;
 
         const userPrompt = `Instrucción: "${instruction}"\n\nTexto del PDF:\n${finalText}${extractionNote}\n\nGenera la respuesta JSON adecuada.`;
 
