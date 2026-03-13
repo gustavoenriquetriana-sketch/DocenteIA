@@ -371,10 +371,8 @@ function login() {
         .finally(() => {
             btn.innerText = "Entrar";
             btn.classList.remove('opacity-75', 'cursor-not-allowed');
-        });
-}
-
 document.addEventListener('DOMContentLoaded', () => {
+    // 1. Manejo del botón de Google Login
     const btnGoogleLogin = document.getElementById('btn-google-auth-login');
     if (btnGoogleLogin) {
         btnGoogleLogin.addEventListener('click', () => {
@@ -389,6 +387,31 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             } catch (error) {
                 console.error("Error with Google Login:", error);
+            }
+        });
+    }
+
+    // 2. Escuchar cambios de estado de autenticación (Aduana de Redirección)
+    if (typeof window.supabaseClient !== 'undefined') {
+        window.supabaseClient.auth.onAuthStateChange((event, session) => {
+            if (event === 'SIGNED_IN' && session && session.user) {
+                const metadata = session.user.user_metadata || {};
+                
+                // Si falta la institución o el cargo, redirigir a completar perfil
+                // Solo si NO estamos ya en completar-perfil para evitar bucles infinitos
+                const isCompletarPerfil = window.location.pathname.endsWith('completar-perfil.html');
+                
+                if (!metadata.institucion || !metadata.cargo) {
+                    if (!isCompletarPerfil) {
+                        window.location.href = 'completar-perfil.html';
+                    }
+                } else {
+                    // Si ya tiene todo y venimos del login/register (no de dashboard), lo enviamos al dashboard
+                    const isLoginOrRegister = window.location.pathname.endsWith('index.html') || window.location.pathname.endsWith('register.html') || window.location.pathname === '/';
+                    if (isLoginOrRegister) {
+                        window.location.href = 'dashboard.html';
+                    }
+                }
             }
         });
     }

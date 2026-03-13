@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro Profesional | DocenteAI</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Custom Scrollbar for Form Side */
+        .custom-scroll::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .custom-scroll::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background-color: #cbd5e1;
+            border-radius: 20px;
+        }
+    </style>
+</head>
+
+<body class="h-screen flex overflow-hidden">
+
+    <!-- Left Side: Branding (Desktop) -->
+    <div class="hidden lg:flex w-1/2 bg-slate-900 relative items-center justify-center p-12 overflow-hidden">
+
+        <!-- Abstract Background -->
+        <div class="absolute inset-0 z-0">
+            <div
+                class="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-600 rounded-full mix-blend-multiply filter blur-[128px] opacity-20 animate-pulse">
+            </div>
+            <div class="absolute bottom-0 left-0 w-[500px] h-[500px] bg-purple-600 rounded-full mix-blend-multiply filter blur-[128px] opacity-20 animate-pulse"
+                style="animation-delay: 2s"></div>
+        </div>
+
+        <div class="relative z-10 text-center text-white max-w-lg">
+            <div
+                class="w-20 h-20 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-8 shadow-2xl shadow-blue-900/50">
+                <i class="fa-solid fa-graduation-cap text-4xl"></i>
+            </div>
+
+            <h1 class="text-4xl font-bold mb-6">Bienvenido a la Nueva Era Académica</h1>
+            <p class="text-blue-200 text-lg leading-relaxed mb-10">Gestiona tus clases con Inteligencia Artificial.
+                <br>Diseñado exclusivamente para docentes universitarios e investigadores.
+            </p>
+
+            <div class="flex justify-center gap-4 text-sm font-medium text-slate-400">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-check text-green-400"></i> Planificación
+                </div>
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-check text-green-400"></i> Notas
+                </div>
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-check text-green-400"></i> Asistencia IA
+                </div>
+            </div>
+
+            <div class="mt-12 opacity-50 text-xs">
+                © 2026 UNEXPO Guarenas - Departamento de Desarrollo
+            </div>
+        </div>
+    </div>
+
+    <!-- Right Side: Form -->
+    <div class="w-full lg:w-1/2 bg-white flex flex-col h-full relative">
+        <!-- Top Mobile Header -->
+        <div class="lg:hidden p-6 pb-0 flex items-center gap-3">
+            <div class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center text-white">
+                <i class="fa-solid fa-graduation-cap"></i>
+            </div>
+            <span class="font-bold text-lg text-slate-800">DocenteAI</span>
+        </div>
+
+        <div class="flex-1 flex items-center justify-center p-6 sm:p-12 overflow-y-auto custom-scroll">
+            <div class="w-full max-w-md space-y-8 fade-in">
+
+                <div class="text-center lg:text-left">
+                    <h2 class="text-3xl font-bold text-slate-900">Completar Perfil</h2>
+                    <p class="text-slate-500 mt-2">Por favor, necesitamos unos datos extra de tu perfil profesional.</p>
+                </div>
+
+                <form id="registerForm" onsubmit="handleStep1(event)" class="space-y-5">
+
+                    <!-- STEP 1: DATOS PERSONALES -->
+                    <div id="step1" class="space-y-5 fade-in">
+                        <!-- Nombre / Razón Social -->
+                        <div>
+                            <label class="block text-xs font-bold text-slate-600 uppercase mb-2">Nombre Completo / Razón
+                                Social</label>
+                            <div class="relative">
+                                <i class="fa-solid fa-user absolute left-4 top-3.5 text-slate-400 text-sm"></i>
+                                <input type="text" id="nombre" readonly tabindex="-1"
+                                    class="w-full pl-11 pr-4 py-3 bg-slate-200 border border-slate-300 rounded-xl text-sm font-medium focus:outline-none text-slate-500 cursor-not-allowed transition"
+                                    placeholder="Cargando...">
+                            </div>
+                        </div>
+
+                        <!-- Email -->
+                        <div>
+                            <label class="block text-xs font-bold text-slate-600 uppercase mb-2">Correo
+                                Institucional</label>
+                            <div class="relative">
+                                <i class="fa-solid fa-envelope absolute left-4 top-3.5 text-slate-400 text-sm"></i>
+                                <input type="email" id="email" readonly tabindex="-1"
+                                    class="w-full pl-11 pr-4 py-3 bg-slate-200 border border-slate-300 rounded-xl text-sm font-medium focus:outline-none text-slate-500 cursor-not-allowed transition"
+                                    placeholder="Cargando...">
+                            </div>
+                        </div>
+
+                        <!-- Institución -->
+                        <div>
+                            <label class="block text-xs font-bold text-slate-600 uppercase mb-2">Institución de
+                                Procedencia</label>
+                            <div class="relative">
+                                <i
+                                    class="fa-solid fa-building-columns absolute left-4 top-3.5 text-slate-400 text-sm"></i>
+                                <input type="text" id="institucion" required
+                                    class="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:border-blue-600 focus:bg-white focus:ring-4 focus:ring-blue-50 transition"
+                                    placeholder="Ej: UNEXPO, UCV, LUZ">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                            <!-- Departamento -->
+                            <div>
+                                <label class="block text-xs font-bold text-slate-600 uppercase mb-2">Departamento /
+                                    Facultad</label>
+                                <input type="text" id="departamento" required
+                                    class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:border-blue-600 focus:bg-white focus:ring-4 focus:ring-blue-50 transition"
+                                    placeholder="Ej: Mecatrónica">
+                            </div>
+
+                            <!-- Cargo -->
+                            <div>
+                                <label class="block text-xs font-bold text-slate-600 uppercase mb-2">Cargo
+                                    Académico</label>
+                                <select id="cargo" required
+                                    class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:border-blue-600 focus:bg-white focus:ring-4 focus:ring-blue-50 transition appearance-none">
+                                    <option value="" disabled selected>Seleccionar...</option>
+                                    <option value="Docente Titular">Docente Titular</option>
+                                    <option value="Jefe de Departamento">Jefe de Departamento</option>
+                                    <option value="Investigador">Investigador</option>
+                                    <option value="Administrativo">Administrativo</option>
+                                    <option value="Otro">Otro</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Continue Button -->
+                        <button type="submit" id="btnContinue"
+                            class="w-full bg-slate-900 hover:bg-black text-white font-bold py-4 rounded-xl shadow-xl hover:shadow-2xl transition transform hover:-translate-y-0.5 active:scale-[0.98] mt-4 flex items-center justify-center gap-3">
+                            <span>Finalizar y Entrar al Panel</span>
+                            <i class="fa-solid fa-arrow-right text-sm"></i>
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Script de Lógica -->
+                <!-- Supabase SDK & Initialization -->
+                <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+                <script>
+                    window.SUPABASE_URL = 'https://gztjdynthqwuoulkwzam.supabase.co';
+                    window.SUPABASE_ANON_KEY = 'sb_publishable_D-47ae0npx_gnj_qLUtMfw_GAL4EirW';
+                    if (!window.supabaseClient) {
+                        window.supabaseClient = window.supabase.createClient(window.SUPABASE_URL, window.SUPABASE_ANON_KEY);
+                    }
+
+                    document.addEventListener('DOMContentLoaded', async () => {
+                        try {
+                            const { data: { session }, error } = await window.supabaseClient.auth.getSession();
+                            if (error) throw error;
+                            
+                            if (session && session.user) {
+                                // Pre-fill name based on available metadata
+                                const metadata = session.user.user_metadata || {};
+                                const fullName = metadata.full_name || metadata.name || '';
+                                document.getElementById('nombre').value = fullName;
+                                document.getElementById('email').value = session.user.email || '';
+                            } else {
+                                // If no session is found, redirect back to login
+                                window.location.href = 'index.html';
+                            }
+                        } catch (err) {
+                            console.error("Error al obtener la sesión de Supabase:", err);
+                        }
+                    });
+
+                    async function handleStep1(e) {
+                        e.preventDefault();
+                        const btn = document.getElementById('btnContinue');
+                        const originalContent = btn.innerHTML;
+
+                        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Guardando...';
+                        btn.disabled = true;
+
+                        const institucion = document.getElementById('institucion').value;
+                        const departamento = document.getElementById('departamento').value;
+                        const cargo = document.getElementById('cargo').value;
+
+                        try {
+                            const { data, error } = await window.supabaseClient.auth.updateUser({
+                                data: {
+                                    institucion: institucion,
+                                    departamento: departamento,
+                                    cargo: cargo
+                                }
+                            });
+
+                            if (error) throw error;
+
+                            // Save to local storage for quick access across the app
+                            localStorage.setItem('user_institution', institucion);
+                            localStorage.setItem('user_department', departamento);
+                            localStorage.setItem('user_cargo', cargo);
+                            
+                            // Re-save session details in case other scripts rely on them
+                            if (data.user) {
+                                const meta = data.user.user_metadata || {};
+                                localStorage.setItem('usuarioNombre', meta.full_name || meta.name || data.user.email);
+                                localStorage.setItem('userEmail', data.user.email);
+                            }
+
+                            // Success update -> redirect to Dashboard
+                            window.location.href = 'dashboard.html';
+
+                        } catch (error) {
+                            console.error("Error updating user profile:", error);
+                            alert('No se pudo guardar la información. Intenta de nuevo.');
+                            btn.innerHTML = originalContent;
+                            btn.disabled = false;
+                        }
+                    }
+                </script>
+</body>
+
+</html>
