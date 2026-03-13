@@ -374,20 +374,25 @@ function login() {
         });
 }
 
-function loginWithGoogle() {
-    try {
-        if (typeof supabase !== 'undefined') {
-            supabase.auth.signInWithOAuth({ provider: 'google' });
-        } else {
-            console.error("Supabase client is not initialized.");
-            if (typeof Swal !== 'undefined') {
-                Swal.fire({ icon: 'error', title: 'Error', text: 'El servicio de autenticación no está disponible en este momento.' });
+document.addEventListener('DOMContentLoaded', () => {
+    const btnGoogleLogin = document.getElementById('btn-google-auth-login');
+    if (btnGoogleLogin) {
+        btnGoogleLogin.addEventListener('click', () => {
+            try {
+                if (typeof window.supabaseClient !== 'undefined') {
+                    window.supabaseClient.auth.signInWithOAuth({ provider: 'google' });
+                } else {
+                    console.error("Supabase client is not initialized.");
+                    if (typeof Swal !== 'undefined') {
+                        Swal.fire({ icon: 'error', title: 'Error', text: 'El servicio de autenticación no está disponible en este momento.' });
+                    }
+                }
+            } catch (error) {
+                console.error("Error with Google Login:", error);
             }
-        }
-    } catch (error) {
-        console.error("Error with Google Login:", error);
+        });
     }
-}
+});
 
 
 function syncData() {
