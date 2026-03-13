@@ -374,6 +374,21 @@ function login() {
         });
 }
 
+function loginWithGoogle() {
+    try {
+        if (typeof supabase !== 'undefined') {
+            supabase.auth.signInWithOAuth({ provider: 'google' });
+        } else {
+            console.error("Supabase client is not initialized.");
+            if (typeof Swal !== 'undefined') {
+                Swal.fire({ icon: 'error', title: 'Error', text: 'El servicio de autenticación no está disponible en este momento.' });
+            }
+        }
+    } catch (error) {
+        console.error("Error with Google Login:", error);
+    }
+}
+
 
 function syncData() {
     const btn = document.getElementById('btn-sync');
