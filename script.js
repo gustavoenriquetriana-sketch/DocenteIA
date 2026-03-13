@@ -371,6 +371,9 @@ function login() {
         .finally(() => {
             btn.innerText = "Entrar";
             btn.classList.remove('opacity-75', 'cursor-not-allowed');
+        });
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     // 1. Manejo del botón de Google Login
     const btnGoogleLogin = document.getElementById('btn-google-auth-login');
