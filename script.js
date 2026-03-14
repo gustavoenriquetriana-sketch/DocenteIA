@@ -308,8 +308,19 @@ function handleAuthError(status) {
 }
 
 // 🔑 HELPER: Fetch con autorización JWT automática
-function authFetch(url, options = {}) {
-    const token = localStorage.getItem('docenteai_token');
+async function authFetch(url, options = {}) {
+    let token = null;
+    if (window.supabaseClient) {
+        const { data } = await window.supabaseClient.auth.getSession();
+        if (data.session) {
+            token = data.session.access_token;
+        }
+    }
+
+    if (!token) {
+        token = localStorage.getItem('docenteai_token');
+    }
+
     const headers = {
         'Content-Type': 'application/json',
         ...(token ? { 'Authorization': 'Bearer ' + token } : {}),
