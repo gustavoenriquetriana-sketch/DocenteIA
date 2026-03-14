@@ -1510,24 +1510,13 @@
         </div>
 
         <script>
-            // 🛡️ GUARDIA DE SEGURIDAD PRIMARIO CON SUPABASE
-            if (!window.supabaseClient) {
-                console.warn("GUARDIA VULNERADA: Supabase no inicializado.");
+            // 🛡️ GUARDIA DE SEGURIDAD PRIMARIO
+            const currentToken = localStorage.getItem('docenteai_token');
+            console.log('Token detectado:', currentToken);
+
+            if (!currentToken) {
+                console.warn("GUARDIA VULNERADA: No se encontró token. Redirigiendo al login...");
                 window.location.replace('index.html');
-            } else {
-                window.supabaseClient.auth.getSession().then(({ data, error }) => {
-                    const session = data.session;
-                    if (!session) {
-                        console.warn("GUARDIA VULNERADA: No hay sesión activa en Supabase. Redirigiendo al login...");
-                        window.location.replace('index.html');
-                    } else {
-                        const metadata = session.user.user_metadata || {};
-                        if (!metadata.institucion || !metadata.cargo) {
-                            console.warn("Faltan datos en el perfil (institución o cargo). Redirigiendo a completar-perfil.html...");
-                            window.location.replace('completar-perfil.html');
-                        }
-                    }
-                });
             }
 
             // 🔑 AUTH HELPERS (Disponibles en todo el dashboard)
@@ -1543,20 +1532,8 @@
 
             // Función Helper de Lazo Cerrado para inyectar JWT
             async function authFetch(url, options = {}) {
-                let token = null;
-                
-                // 1. Extraemos el token de la sesión de Supabase Auth
-                if (window.supabaseClient) {
-                    const { data } = await window.supabaseClient.auth.getSession();
-                    if (data.session) {
-                        token = data.session.access_token;
-                    }
-                }
-
-                // Fallback por si acaso para token viejo temporal
-                if (!token) {
-                    token = localStorage.getItem('docenteai_token');
-                }
+                // 1. Extraemos el token de la memoria de estado sólido
+                const token = localStorage.getItem('docenteai_token');
 
                 // 2. Preparamos las cabeceras (Headers)
                 const headers = {
@@ -1569,9 +1546,9 @@
                     delete headers['Content-Type'];
                 }
 
-                // 3. Inyección Criptográfica
+                // 3. Inyección Criptográfica: Si hay token, lo concatenamos con la sintaxis estricta 'Bearer '
                 if (token) {
-                    headers['Authorization'] = `Bearer ${token}`; // Access Token de Supabase inyectado 🎉
+                    headers['Authorization'] = `Bearer ${token}`;
                 }
 
                 // 4. Ejecutamos la petición al servidor
@@ -1580,9 +1557,10 @@
                     headers: headers
                 });
 
-                // 5. Prevención de fallas
+                // 5. Prevención de fallas (Poka-yoke): Si el servidor rechaza el token (401 o 403)
                 if (response.status === 401 || response.status === 403) {
                     console.error("Fallo de seguridad: Token expirado o inválido.");
+                    localStorage.removeItem('docenteai_token'); // Purgamos la memoria
                     window.location.href = 'index.html'; // Abortamos al login
                     return null;
                 }

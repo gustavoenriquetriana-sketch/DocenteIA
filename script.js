@@ -308,19 +308,8 @@ function handleAuthError(status) {
 }
 
 // 🔑 HELPER: Fetch con autorización JWT automática
-async function authFetch(url, options = {}) {
-    let token = null;
-    if (window.supabaseClient) {
-        const { data } = await window.supabaseClient.auth.getSession();
-        if (data.session) {
-            token = data.session.access_token;
-        }
-    }
-
-    if (!token) {
-        token = localStorage.getItem('docenteai_token');
-    }
-
+function authFetch(url, options = {}) {
+    const token = localStorage.getItem('docenteai_token');
     const headers = {
         'Content-Type': 'application/json',
         ...(token ? { 'Authorization': 'Bearer ' + token } : {}),
@@ -385,51 +374,7 @@ function login() {
         });
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    // 1. Manejo del botón de Google Login
-    const btnGoogleLogin = document.getElementById('btn-google-auth-login');
-    if (btnGoogleLogin) {
-        btnGoogleLogin.addEventListener('click', () => {
-            try {
-                if (typeof window.supabaseClient !== 'undefined') {
-                    window.supabaseClient.auth.signInWithOAuth({ provider: 'google' });
-                } else {
-                    console.error("Supabase client is not initialized.");
-                    if (typeof Swal !== 'undefined') {
-                        Swal.fire({ icon: 'error', title: 'Error', text: 'El servicio de autenticación no está disponible en este momento.' });
-                    }
-                }
-            } catch (error) {
-                console.error("Error with Google Login:", error);
-            }
-        });
-    }
 
-    // 2. Escuchar cambios de estado de autenticación (Aduana de Redirección)
-    if (typeof window.supabaseClient !== 'undefined') {
-        window.supabaseClient.auth.onAuthStateChange((event, session) => {
-            if (event === 'SIGNED_IN' && session && session.user) {
-                const metadata = session.user.user_metadata || {};
-                
-                // Si falta la institución o el cargo, redirigir a completar perfil
-                // Solo si NO estamos ya en completar-perfil para evitar bucles infinitos
-                const isCompletarPerfil = window.location.pathname.endsWith('completar-perfil.html');
-                
-                if (!metadata.institucion || !metadata.cargo) {
-                    if (!isCompletarPerfil) {
-                        window.location.href = 'completar-perfil.html';
-                    }
-                } else {
-                    // Si ya tiene todo y venimos del login/register (no de dashboard), lo enviamos al dashboard
-                    const isLoginOrRegister = window.location.pathname.endsWith('index.html') || window.location.pathname.endsWith('register.html') || window.location.pathname === '/';
-                    if (isLoginOrRegister) {
-                        window.location.href = 'dashboard.html';
-                    }
-                }
-            }
-        });
-    }
-});
 
 
 function syncData() {

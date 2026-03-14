@@ -113,7 +113,7 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 // 🔐 CONSTANTES DE AUTENTICACIÓN
 const SALT_ROUNDS = 10;
 
-// 🛡️ MIDDLEWARE DE AUTENTICACIÓN JWT (Adaptado para Supabase Tokens)
+// 🛡️ MIDDLEWARE DE AUTENTICACIÓN JWT
 const verifyToken = (req, res, next) => {
     const authHeader = req.headers['authorization'];
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -121,28 +121,11 @@ const verifyToken = (req, res, next) => {
     }
     const token = authHeader.split(' ')[1];
     try {
-        // En esta versión decodificamos el token sin verificar la firma localmente
-        // ya que el token viene firmado por Supabase. 
-        // Si usamos jwt.verify, tendríamos que obtener el JWT Secret de Supabase.
-        const decoded = jwt.decode(token);
-        
-        if (!decoded) {
-            return res.status(403).json({ success: false, error: 'Token inválido o malformado.' });
-        }
-
-        // Mapeo CRÍTICO para unificar los dos sistemas (Split Brain Fix):
-        // Supabase usa "sub" como el ID del usuario en el token.
-        // El sistema anterior usaba "id". 
-        // Asignamos a id el valor de sub o id según quién generó el token.
-        req.user = { 
-            ...decoded,
-            id: decoded.sub || decoded.id, 
-            email: decoded.email 
-        };
-        
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        req.user = decoded;
         next();
     } catch (err) {
-        return res.status(403).json({ success: false, error: 'Error al procesar el token. Inicia sesión nuevamente.' });
+        return res.status(403).json({ success: false, error: 'Token inválido o expirado. Inicia sesión nuevamente.' });
     }
 };
 
