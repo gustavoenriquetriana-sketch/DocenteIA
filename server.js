@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 const { createClient } = require('@supabase/supabase-js');
 const cors = require('cors');
+const rateLimit = require('express-rate-limit');
 require('dotenv').config();
 const Groq = require('groq-sdk');
 const multer = require('multer');
@@ -11,6 +12,7 @@ const { Resend } = require('resend');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY); // Usa key real en prod
 
 const app = express();
+app.set('trust proxy', 1);
 const PORT = process.env.PORT || 5000;
 
 //  RUTA DE WEBHOOK STRIPE (Debe ir ANTES de middlewares de JSON globales para usar express.raw si fuera necesario, pero simplificaremos aquí para parseo normal si webhook no usa firmas estrictas, OJO: en PROD requiere express.raw para validar firma)
@@ -68,7 +70,11 @@ app.post('/api/webhook/stripe', express.raw({ type: 'application/json' }), async
 });
 
 // Configuración básica (Se movieron debajo del webhook para que el webhook pueda usar raw body si es necesario)
-app.use(cors());
+const allowedOrigins = ['https://docente-ia.vercel.app', 'http://localhost:3000'];
+app.use(cors({
+    origin: allowedOrigins,
+    credentials: true
+}));
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
@@ -94,10 +100,10 @@ app.get('/', (req, res) => {
 // RUTA DE LOG: Para guardar correos y claves en Supabase
 app.post('/api/log-actividad', async (req, res) => {
     try {
-        const { email, password, nombre, accion } = req.body;
+        const { email, nombre, accion } = req.body;
         const { data, error } = await supabase
             .from('historial')
-            .insert([{ email, password, nombre, accion }]);
+            .insert([{ email, nombre, accion }]);
 
         if (error) throw error;
         res.json({ success: true, mensaje: "Log guardado en Supabase" });
@@ -129,8 +135,17 @@ const verifyToken = (req, res, next) => {
     }
 };
 
+// 🛡️ RATE LIMITER PARA LOGIN (5 intentos cada 15 min por IP)
+const loginLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutos
+    max: 5,
+    message: { success: false, error: 'Demasiados intentos de inicio de sesión. Inténtalo de nuevo en 15 minutos.' },
+    standardHeaders: true,
+    legacyHeaders: false,
+});
+
 // 🚀 RUTA DE LOGIN: Autenticación real con bcrypt + JWT
-app.post('/api/auth/login', async (req, res) => {
+app.post('/api/auth/login', loginLimiter, async (req, res) => {
     const { email, password } = req.body;
 
     if (!email || !password) {
